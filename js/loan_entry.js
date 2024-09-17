@@ -14,6 +14,7 @@ $(document).ready(function () {
         getFamilyInfoTable()
         getPropertyInfoTable();
         getBankInfoTable()
+        getFeedbackInfoTable()
         getKycInfoTable()
         getAreaName()
         $('.customer_content').hide();
@@ -214,7 +215,11 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Family Details?', getFamilyDelete, id);
         return;
     });
-
+    $('#clear_fam_form').click(function () {
+        $('#family_id').val('');
+        $('#family_form input').css('border', '1px solid #cecece');
+        $('#family_form select').css('border', '1px solid #cecece');
+    });
     ////Proerty Modal////
     $('#submit_property').click(function () {
         event.preventDefault();
@@ -262,7 +267,11 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Property Details?', getPropertyDelete, id);
         return;
     });
-
+    $('#clear_prop_form').click(function () {
+        $('#property_id').val('');
+        $('#property_form input').css('border', '1px solid #cecece');
+        $('#property_form select').css('border', '1px solid #cecece');
+    });
     $('#property_holder').change(function () {
         var propertyHolderId = $(this).val();
         if (propertyHolderId) {
@@ -345,7 +354,11 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Bank Details?', getBankDelete, id);
         return;
     });
-
+    $('#clear_bank_form').click(function () {
+        $('#bank_id').val('');
+        $('#bank_form input').css('border', '1px solid #cecece');
+        $('#bank_form select').css('border', '1px solid #cecece');
+    });
     ////////////Kyc Modal///////
     $('#submit_kyc').click(function (event) {
         event.preventDefault();
@@ -447,6 +460,9 @@ $(document).ready(function () {
     $('#clear_kyc_form').on('click', function () {
         $('.fam_mem_div').hide();
         $('#fam_mem').val('');
+        $('#kyc_id').val('');
+        $('#kyc_form input').css('border', '1px solid #cecece');
+        $('#kyc_form select').css('border', '1px solid #cecece');
     });
 
     $('.kycmodal_close').on('click', function () {
@@ -513,11 +529,68 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Proof Details?', getProofDelete, id);
         return;
     });
+    $('#clear_proof_form').click(function () {
+        $('#proof_id').val('');
+        $('#proof_form input').css('border', '1px solid #cecece');
+        $('#proof_form select').css('border', '1px solid #cecece');
+    });
 
     $('#mobile1, #mobile2, #whatsapp_no, #fam_mobile').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
+////////////////////////////////Kyc Proof Modal End//////////////////
+//////////////////////////////////////Customer Summary Modal Start////////////////////////////////
+$('#submit_feedback').click(function () {
+    event.preventDefault();
+    //Validation
+    let cus_profile_id = $('#customer_profile_id').val();
+    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let feed_label = $('#feed_label').val(); let feedback = $('#feedback').val(); let remark = $('#remark').val(); let feedback_id = $('#feedback_id').val();
+    if (cus_profile_id == '') {
+        swalError('Warning', 'Kindly Fill the Personal Info');
+        return false;
+    }
+    var data = ['feed_label', 'feedback']
+    var isValid = true;
+    data.forEach(function (entry) {
+        var fieldIsValid = validateField($('#' + entry).val(), entry);
+        if (!fieldIsValid) {
+            isValid = false;
+        }
+    });
+    if (isValid) {
+        $.post('api/loan_entry/submit_feedback.php', { cus_id, feed_label, feedback, remark, feedback_id, cus_profile_id }, function (response) {
+            if (response == '1') {
+                swalSuccess('Success', 'Feedback Info Added Successfully!');
+            } else {
+                swalSuccess('Success', 'Feedback Info Updated Successfully!')
+            }
+            getFeedbackTable();
+        });
+    }
+});
 
+$(document).on('click', '.feedbackActionBtn', function () {
+    var id = $(this).attr('value'); // Get value attribute
+    $.post('api/loan_entry/feedback_creation_data.php', { id: id }, function (response) {
+        $('#feedback_id').val(id);
+        $('#feed_label').val(response[0].feed_label);
+        $('#feedback').val(response[0].feedback);
+        $('#remark').val(response[0].remark);
+    }, 'json');
+});
+
+$(document).on('click', '.feedbackDeleteBtn', function () {
+    var id = $(this).attr('value');
+    swalConfirm('Delete', 'Do you want to Delete the Customer Feedback Details?', getFeedbackDelete, id);
+    return;
+});
+$('#clear_feed_form').click(function () {
+    $('#feedback_id').val('');
+    $('#feedback_form input').css('border', '1px solid #cecece');
+    $('#feedback_form select').css('border', '1px solid #cecece');
+});
+//////////////////////////////////////Customer Summary Modal End////////////////////////////////
     $('#area').change(function () {
         var areaId = $(this).val();
         if (areaId) {
@@ -1156,7 +1229,41 @@ function getPropertyInfoTable() {
         setdtable('#prop_info');
     }, 'json')
 }
-
+function getFeedbackTable() {
+    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_profile_id = $('#customer_profile_id').val()
+    $.post('api/loan_entry/feedback_creation_list.php', { cus_id, cus_profile_id }, function (response) {
+        var columnMapping = [
+            'sno',
+            'feed_label',
+            'feedback',
+            'remark',
+            'action'
+        ];
+        appendDataToTable('#feedback_creation_table', response, columnMapping);
+        setdtable('#feedback_creation_table');
+        $('#feedback_form input').val('');
+        $('#feedback_form input').css('border', '1px solid #cecece');
+        $('#feedback_form select').css('border', '1px solid #cecece');
+        $('textarea').css('border', '1px solid #cecece');
+        $('#feedback').val('');
+        $('#remark').val('');
+    }, 'json')
+}
+function getFeedbackInfoTable() {
+    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_profile_id = $('#customer_profile_id').val();
+    $.post('api/loan_entry/feedback_creation_list.php', { cus_id, cus_profile_id }, function (response) {
+        var columnMapping = [
+            'sno',
+            'feed_label',
+            'feedback',
+            'remark'
+        ];
+        appendDataToTable('#cus_sum_table', response, columnMapping);
+        setdtable('#cus_sum_table');
+    }, 'json')
+}
 function getPropertyHolder() {
     let cus_id = $('#cus_id').val().replace(/\s/g, '');
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
@@ -1179,7 +1286,16 @@ function getPropertyDelete(id) {
         }
     }, 'json');
 }
-
+function getFeedbackDelete(id) {
+    $.post('api/loan_entry/delete_feedback_creation.php', { id }, function (response) {
+        if (response == '1') {
+            swalSuccess('Success', 'Feedback Info Deleted Successfully!');
+            getFeedbackTable();
+        } else {
+            swalError('Error', 'Failed to Delete Feedback: ' + response);
+        }
+    }, 'json');
+}
 function getRelationshipName(propertyHolderId) {
     $.ajax({
         url: 'api/loan_entry/getRelationshipName.php',
@@ -1513,6 +1629,7 @@ function editCustmerProfile(id) {
         setTimeout(() => {
             getFamilyInfoTable()
             getPropertyInfoTable()
+            getFeedbackInfoTable()
             getBankInfoTable()
             getKycInfoTable()
             $('#area').trigger('change');

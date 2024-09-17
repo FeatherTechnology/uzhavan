@@ -75,7 +75,7 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
             <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo moneyFormatIndia($loan_balance); ?></div>
         </div>
     </div>
-    <img class="group" alt="Finance Software" src="img/fav.png" style="position: absolute; width: 150px; height: 91px; top: 34px; left: 44px;" />
+    <img class="group" alt="Uzhavan Software" src="img/fav.png" style="position: absolute; width: 150px; height: 91px; top: 34px; left: 44px;" />
 </div>
 
 <button type="button" name="printpurchase" onclick="poprint()" id="printpurchase" class="btn btn-primary">Print</button>
