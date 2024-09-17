@@ -2,7 +2,6 @@
 require "../../../ajaxconfig.php";
 
 $type = $_POST['type'];
-// $user_id = ($_POST['user_id'] != '') ? $userwhere = " AND insert_login_id = '" . $_POST['user_id'] . "' " : $userwhere = ''; //for user based
 if($_POST['user_id'] != ''){
     $userwhere = " AND insert_login_id = '" . $_POST['user_id'] . "' "; //for user based    
     $lelcuserswhere = " AND li.insert_login_id = '" . $_POST['user_id'] . "' "; //for user based    

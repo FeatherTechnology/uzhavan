@@ -556,14 +556,3 @@ function checkMinMaxValue(minSelector, maxSelector) {
     }
 }
 
-// Function to check if all values in an object are not empty
-// function isFormDataValid(formData) {
-//     for (let key in formData) {
-//         if (key != 'id') {
-//             if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
-//                 return false;
-//             }
-//         }
-//     }
-//     return true;
-// }

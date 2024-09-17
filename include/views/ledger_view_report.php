@@ -8,7 +8,7 @@
                 <option value='2'>Weekly</option>
                 <option value='3'>Monthly</option>
             </select>
-            <input type="button" id='ledger_view_report_btn' name='ledger_view_report_btn' class="toggle-button" style="background-color: #7CA5B8;color:white" value='Search'>
+            <input type="button" id='ledger_view_report_btn' name='ledger_view_report_btn' class="toggle-button" style="background-color: #343C63;color:white" value='Search'>
         </div> <br />
         <!-- Balance report Start -->
         <div class="card">

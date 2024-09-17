@@ -99,8 +99,6 @@ $(document).ready(function () {
                             cache: false,
                             success: function (html) {
                                 $('#printcollection').html(html)
-                                // Get the content of the div element
-                                //var content = $("#printcollection").html();
 
                             }
                         })

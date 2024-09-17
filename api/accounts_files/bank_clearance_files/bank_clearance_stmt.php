@@ -4,8 +4,6 @@ include('../../../ajaxconfig.php');
 
 if (isset($_SESSION['user_id'])) { //fetch if user has cash tally admin access or not
     $user_id = $_SESSION['user_id'];
-    // $qry = $pdo->query("SELECT cash_tally_admin from user where user_id = $user_id");
-    // $admin_access = $qry->fetch()['cash_tally_admin'];
     $admin_access = '1';
 } else {
     $admin_access = '1';

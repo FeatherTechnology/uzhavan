@@ -5,7 +5,6 @@ $status = [
     4 => 'Loan Issued', 5 => 'Loan Approval', 6 => 'Loan Approval',
     7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC'
 ];
-//$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : null;

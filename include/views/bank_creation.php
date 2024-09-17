@@ -96,23 +96,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Bank Mapping Info</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="company_name"> Under Company</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="company_name" name="company_name" pattern="[a-zA-Z\s]+" placeholder="Enter Company Name" disabled tabindex="7">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div> -->
-
             </div>
             <div class="col-md-12 ">
                 <div class="text-right">

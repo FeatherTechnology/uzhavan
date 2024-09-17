@@ -195,14 +195,4 @@ $('#family_info, #back_btn').click(function (event) {
     $('#branch_name').css('border', '1px solid #cecece');
     $('#under_branch').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
 });
-// function validateMultiSelectField(fieldId) {
-//     const selectedValues = underBranchChoices.getValue(true);
-//     const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
-//     if (selectedValues.length === 0) {
-//         choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
-//         return false;
-//     } else {
-//         choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
-//         return true;
-//     }
-// }
+

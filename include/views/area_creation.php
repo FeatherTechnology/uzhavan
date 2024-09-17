@@ -191,9 +191,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="card">
-                    <div class="card-body"> -->
                 <div class="row">
                     <div class="col-12">
                         <table id="area_name_table" class="custom-table">
@@ -209,9 +206,6 @@
                         </table>
                     </div>
                 </div>
-                <!-- </div>
-                </div> -->
-
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" tabindex="5" onclick="getAreaNameDropdown()">Close</button>

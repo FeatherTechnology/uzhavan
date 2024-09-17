@@ -22,31 +22,6 @@ if (isset($_FILES["file"]["type"])) {
             $Reader->ChangeSheet($i);
             foreach ($Reader as $Row) {
                 if ($Row[0] != "Date") {
-
-                    // $trans_date = "";
-                    // if (isset($Row[0])) {
-                    //     $excel_date = $Row[0];
-
-                    //     $date_formats = array(
-                    //         'Y-m-d',        // Year-Month-Day
-                    //         'd/m/Y',        // Day/Month/Year
-                    //         'm/d/Y',        // Month/Day/Year
-                    //         'd-m-Y',        // Day-Month-Year
-                    //         'm-d-Y',        // Month-Day-Year
-                    //         'Y/m/d',        // Year/Month/Day
-                    //         'd-m-y',        // Day-Month-Year (short year format)
-                    //         'm-d-y'         // Month-Day-Year (short year format)
-                    //     );
-
-                    //     foreach ($date_formats as $date_format) {
-                    //         $date = date_create_from_format($date_format, $excel_date);
-                    //         if ($date !== false) {
-                    //             $trans_date = $date->format('Y-m-d');
-                    //             break;
-                    //         }
-                    //     }
-                    // }
-
                     $trans_date = "";
                     if (isset($Row[0])) {
                         $excel_date = $Row[0];

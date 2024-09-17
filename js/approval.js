@@ -75,25 +75,7 @@ $(document).ready(function () {
             $('#data_checking_table_div').hide();
         }
     });
-
-    // $('#back_btn').click(function () {
-    //     let cus_id = $('#cus_id').val().replace(/\s/g, '');
-    //     let cus_profile_id = $('#customer_profile_id').val();
-    //     $('.customer_content').show();
-    //     $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
-    //         if (response.status == 0) {
-    //             // If status is 0, proceed with confirmation
-    //                 swalConfirm('Warning', 'Are you sure you want to go back? Personal information will be lost because the customer profile is incomplete.', cusDeleteStatus, cus_id);
-    //                 return;
-                
-    //         }else {
-    //             // Do nothing if cancelled
-    //             swapTableAndCreation();
-    //             getApprovalTable();
-
-    //     clearLoanCalcForm();//To clear Loan Calculation.
-    //     clearCusProfileForm('1');//To Clear Customer Profile
-    // });
+;
     $('#back_btn').click(function () {
                 getApprovalTable();           
     });
@@ -105,7 +87,6 @@ $(document).ready(function () {
         $('#loan_calculation_id').val(loanCalcId);
         swapTableAndCreation();
         editCustmerProfile(id)
-       //  loanCalculationEdit(loanCalcId);
     });
 
     $('input[name=loan_entry_type]').click(function () {
@@ -762,10 +743,6 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-        // if (cus_id === '' || cus_name === '' || gender === '' || mobile1 === '' || (pic === undefined && per_pic == '')) {
-        //     swalError('Warning', 'Please Fill out Mandatory fields!');
-        //     return false;
-        // }
         if (isValid) {
             let personalDetail = new FormData();
             personalDetail.append('cus_id', cus_id);
@@ -816,33 +793,6 @@ $(document).ready(function () {
 
         }
     })
-
-    // $('#area_confirm').change(function () {
-    //     let cus_id = $('#cus_id').val().replace(/\s/g, ''); 
-    //     let area_confirm = $(this).val(); 
-
-    //     $.post('api/loan_entry/area_confirm.php', { cus_id, area_confirm }, function (response) {
-    //         if(!response){
-    //             if (response.error) {
-    //                 // Handle error
-    //                 swalError('Error', response.error);
-    //             } else {
-    //                 if (area_confirm == '1') { // Resident
-    //                     $('#res_type').val(response.res_type);
-    //                     $('#res_detail').val(response.res_detail);
-    //                     $('#res_address').val(response.res_address);
-    //                     $('#native_address').val(response.native_address);
-    //                 } else if (area_confirm == '2') { // Occupation
-    //                     $('#occupation').val(response.occupation);
-    //                     $('#occ_detail').val(response.occ_detail);
-    //                     $('#occ_income').val(response.occ_income);
-    //                     $('#occ_address').val(response.occ_address);
-    //                 }
-    //             }
-    //         }
-    //     }, 'json')
-    // });
-
     $('#name_check, #aadhar_check, #mobile_check').on('input', function () {
         var name = $('#name_check').val().trim();
         var aadhar = $('#aadhar_check').val().trim();
@@ -1791,12 +1741,6 @@ $(document).ready(function () {
         if (docName != '') {
 
             $.post('api/loan_entry/loan_calculation/submit_document_need.php', { docName, cusProfileId, cusID }, function (response) {
-                // if (response == '1') {
-                //     swalError('Warning', 'Document Need Already Exists!');
-                // } else if (response == '2') {
-                //     swalSuccess('Success', 'Document Need Added Successfully!');
-                // }
-
                 getDocNeedTable(cusProfileId);
             }, 'json');
 
