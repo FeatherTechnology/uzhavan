@@ -321,11 +321,7 @@ $(document).ready(function(){
         var cp_id = $(this).attr('value');
         fineChartList(cp_id) //To Show Fine Chart List
     });
-
-    // $(document).on('click','.coll-charge', function(){
-    //     var cp_id = $(this).attr('value');
-    //     resetcollCharges(cp_id);  //Fine
-    // }); 
+ 
     $('#collection_mode').on('change', function () {
         resetValidation();
     });

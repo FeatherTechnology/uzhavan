@@ -28,5 +28,5 @@ if($cnt =='1'){
         $result = '0'; //Failed
     }
 }
-$pdo = null; // Close Connection
+$pdo = null; 
 echo json_encode($result); // Failure

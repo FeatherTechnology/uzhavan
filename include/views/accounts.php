@@ -561,14 +561,6 @@ function moneyFormatIndia($num1) {
                                     <input type="number" class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
                                 </div>
                             </div>
-                            <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_user_name_div" style="display: none;">
-                                <div class="form-group">
-                                    <label for="other_user_name">User Name</label><span class="text-danger">*</span>
-                                    <select class="form-control" name="other_user_name" id="other_user_name" tabindex="11" disabled>
-                                        <option value="">Select User Name</option>
-                                    </select>
-                                </div>
-                            </div> -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="other_amnt">Amount</label><span class="text-danger">*</span>
@@ -604,7 +596,6 @@ function moneyFormatIndia($num1) {
                                     <th>Type</th>
                                     <th>Reference ID</th>
                                     <th>Transaction ID</th>
-                                    <!-- <th>User Name</th> -->
                                     <th>Amount</th>
                                     <th>Remark</th>
                                     <th>Action</th>
@@ -727,12 +718,6 @@ function moneyFormatIndia($num1) {
 									</select>
 								</div>
 							</div>
-							<!-- <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12 IDE_nameDiv" style="display:none">
-								<div class="form-group">
-									<label for='IDE_name_area'>Area</label>
-									<input type='text' class="form-control" id='IDE_name_area' name='IDE_name_area' readonly placeholder='Please Select Name'>
-								</div>
-							</div> -->
 						</div>
 					</div>
 				</div>

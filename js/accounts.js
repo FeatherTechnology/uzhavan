@@ -196,17 +196,7 @@ $(document).ready(function(){
             catTypeOptn +="<option value='1'>Credit</option>";
         }
 
-        $('#cat_type').empty().append(catTypeOptn); //To show Type based on transaction category.
-
-        // if(category =='7'){
-        //     $('#other_user_name').attr('disabled', false);
-        //     $('.other_user_name_div').show();
-        //     getUserList();
-        // }else{
-        //     $('.other_user_name_div').hide();
-        //     $('#other_user_name').val('').attr('disabled', true);
-        // }
-        
+        $('#cat_type').empty().append(catTypeOptn); //To show Type based on transaction category. 
         getRefId(category);
     });
     
@@ -544,17 +534,6 @@ function nameDropDown(){
     },'json');
 }
 
-// function getUserList(){
-//     $.post('api/accounts_files/accounts/user_list.php',function(response){
-//         let userNameOptn='';
-//             userNameOptn +="<option value=''>Select User Name</option>";
-//             $.each(response, function(index, val){
-//                 userNameOptn += "<option value='"+val.id+"'>"+val.name+"</option>";
-//             });
-//         $('#other_user_name').empty().append(userNameOptn);
-//     },'json');
-// }
-
 function otherTransFormValid(data){
     for(key in data){
         if(key !='expenses_total_amnt' && key !='bank_id' && key !='other_trans_id'){
@@ -570,12 +549,6 @@ function otherTransFormValid(data){
         }
     }
 
-    // if(data['trans_category'] =='7'){
-    //     if(data['other_user_name'] =='' || data['other_user_name'] ==null || data['other_user_name'] == undefined){
-    //         return false;
-    //     }
-    // }
-
     return true;
 }
 
@@ -590,7 +563,6 @@ function otherTransTable(tableId){
             'type',
             'ref_id',
             'trans_id',
-            // 'username',
             'amount',
             'remark',
             'action'
