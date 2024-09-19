@@ -3,7 +3,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 	<!-- Meta -->
-	<meta name="description" content="Finance ERP Application">
+	<meta name="description" content="Uzhavan ERP Application">
 	<meta name="author" content="Feather Technology">
 	<link rel="shortcut icon" href="img/fav.png" />
 

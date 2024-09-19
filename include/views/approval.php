@@ -518,19 +518,37 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Customer Summary</div>
+                        <button type="button" class="btn btn-primary" id="add_cus_sum" name="add_cus_sum" data-toggle="modal" data-target="#add_cus_info_modal" onclick="getFeedbackTable()" style="padding: 5px 35px; float: right;" tabindex='32'><span class="icon-add"></span></button>
                     </div>
                     <div class="card-body">
                         <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <table id="cus_sum_table" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20">S.NO</th>
+                                                <th>Feedback Label</th>
+                                                <th>Feedback</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Customer Limit" tabindex="32">
+                                    <label for="cus_limit"> Customer Limit</label>
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="33">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="33"></textarea>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="34"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -540,8 +558,8 @@
 
             <div class="col-md-12 ">
                 <div class="text-right">
-                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="34"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="35">Clear</button>
+                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="35"><span class="icon-check"></span>&nbsp;Submit</button>
+                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="36">Clear</button>
                 </div>
             </div>
         </div>
@@ -1370,3 +1388,81 @@
 </div>
 
 <!--Cancel and Revoke Modal End-->
+<!--Customer Summary Modal Start-->
+<div class="modal fade" id="add_cus_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Customer Feedback </h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getFeedbackInfoTable()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="feedback_form">
+                        <div class="row">
+                        <input type="hidden" name="feedback_id" id='feedback_id'>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="feed_label">Feedback Label</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="feed_label" id="feed_label" tabindex="1" placeholder="Enter Feedback Label">
+                                    <input type="hidden" id="addprop_id" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="feedback">Feedback</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="feedback" name="feedback" tabindex="1">
+                                        <option value="">Select Feedback</option>
+                                        <option value="5"> Excellent </option>
+                                        <option value="4"> Good </option>
+                                        <option value="3"> Average </option>
+                                        <option value="2"> Poor </option>
+                                        <option value="1"> Bad </option>
+
+                                    </select>
+                                    <input type="hidden" id="addholder_id" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="feed_remark">Remarks </label>
+                                    <textarea class="form-control" name="feed_remark" id="feed_remark" tabindex='1'></textarea>
+                                    <input type="hidden" id="addproprelation_id" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <button name="submit_feedback" id="submit_feedback" class="btn btn-primary" tabindex="6" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="reset" id="clear_feed_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="1">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <table id="feedback_creation_table" class="table custom-table">
+                            <thead>
+                                <tr>
+                                    <th width="20">S.No.</th>
+                                    <th>Feedback Label</th>
+                                    <th>Feedback</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody> </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="getFeedbackInfoTable()" tabindex="1">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Customer Summary Modal End-->

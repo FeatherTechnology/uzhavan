@@ -151,12 +151,12 @@ function toggleSidebarSubmenus(current_module) {
             var mainLink = selectedLink.closest('.sidebar-dropdown').querySelector('a');
 
             // Set the background color of the 'Master' link
-            mainLink.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+            mainLink.style.backgroundColor = '#6D7591';
 
-            link.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+            link.style.backgroundColor = '#6D7591';
         }
     });
     if (current_page == 'dashboard') {
-        $('.dashboard').css('backgroundColor', 'rgba(0, 0, 0, 0.2)');
+        $('.dashboard').css('backgroundColor', '#6D7591');
     }
 }
