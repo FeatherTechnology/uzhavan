@@ -6,13 +6,17 @@
                 <thead>
                     <tr>
                         <th>S.NO</th>
+                        <th>Loan Date</th>
                         <th>Customer ID</th>
+                        <th>Aadhar Number</th>
                         <th>Customer Name</th>
                         <th>Area</th>
                         <th>Line</th>
                         <th>Branch</th>
-                        <th>Loan Amount</th>
                         <th>Mobile</th>
+                        <th>Loan Category</th>
+                        <th>Loan Amount</th>
+                        <th>Customer Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -59,7 +63,7 @@
                                 <table id="doc_need_table" class="table custom-table">
                                     <thead>
                                         <tr>
-                                            <th>S.No</th>
+                                            <th width="500">S.No</th>
                                             <th>Document Name</th>
                                         </tr>
                                     </thead>
@@ -71,9 +75,30 @@
                     </div>
                 </div>
                 <!--- -------------------------------------- Document Need END ------------------------------- -->
-
-                <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Document Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="document_type">Document Type</label>
+                                    <select class="form-control" id="document_type" name="document_type" tabindex="2">
+                                        <option value="">Select Document Type</option>
+                                        <option value="1">Cheque Info</option>
+                                        <option value="2">Document Info</option>
+                                        <option value="3">Mortgage Info</option>
+                                        <option value="4">Endorsement Info</option>
+                                        <option value="5">Gold Info</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--- -------------------------------------- Cheque Info START ------------------------------- -->
+                <div class="card cheque-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Cheque Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_cheque_info_modal" style="padding: 5px 35px; float: right;" tabindex='9' onclick="getChequeCreationTable();"><span class="icon-add"></span></button>
@@ -105,7 +130,7 @@
                 <!--- -------------------------------------- Cheque Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Document Info START ------------------------------- -->
-                <div class="card">
+                <div class="card doc_div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Document Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_doc_info_modal" onclick="getFamilyMember('Select Holder Name', '#doc_holder_name'); getDocCreationTable();" style="padding: 5px 35px; float: right;" tabindex='29'><span class="icon-add"></span></button>
@@ -136,7 +161,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card">
+                <div class="card mortgage-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_mortgage_info_modal" onclick="getFamilyMember('Select Property Holder Name', '#property_holder_name');getMortCreationTable()" style="padding: 5px 35px; float: right;" tabindex='30'><span class="icon-add"></span></button>
@@ -171,7 +196,7 @@
                 <!--- -------------------------------------- Mortgage Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Endorsement Info START ------------------------------- -->
-                <div class="card">
+                <div class="card endorsement-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Endorsement Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_endorsement_info_modal" onclick="getFamilyMember('Select Proof Of', '#owner_name');getEndorsementCreationTable();" style="padding: 5px 35px; float: right;" tabindex='31'><span class="icon-add"></span></button>
@@ -204,7 +229,7 @@
                 <!--- -------------------------------------- Endorsement Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Gold Info START ------------------------------- -->
-                <div class="card">
+                <div class="card gold-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Gold Info
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_gold_info_modal" style="padding: 5px 35px; float: right;" tabindex='31' onclick="getGoldCreationTable()"><span class="icon-add"></span></button>
@@ -239,14 +264,9 @@
 
     <!-- -------------------------------------- Loan Issue START ------------------------------ -->
     <form id="loan_issue_form" name="loan_issue_form" style="display: none;">
-        <input type="hidden" id="due_period_calc">
-        <input type="hidden" id="profit_type_calc">
-        <input type="hidden" id="due_method_calc">
-        <input type="hidden" id="scheme_due_method_calc">
-        <input type="hidden" id="scheme_day_calc">
         <div class="row gutters">
+            <input type="hidden" id="aadhar_num">
             <div class="col-12">
-
                 <!--- -------------------------------------- Personal Info START ------------------------------- -->
                 <div class="card">
                     <div class="card-header">
@@ -256,34 +276,40 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="1"  placeholder="Enter Aadhar Number" readonly>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="1" readonly>
+                                            <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="2" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_name" name="cus_name" tabindex="2" readonly>
+                                            <input type="text" class="form-control" id="cus_name" name="cus_name" tabindex="3" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_data"> Customer Data</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_data" name="cus_data" tabindex="3" readonly>
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" tabindex="4" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number </label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control " id="mobile1" name="mobile1" tabindex="4" readonly>
+                                            <input type="number" class="form-control " id="mobile1" name="mobile1" tabindex="5" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_area"> Area </label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control " id="cus_area" name="cus_area" tabindex="5" readonly>
+                                            <input type="text" class="form-control " id="cus_area" name="cus_area" tabindex="6" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -304,6 +330,138 @@
                 </div>
                 <!--- -------------------------------------- Personal Info END ------------------------------- -->
 
+                <!--- -------------------------------------- Loan Info ------------------------------- -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Loan Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="loan_id_calc"> Loan ID</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_id_calc" name="loan_id_calc" tabindex="7" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="loan_category_calc"> Loan Category</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_category_calc" name="loan_category_calc" tabindex="8" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="category_info_calc">Category Info</label>
+                                    <textarea class="form-control" id="category_info_calc" name="category_info_calc" tabindex="9" readonly></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="loan_amnt_calc">Loan Amount</label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="10" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="profit_type_calc">Profit Type</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="profit_type_calc" name="profit_type_calc" tabindex="11" disabled>
+                                        <option value="">Select Profit Type</option>
+                                        <option value="0">Calculation</option>
+                                        <option value="1">Scheme</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--- -------------------------------------- Loan Info END --------------------------------->
+
+                <!--- -------------------------------------- Calculation - Scheme START ------------------------------- -->
+                <div class="card" id="profit_type_calc_scheme" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-title calc_scheme_title">Calculation</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calc" style="display:none">
+                                <div class="form-group">
+                                    <label for="due_method_calc">Due Method</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="due_method_calc" name="due_method_calc" value="Monthly" tabindex="12" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calc" style="display:none">
+                                <div class="form-group">
+                                    <label for="due_type_calc">Due Type</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="due_type_calc" name="due_type_calc" tabindex="13" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme" style="display:none">
+                                <div class="form-group">
+                                    <label for="scheme_due_method_calc">Due Method</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="scheme_due_method_calc" name="scheme_due_method_calc" tabindex="14" disabled>
+                                        <option value="">Select Due Method</option>
+                                        <option value="1">Monthly</option>
+                                        <option value="2">Weekly</option>
+                                        <option value="3">Daily</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme_day" style="display:none">
+                                <div class="form-group">
+                                    <label for="scheme_day_calc">Day</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="scheme_day_calc" name="scheme_day_calc" tabindex="15" disabled>
+                                        <option value="">Select Day</option>
+                                        <option value="1">Monday</option>
+                                        <option value="2">Tuesday</option>
+                                        <option value="3">Wednesday</option>
+                                        <option value="4">Thursday</option>
+                                        <option value="5">Friday</option>
+                                        <option value="6">Saturday</option>
+                                        <option value="7">Sunday</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme" style="display:none">
+                                <div class="form-group">
+                                    <label for="scheme_name_calc">Scheme Name</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="scheme_name_calc" name="scheme_name_calc" tabindex="16" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="profit_method_calc">Profit Method</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="profit_method_calc" name="profit_method_calc" tabindex="17" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="interest_rate_calc">Interest Rate</label><span class="text-danger">*</span><!-- Min and max intrest rate-->
+                                    <input type="number" class="form-control" id="interest_rate_calc" name="interest_rate_calc" tabindex="18" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="due_period_calc">Due Period</label><span class="text-danger">*</span><!-- Min and max Profit Method-->
+                                    <input type="number" class="form-control" id="due_period_calc" name="due_period_calc" tabindex="19" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="doc_charge_calc">Document Charges</label><span class="text-danger">*</span><!-- Min and max Document charges-->
+                                    <input type="number" class="form-control" id="doc_charge_calc" name="doc_charge_calc" tabindex="20" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="processing_fees_calc">Processing Fees</label><span class="text-danger">*</span><!-- Min and max Processing fee-->
+                                    <input type="number" class="form-control" id="processing_fees_calc" name="processing_fees_calc" tabindex="21" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--- -------------------------------------- Calculation - Scheme END ------------------------------- -->
+
                 <!--- -------------------------------------- Loan Calculate START ------------------------------- -->
                 <div class="card">
                     <div class="card-header">
@@ -313,56 +471,44 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="loan_category_calc"> Loan Category</label><span class="text-danger">*</span>
-                                    <input class="form-control" id="loan_category_calc" name="loan_category_calc" tabindex="6" readonly>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="loan_amnt_calc">Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="7" readonly>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
                                     <label for="principal_amnt_calc">Principal Amount</label><span class="text-danger princ-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="8" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="22" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="interest_amnt_calc">Interest Amount</label><span class="text-danger int-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="9" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="23" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="total_amnt_calc">Total Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="10" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="24" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_amnt_calc">Due Amount</label><span class="text-danger due-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="11" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="25" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_charge_calculate">Document Charges</label><span class="text-danger doc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="12" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="26" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="processing_fees_calculate">Processing Fees</label><span class="text-danger proc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="13" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="27" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="net_cash_calc">Net Cash</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="14" readonly>
+                                    <input type="number" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="28" readonly>
                                 </div>
                             </div>
                         </div>
@@ -380,19 +526,19 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_date_calc">Loan date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="loan_date_calc" name="loan_date_calc" tabindex="15" readonly>
+                                    <input type="date" class="form-control" id="loan_date_calc" name="loan_date_calc" tabindex="29" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_startdate_calc">Due Start Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="due_startdate_calc" name="due_startdate_calc" tabindex="16">
+                                    <input type="date" class="form-control" id="due_startdate_calc" name="due_startdate_calc" tabindex="30">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="maturity_date_calc">Maturity Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="17" readonly>
+                                    <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="31" readonly>
                                 </div>
                             </div>
                         </div>
@@ -410,13 +556,23 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="balance_net_cash">Balance Net Cash</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="balance_net_cash" name="balance_net_cash" tabindex="18" readonly>
+                                    <input type="number" class="form-control" id="balance_net_cash" name="balance_net_cash" tabindex="32" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="payment_type">Payment Type</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="payment_type" name="payment_type" tabindex="33">
+                                        <option value="">Select Payment Type</option>
+                                        <option value="1">Split Payment</option>
+                                        <option value="2">Single Payment</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12  payment">
+                                <div class="form-group">
                                     <label for="payment_mode">Payment Mode</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="payment_mode" name="payment_mode" tabindex="19">
+                                    <select type="text" class="form-control" id="payment_mode" name="payment_mode" tabindex="34">
                                         <option value=""> Select Payment Mode</option>
                                         <option value="1"> Cash </option>
                                         <option value="2"> Bank Transfer </option>
@@ -424,36 +580,97 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" id="bank_container" style="display: none;">
                                 <div class="form-group">
-                                    <label for="transaction_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="transaction_id" name="transaction_id" tabindex="20">
+                                    <label for="bank_name">Bank Name</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="bank_name" name="bank_name" tabindex="35">
+                                        <option value="">Select Bank Name</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Cash</label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control" id="cash" name="cash" tabindex="36">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
+                                <div class="form-group">
+                                    <label for="">Cheque number</label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control" id="chequeno" name="chequeno" tabindex="37">
                                 </div>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
-                                    <label for="chequeno">Cheque number</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="chequeno" name="chequeno" tabindex="21">
+                                    <label for="">Cheque Value</label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control" id="chequeValue" name="chequeValue" tabindex="38">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
-                                    <label for="issue_amount">Issue Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="issue_amount" name="issue_amount" tabindex="22">
+                                    <label for="">Cheque Remark</label>
+                                    <input type="text" class="form-control" id="chequeRemark" name="chequeRemark" tabindex="39">
                                 </div>
                             </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction ID</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="transaction_id" name="transaction_id" tabindex="40">
+                                    <span class="text-danger" style="display: none;" id="transact_id"> Please Enter Transaction ID </span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Value </label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control" id="transaction_value" name="transaction_value" tabindex="41">
+                                    <span class="text-danger" style="display: none;" id="transact_val"> Please Enter Transaction Value </span>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Remark </label>
+                                    <input type="text" class="form-control" id="transaction_remark" name="transaction_remark" tabindex="42">
+                                    <span class="text-danger" style="display: none;" id="transact_remark"> Please Enter Transaction Remark </span>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 balance_remark_container" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Balance Amount </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="balance_amount" name="balance_amount" readonly tabindex='43'>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="issue_date">Issue date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="issue_date" name="issue_date" tabindex="23" readonly>
+                                    <label for="issue_date">Issue Date</label><span class="text-danger">*</span>
+                                    <input type="date" class="form-control" id="issue_date" name="issue_date" tabindex="44" readonly>
                                 </div>
                             </div>
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="issue_person"> Issue Person </label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="issue_person" name="issue_person" tabindex="24">
+                                    <select type="text" class="form-control" id="issue_person" name="issue_person" tabindex="45">
                                         <option value=""> Select Issue Person </option>
                                     </select>
                                 </div>
@@ -461,22 +678,45 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="issue_relationship">Relationship</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="25" placeholder="Relationship" readonly>
+                                    <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="46" placeholder="Relationship" readonly>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
-                <!--- -------------------------------------- Issue Info END ------------------------------- -->
+                <div class="card" style="display:none;" id="loan_count_div">
+                    <div class="card-header">
+                        <div class="card-title">Customer Summary</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="47" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="first_loan_date">First Loan Date </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="48" readonly>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="col-12 mt-3 text-right">
-                    <button name="submit_loan_issue" id="submit_loan_issue" class="btn btn-primary" tabindex="30"><span class="icon-check"></span>&nbsp;Submit</button>
+                    </div>
                 </div>
             </div>
+            <!--- -------------------------------------- Issue Info END ------------------------------- -->
+
+            <div class="col-12 mt-3 text-right">
+                <button name="submit_loan_issue" id="submit_loan_issue" class="btn btn-primary" tabindex="46"><span class="icon-check"></span>&nbsp;Submit</button>
+            </div>
         </div>
-    </form>
-    <!-- -------------------------------------- Loan Issue END ------------------------------ -->
+</div>
+</form>
+<!-- -------------------------------------- Loan Issue END ------------------------------ -->
 </div> <!-- Loan Issue Content END - Customer profile & Loan Issue -->
 
 
@@ -541,7 +781,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cq_upload">Upload</label>
-                                    <input type="file" class="form-control cq_upload" name="cq_upload[]" id="cq_upload" tabindex="8" multiple>
+                                    <input type="file" class="form-control cq_upload" name="cq_upload[]" id="cq_upload" tabindex="8" onchange="compressImage(this, 200)" multiple>
                                     <input type="hidden" id="cq_upload_edit">
                                 </div>
                             </div>
@@ -636,7 +876,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_upload">Upload</label>
-                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" tabindex="5">
+                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" onchange="compressImage(this, 200)" tabindex="5">
                                     <input type="hidden" name="doc_upload_edit" id="doc_upload_edit">
                                 </div>
                             </div>
@@ -745,7 +985,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="mort_upload">Upload</label>
-                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" tabindex="9">
+                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" onchange="compressImage(this, 200)" tabindex="9">
                                     <input type="hidden" name="mort_upload_edit" id="mort_upload_edit">
                                 </div>
                             </div>
@@ -853,7 +1093,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="endorsement_upload"> Upload</label>
-                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" tabindex="8">
+                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" onchange="compressImage(this, 200)" tabindex="8">
                                     <input type="hidden" id="endorsement_upload_edit">
                                 </div>
                             </div>
@@ -968,3 +1208,46 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
+
+<!--------------------------------------------------------------Cancel And Revoke Modal start--------------------------------------------------------------------------->
+
+<div class="modal fade" id="add_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title modal_revoke" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeRemarkModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="approve_form">
+                        <div class="row">
+                            <input type="hidden" name="cus_sts_id" id='cus_sts_id'>
+                            <input type="hidden" name="customer_status" id='customer_status'>
+                            <div class="col-sm-3 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="remark">Remark</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="remark" id="remark" placeholder="Enter Remark Detail" tabindex="1"></textarea>
+                                    <input type="hidden" id="addremark" value='0'>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <button name="submit_remark" id="submit_remark" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="1" onclick="closeRemarkModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!---------------------------------------------------------------------------Cancel and Revoke Modal End---------------------------------------------------------------->

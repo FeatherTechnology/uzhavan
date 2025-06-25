@@ -6,28 +6,32 @@ $cash_type = $_POST['cash_type'];
 $bank_id = $_POST['bank_id'];
 
 if ($cash_type == '1') {
-    $cndtn = "coll_mode = '1' ";
-    $cndtn1 = "payment_mode = '1' ";
+    $cndtn = "and li.payment_mode = '1' ";
 } elseif ($cash_type == '2') {
-    $cndtn = "coll_mode != '1' AND bank_id = '$bank_id' ";
-    $cndtn1 = "payment_mode != '1' ";
+    $cndtn = " and  li.bank_name = '$bank_id' ";
 }
 //collection_mode = 1 - cash; 2 to 5 - bank;
-$qry = $pdo->query("SELECT b.name, c.linename, no_of_loans, issueAmnt
-FROM other_transaction a 
-JOIN users b ON a.user_name = b.id 
-JOIN line_name_creation c ON b.line = c.id 
-LEFT JOIN ( SELECT insert_login_id, COUNT(id) AS no_of_loans, SUM(issue_amnt) AS issueAmnt FROM loan_issue WHERE $cndtn1 AND DATE(issue_date) = CURDATE() GROUP BY insert_login_id ) li ON li.insert_login_id = b.id
-WHERE a.type = '2' AND a.trans_cat = '7' AND $cndtn
-GROUP BY b.name, c.linename, no_of_loans, issueAmnt; ");
+$current_date = date('Y-m-d');
+if($cash_type == 1 ){
+    $qry = $pdo->query("SELECT b.name, c.linename,COUNT(DISTINCT li.cus_profile_id) AS no_of_loans, COALESCE(SUM(li.cash),0) AS issueAmnt 
+    FROM loan_issue li
+    JOIN users b ON li.insert_login_id = b.id 
+    JOIN line_name_creation c ON b.line = c.id 
+    WHERE DATE(li.issue_date) = '$current_date' $cndtn
+    GROUP BY b.name, c.linename, li.insert_login_id; ");    
+}else{
+    $qry = $pdo->query("SELECT b.name, c.linename,COUNT(DISTINCT li.cus_profile_id) AS no_of_loans, COALESCE(SUM(cheque_val) + SUM(transaction_val),0) AS issueAmnt 
+    FROM loan_issue li
+    JOIN users b ON li.insert_login_id = b.id 
+    JOIN line_name_creation c ON b.line = c.id 
+    WHERE DATE(li.issue_date) = '$current_date' $cndtn
+    GROUP BY b.name, c.linename, li.insert_login_id;" ); 
+
+}  
 if ($qry->rowCount() > 0) {
     while ($data = $qry->fetch(PDO::FETCH_ASSOC)) {
-        // $amnt = ($data['amount']) ? $data['amount'] : 0;
-        // $cramnt = ($data['cr_amnt']) ? $data['cr_amnt'] : 0;
-        // $bal = $amnt - $data['overallIssueAmnt'] - $cramnt;
         $data['no_of_loans'] = ($data['no_of_loans']) ? $data['no_of_loans'] : 0;
         $data['issueAmnt'] = ($data['issueAmnt']) ? moneyFormatIndia($data['issueAmnt']) : 0;
-        // $data['balance'] = moneyFormatIndia($bal);
         $loan_issue_list_arr[] = $data;
     }
 }

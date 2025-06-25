@@ -3,7 +3,7 @@
         <div class="toggle-container col-12">
             <input type="date" id='from_date' name='from_date' class="toggle-button" value=''>
             <input type="date" id='to_date' name='to_date' class="toggle-button" value=''>
-            <input type="button" id='collection_report_btn' name='collection_report_btn' class="toggle-button" style="background-color: #343C63;color:white" value='Search'>
+            <input type="button" id='collection_report_btn' name='collection_report_btn' class="toggle-button" style="background-color: #7CA5B8;color:white" value='Search'>
         </div> <br/>
         <!-- Collection report Start -->
         <div class="card">
@@ -17,6 +17,7 @@
                                 <th>Loan ID</th>
                                 <th>Loan Date</th>
                                 <th>Customer ID</th>
+                                <th>Aadhar Number</th>
                                 <th>Customer Name</th>
                                 <th>Area</th>
                                 <th>Branch</th>
@@ -39,7 +40,7 @@
                         <tbody></tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="14"></td>
+                                <td colspan="15"></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

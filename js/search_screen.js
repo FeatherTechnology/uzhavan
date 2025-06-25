@@ -1,20 +1,14 @@
 $(document).ready(function () {
 
-    $('#cust_id').on('keyup', function () {
-        var value = $(this).val();
-        value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join(" ");
-        $(this).val(value);
-    });
-
     $('#cus_mobile').change(function () {
         let mobileValue = $(this).val().trim();  // Retrieve and trim the value of the mobile input
-    
+
         // Check if mobileValue is not empty
         if (mobileValue !== '') {
             checkMobileNo(mobileValue, $(this).attr('id'));
         }
     });
-    
+
 
     $(document).on('click', '.view_customer', function (event) {
         event.preventDefault();
@@ -22,11 +16,12 @@ $(document).ready(function () {
         $('#custome_list, #search_form').hide();
         let cus_id = $(this).closest('tr').find('td:nth-child(2)').text();
         // let cus_id = $('#cust_id').val().replace(/\s/g, '');
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();
 
-        OnLoadFunctions(cus_id,cus_name,area,mobile)
+        OnLoadFunctions(cus_id, aadhar_num, cus_name, area, mobile)
     })
     $(document).on('click', '.noc-summary', function (event) {
         event.preventDefault();
@@ -65,9 +60,9 @@ $(document).ready(function () {
         $('#due_chart_model').modal('show');
         var cp_id = $(this).attr('value');
         var cus_id = $('#cus_id').val();
-        dueChartList(cp_id,cus_id); // To show Due Chart List.
-        setTimeout(()=>{
-            $('.print_due_coll').click(function(){
+        dueChartList(cp_id, cus_id); // To show Due Chart List.
+        setTimeout(() => {
+            $('.print_due_coll').click(function () {
                 var id = $(this).attr('value');
                 Swal.fire({
                     title: 'Print',
@@ -84,21 +79,21 @@ $(document).ready(function () {
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url:'api/collection_files/print_collection.php',
-                            data:{'coll_id':id},
-                            type:'post',
-                            cache:false,
-                            success:function(html){
+                            url: 'api/collection_files/print_collection.php',
+                            data: { 'coll_id': id },
+                            type: 'post',
+                            cache: false,
+                            success: function (html) {
                                 $('#printcollection').html(html)
                                 // Get the content of the div element
                                 //var content = $("#printcollection").html();
-                            
+
                             }
                         })
                     }
                 })
             })
-        },1000)
+        }, 1000)
     });
 
     $(document).on('click', '.penalty-chart', function () {
@@ -106,19 +101,19 @@ $(document).ready(function () {
         $('#penalty_model').modal('show');
         let cp_id = $(this).attr('value');
         $('#cus_profile_id').val(cp_id)
-        
-    let cus_id = $('#cus_id').val();
-    $.ajax({
-        //to insert penalty by on click
-        url: 'api/collection_files/collection_loan_details.php',
-        data: {'cp_id':cp_id},
-        dataType:'json',
-        type:'post',
-        cache: false,
-        success: function(response){
-            penaltyChartList(cp_id,cus_id); //To show Penalty List.
-        }
-    })
+
+        let cus_id = $('#cus_id').val();
+        $.ajax({
+            //to insert penalty by on click
+            url: 'api/collection_files/collection_loan_details.php',
+            data: { 'cp_id': cp_id },
+            dataType: 'json',
+            type: 'post',
+            cache: false,
+            success: function (response) {
+                penaltyChartList(cp_id, cus_id); //To show Penalty List.
+            }
+        })
     });
 
     $(document).on('click', '.fine-chart', function () {
@@ -160,7 +155,7 @@ $(document).ready(function () {
         $('#loan_calculation_id').val(loanCalcId);
         loanCalculationEdit(loanCalcId);
         callLoanCaculationFunctions();
-        
+
     });
 
     $(document).on('click', '.documentation', function () {
@@ -170,18 +165,24 @@ $(document).ready(function () {
         $('#customer_profile_id').val(id);
         let cusID = $(this).attr('data-id'); //Cus id From List Page.
         $('#cus_id').val(cusID);
-         getDocTable(id);
-         getChequeInfoTable();
-         getDocInfoTable();
-         getMortInfoTable();
-         getEndorsementInfoTable();
-         getGoldInfoTable();
+        $('.cheque-div').hide();
+        $('.doc_div').hide();
+        $('.mortgage-div').hide();
+        $('.endorsement-div').hide();
+        $('.gold-div').hide();
+        getDocTable(id);
+        getChequeInfoTable();
+        getDocInfoTable();
+        getMortInfoTable();
+        getEndorsementInfoTable();
+        getGoldInfoTable();
 
     });
 
     $('#submit_search').click(function (event) {
         event.preventDefault();
-        let cus_id = $('#cust_id').val().replace(/\s/g, '');
+        let cus_id = $('#cust_id').val();
+        let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();
@@ -190,7 +191,7 @@ $(document).ready(function () {
             $.ajax({
                 url: 'api/search_files/search_customer.php',
                 type: 'POST',
-                data: { cus_id, cus_name, area, mobile },
+                data: { cus_id, aadhar_num, cus_name, area, mobile },
                 success: function (data) {
                     $('#custome_list').show();
                     getSearchTable(data);
@@ -200,7 +201,7 @@ $(document).ready(function () {
             $('#custome_list').hide();
         }
     });
-//////////////////////////////////////////////////////////////customer profile////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////customer profile////////////////////////////////////////////////////
     $('#guarantor_name').change(function () {
         var guarantorId = $(this).val();
         if (guarantorId) {
@@ -221,19 +222,19 @@ $(document).ready(function () {
     $('#pic').change(function () {
         let pic = $('#pic')[0];
         let img = $('#imgshow');
+        compressImage(this, 200)
         img.attr('src', URL.createObjectURL(pic.files[0]));
-        checkInputFileSize(this, 200, img)
     })
 
     $('#gu_pic').change(function () {
         let pic = $('#gu_pic')[0];
         let img = $('#gur_imgshow');
+        compressImage(this, 200)
         img.attr('src', URL.createObjectURL(pic.files[0]));
-        checkInputFileSize(this, 200, img)
     })
 
 });
-$('#print_doc').click(function(){
+$('#print_doc').click(function () {
     let cus_profile_id = $('#customer_profile_id').val();
     // Open a new window or tab
     var printWindow = window.open('', '_blank');
@@ -243,10 +244,10 @@ $('#print_doc').click(function(){
         // Load the content into the popup window
         $.ajax({
             url: 'api/loan_issue_files/print_document.php',
-            data: {cus_profile_id},
+            data: { cus_profile_id },
             cache: false,
             type: "post",
-            success: function(html) {
+            success: function (html) {
                 // Write the content to the new window
                 printWindow.document.open();
                 printWindow.document.write(html);
@@ -255,7 +256,7 @@ $('#print_doc').click(function(){
                 // Optionally, print the content
                 printWindow.print();
             },
-            error: function() {
+            error: function () {
                 // Handle error
                 printWindow.close();
                 alert('Failed to load print content.');
@@ -269,6 +270,7 @@ function validate() {
     let response = true;
 
     let cus_id = $('#cust_id').val().trim();
+    let aadhar_num = $('#aadhar_nums').val().trim();
     let cus_name = $('#cust_name').val().trim();
     let area = $('#cus_area').val().trim();
     let mobile = $('#cus_mobile').val().trim();
@@ -277,20 +279,25 @@ function validate() {
     $('#cust_id, #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
 
     // Check if any one field is filled
-    if (cus_id || cus_name || area || mobile) {
+    if (cus_id || aadhar_num || cus_name || area || mobile) {
         // If any field is filled, reset the other fields' borders
         if (cus_id) {
-            $('#cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+            $('#cust_name, #cus_area, #cus_mobile ,#aadhar_nums').css('border', '1px solid #cecece');
+        } else if (aadhar_num) {
+            $('#cust_id , #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
         } else if (cus_name) {
-            $('#cust_id, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
+            $('#cust_id ,#aadhar_nums , #cus_area, #cus_mobile').css('border', '1px solid #cecece');
         } else if (area) {
-            $('#cust_id, #cust_name, #cus_mobile').css('border', '1px solid #cecece');
+            $('#cust_id , #aadhar_nums , #cust_name, #cus_mobile ').css('border', '1px solid #cecece');
         } else if (mobile) {
-            $('#cust_id, #cust_name, #cus_area').css('border', '1px solid #cecece');
+            $('#cust_id, #aadhar_nums , #cust_name, #cus_area').css('border', '1px solid #cecece');
         }
     } else {
         // If no fields are filled, show validation errors
         if (!validateField(cus_id, 'cust_id')) {
+            response = false;
+        }
+        if (!validateField(aadhar_num, 'aadhar_nums')) {
             response = false;
         }
         if (!validateField(cus_name, 'cust_name')) {
@@ -302,7 +309,7 @@ function validate() {
         if (!validateField(mobile, 'cus_mobile')) {
             response = false;
         }
-       
+
     }
 
     return response;
@@ -312,23 +319,24 @@ function getSearchTable(data) {
     // Assuming response is in JSON format and contains customer data
     let response = JSON.parse(data);
     // if (response && response.length > 0) {
-        var columnMapping = [
-            'sno',
-            'cus_id',
-            'cus_name',
-            'area',
-            'branch_name',
-            'linename',
-            'mobile1',
-            'action'
-        ];
-        appendDataToTable('#search_table', response, columnMapping);
-        setdtable('#search_table');
-        setDropdownScripts();
+    var columnMapping = [
+        'sno',
+        'cus_id',
+        'aadhar_num',
+        'cus_name',
+        'area',
+        'branch_name',
+        'linename',
+        'mobile1',
+        'action'
+    ];
+    appendDataToTable('#search_table', response, columnMapping);
+    setdtable('#search_table');
+    setDropdownScripts();
     // }
 }
-function getLoanTable(cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt) {
-    $.post('api/search_files/search_loan.php', { cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt}, function (response) {
+function getLoanTable(cus_id, aadhar_num, cus_name, area, mobile, pending_sts, od_sts, due_nil_sts, balAmnt) {
+    $.post('api/search_files/search_loan.php', { cus_id, aadhar_num, cus_name, area, mobile, pending_sts, od_sts, due_nil_sts, balAmnt }, function (response) {
         var columnMapping = [
             'sno',
             'loan_date',
@@ -353,101 +361,102 @@ function closeChartsModal() {
     $('#fine_model').modal('hide');
     $('#closed_remark_model').modal('hide');
 }
-function dueChartList(cp_id,cus_id){
+function dueChartList(cp_id, cus_id) {
     $.ajax({
         url: 'api/collection_files/get_due_chart_list.php',
-        data: {'cp_id':cp_id,'cus_id':cus_id},
-        type:'post',
+        data: { 'cp_id': cp_id, 'cus_id': cus_id },
+        type: 'post',
         cache: false,
-        success: function(response){
+        success: function (response) {
             $('#due_chart_table_div').empty();
             $('#due_chart_table_div').html(response);
         }
-    }).then(function(){
-    
-        $.post('api/collection_files/get_due_method_name.php',{cp_id},function(response){
-            $('#dueChartTitle').text('Due Chart ( '+ response['due_method'] + ' - '+ response['loan_type'] +' ');
-        },'json');
+    }).then(function () {
+
+        $.post('api/collection_files/get_due_method_name.php', { cp_id }, function (response) {
+            $('#dueChartTitle').text('Due Chart ( ' + response['due_method'] + ' - ' + response['loan_type'] + ' ');
+        }, 'json');
     })
-    
-    }
-     //Penalty Chart List
-    function penaltyChartList(cp_id,cus_id){
+
+}
+//Penalty Chart List
+function penaltyChartList(cp_id, cus_id) {
     $.ajax({
         url: 'api/collection_files/get_penalty_chart_list.php',
-        data: {'cp_id':cp_id,'cus_id':cus_id},
-        type:'post',
+        data: { 'cp_id': cp_id, 'cus_id': cus_id },
+        type: 'post',
         cache: false,
-        success: function(response){
+        success: function (response) {
             $('#penalty_chart_table_div').empty()
             $('#penalty_chart_table_div').html(response)
         }
     });//Ajax End.
-    }
-    
-    
-     //Fine Chart List
-    function fineChartList(cp_id){
+}
+
+
+//Fine Chart List
+function fineChartList(cp_id) {
     $.ajax({
         url: 'api/collection_files/get_fine_chart_list.php',
-        data: {'cp_id':cp_id},
-        type:'post',
+        data: { 'cp_id': cp_id },
+        type: 'post',
         cache: false,
-        success: function(response){
+        success: function (response) {
             $('#fine_chart_table_div').empty()
             $('#fine_chart_table_div').html(response)
         }
     });//Ajax End.
-    }
+}
 
-    function OnLoadFunctions(cus_id,cus_name,area,mobile){
-        //To get loan sub Status
-        var pending_arr = [];
-        var od_arr = [];
-        var due_nil_arr = [];
-        var balAmnt = [];
-        $.ajax({
-            url: 'api/collection_files/resetCustomerStatus.php',
-            data: {'cus_id':cus_id},
-            dataType:'json',
-            type:'post',
-            cache: false,
-            success: function(response){
-                if(response.follow_cus_sts != null){
-                    for(var i=0;i< response['pending_customer'].length;i++){
-                        pending_arr[i] = response['pending_customer'][i]
-                        od_arr[i] = response['od_customer'][i]
-                        due_nil_arr[i] = response['due_nil_customer'][i]
-                        balAmnt[i] = response['balAmnt'][i]
-                    }
-                    var pending_sts = pending_arr.join(',');
-                    $('#pending_sts').val(pending_sts);
-                    var od_sts = od_arr.join(',');
-                    $('#od_sts').val(od_sts);
-                    var due_nil_sts = due_nil_arr.join(',');
-                    $('#due_nil_sts').val(due_nil_sts);
-                    balAmnt = balAmnt.join(',');
+function OnLoadFunctions(cus_id, aadhar_num, cus_name, area, mobile) {
+    //To get loan sub Status
+    var pending_arr = [];
+    var od_arr = [];
+    var due_nil_arr = [];
+    var balAmnt = [];
+    $.ajax({
+        url: 'api/collection_files/resetCustomerStatus.php',
+        data: { 'cus_id': cus_id },
+        dataType: 'json',
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            if (response.follow_cus_sts != null) {
+                for (var i = 0; i < response['pending_customer'].length; i++) {
+                    pending_arr[i] = response['pending_customer'][i]
+                    od_arr[i] = response['od_customer'][i]
+                    due_nil_arr[i] = response['due_nil_customer'][i]
+                    balAmnt[i] = response['balAmnt'][i]
                 }
+                var pending_sts = pending_arr.join(',');
+                $('#pending_sts').val(pending_sts);
+                var od_sts = od_arr.join(',');
+                $('#od_sts').val(od_sts);
+                var due_nil_sts = due_nil_arr.join(',');
+                $('#due_nil_sts').val(due_nil_sts);
+                balAmnt = balAmnt.join(',');
             }
-        }).then(function(){
-                showOverlay();//loader start
-                var pending_sts = $('#pending_sts').val()
-                var od_sts = $('#od_sts').val()
-                var due_nil_sts = $('#due_nil_sts').val()
-                var bal_amt = balAmnt;
-                getLoanTable(cus_id,cus_name,area,mobile,pending_sts,od_sts,due_nil_sts,balAmnt)    
-                hideOverlay();//loader stop
-            }); 
-    }//Auto Load function END
+        }
+    }).then(function () {
+        showOverlay();//loader start
+        var pending_sts = $('#pending_sts').val()
+        var od_sts = $('#od_sts').val()
+        var due_nil_sts = $('#due_nil_sts').val()
+        var bal_amt = balAmnt;
+        getLoanTable(cus_id, aadhar_num, cus_name, area, mobile, pending_sts, od_sts, due_nil_sts, balAmnt)
+        hideOverlay();//loader stop
+    });
+}//Auto Load function END
 
 /////////////////////////////////////////////////////////////////////////customer profile//////////////////////////////////////////////
 function getFamilyInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val();
     $.post('api/loan_entry/family_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'fam_name',
             'fam_relationship',
+            'remarks',
             'fam_age',
             'fam_live',
             'fam_occupation',
@@ -459,7 +468,7 @@ function getFamilyInfoTable() {
     }, 'json')
 }
 function getPropertyInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_entry/property_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
@@ -474,7 +483,7 @@ function getPropertyInfoTable() {
     }, 'json')
 }
 function getBankInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
     $.post('api/loan_entry/bank_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
@@ -490,7 +499,7 @@ function getBankInfoTable() {
     }, 'json')
 }
 function getKycInfoTable() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val();
     let cus_profile_id = $('#customer_profile_id').val()
     $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
         var columnMapping = [
@@ -540,8 +549,8 @@ function getAlineName(areaId) {
     });
 }
 
-function dataCheckList(cus_id, cus_name, cus_mble_no) {
-    $.post('api/loan_entry/datacheck_name.php', { cus_id }, function (response) {
+function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
+    $.post('api/loan_entry/datacheck_name.php', { aadhar_num }, function (response) {
         //Name
         $('#name_check').empty();
         $('#name_check').append("<option value=''>Select Name</option>");
@@ -553,7 +562,7 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
         //Adhar no
         $('#aadhar_check').empty();
         $('#aadhar_check').append("<option value=''>Select Aadhar Number</option>");
-        $('#aadhar_check').append('<option value="' + cus_id + '">' + cus_id + '</option>');
+        $('#aadhar_check').append('<option value="' + aadhar_num + '">' + aadhar_num + '</option>');
         $.each(response, function (index, val) {
             $('#aadhar_check').append("<option value='" + val.fam_aadhar + "'>" + val.fam_aadhar + "</option>");
         });
@@ -569,7 +578,7 @@ function dataCheckList(cus_id, cus_name, cus_mble_no) {
     }, 'json');
 }
 function getGuarantorName() {
-    let cus_id = $('#cus_id').val().replace(/\s/g, '');
+    let cus_id = $('#cus_id').val();
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendGuarantorOption = '';
         appendGuarantorOption += "<option value='0'>Select Guarantor Name</option>";
@@ -604,9 +613,10 @@ function getGrelationshipName(guarantorId) {
 
 function editCustmerProfile(id) {
     $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
-        $('#customer_profile_id').val(id);
+        $('#customer_profile_id').val(response[0].id);
         $('#area_edit').val(response[0].area);
         $('#cus_id').val(response[0].cus_id);
+        $('#adhar_num').val(response[0].aadhar_num);
         $('#cus_name').val(response[0].cus_name);
         $('#gender').val(response[0].gender);
         $('#dob').val(response[0].dob);
@@ -628,7 +638,7 @@ function editCustmerProfile(id) {
         $('#line').val(response[0].line);
         $('#cus_limit').val(response[0].cus_limit);
         $('#about_cus').val(response[0].about_cus);
-        dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1)
+        dataCheckList(response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
         getGuarantorName()
         getAreaName()
         setTimeout(() => {
@@ -669,9 +679,13 @@ function editCustmerProfile(id) {
     }, 'json');
 }
 ///////////////////////////////////////////////////////////Documentation////////////////////////////////////////////////////////////////////
-function getChequeInfoTable(){
+function getChequeInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/cheque_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('.cheque-div').show();
+        }
         let chequeColumn = [
             "sno",
             "holder_type",
@@ -695,14 +709,17 @@ function getDocTable(cusProfileId) {
         setdtable('#doc_table')
     }, 'json');
 }
-function getDocInfoTable(){
+function getDocInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.doc_div').show();
+        }
         let docColumn = [
             "sno",
             "doc_name",
             "doc_type",
-            "fam_name",
+            "holder_name",
             "relationship",
             "upload"
         ]
@@ -710,12 +727,15 @@ function getDocInfoTable(){
         setdtable('#document_info')
     }, 'json');
 }
-function getMortInfoTable(){
+function getMortInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/mortgage_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.mortgage-div').show();
+        }
         let mortgageColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "property_details",
             "mortgage_name",
@@ -729,12 +749,15 @@ function getMortInfoTable(){
         setdtable('#mortgage_info')
     }, 'json');
 }
-function getEndorsementInfoTable(){
+function getEndorsementInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/endorsement_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.endorsement-div').show();
+        }
         let endorsementColumn = [
             "sno",
-            "fam_name",
+            "holder_name",
             "relationship",
             "vehicle_details",
             "endorsement_name",
@@ -746,9 +769,12 @@ function getEndorsementInfoTable(){
         setdtable('#endorsement_info')
     }, 'json');
 }
-function getGoldInfoTable(){
+function getGoldInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/gold_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.gold-div').show();
+        }
         let goldColumn = [
             "sno",
             "gold_type",
@@ -773,7 +799,7 @@ $(document).ready(function () {
         }
     });
 
-   
+
     $('#scheme_due_method_calc').change(function () {
         let schemeDueMethod = $(this).val();
         let loanCatId = $('#loan_category_calc').val();
@@ -914,7 +940,6 @@ function getLoanCategoryName() {
         $.each(response, function (index, val) {
             let selected = '';
             let loan_category_calc2 = $('#loan_category_calc2').val();
-            console.log(loan_category_calc2);
             if (val.id == loan_category_calc2) {
                 selected = 'selected';
             }
@@ -944,7 +969,7 @@ function getLoanCatDetails(id) {
     $.post('api/loan_entry/loan_calculation/getLoanCatDetails.php', { id }, function (response) {
         $('#due_method_calc').val(response[0].due_method);
 
-        if (response[0].due_type == 'emi') {
+        if (response[0].due_type == 'EMI') {
             $('#due_type_calc').val('EMI');
         } else if (response[0].due_type == 'interest') {
             $('#due_type_calc').val('Interest');
@@ -989,7 +1014,7 @@ function getLoanCatDetails(id) {
 
 function dueMethodScheme(schemeDueMethod, loanCatId) {
     $.post('api/common_files/get_due_method_scheme.php', { schemeDueMethod, loanCatId }, function (response) {
-     
+
         let appendSchemeNameOption = '';
         appendSchemeNameOption += '<option value="">Select Scheme Name</option>';
         $.each(response, function (index, val) {
@@ -1036,7 +1061,7 @@ function schemeCalAjax(id) {
 
         }, 'json');
 
-    } 
+    }
 }
 
 function getDocNeedTable(cusProfileId) {
@@ -1053,7 +1078,7 @@ function getDocNeedTable(cusProfileId) {
 function loanCalculationEdit(id) {
     $.post('api/loan_entry/loan_calculation/loan_calculation_data.php', { id }, function (response) {
         $('#loan_id_calc').val(response[0].loan_id);
-       $('#loan_category_calc').val(response[0].loan_category);
+        $('#loan_category_calc').val(response[0].loan_category);
         $('#loan_category_calc2').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
         $('#loan_amount_calc').val(response[0].loan_amount);
@@ -1097,7 +1122,7 @@ function loanCalculationEdit(id) {
 
 
         setTimeout(() => {
-            
+
             $('#agent_id_calc').val(response[0].agent_id);
             $('#agent_name_calc').val(response[0].agent_name);
             $('#refresh_cal').trigger('click');
@@ -1107,10 +1132,17 @@ function loanCalculationEdit(id) {
 //////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////// NOC //////////////////////////////////////////////////////////////////////
 function callAllFunctions(cp_id) {
+    $('.cheque-div').hide();
+    $('.doc_div').hide();
+    $('.mortgage-div').hide();
+    $('.endorsement-div').hide();
+    $('.gold-div').hide();
     getChequeList(cp_id);
     getMortgageList(cp_id);
     getEndorsementList(cp_id);
     getOtherDocumentList(cp_id);
+    getGoldList(cp_id);
+
     $('#noc_relation').val('');
     getFamilyMember();
     setTimeout(() => {
@@ -1120,6 +1152,9 @@ function callAllFunctions(cp_id) {
 
 function getChequeList(cp_id) {
     $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.cheque-div').show();
+        }
         let nocChequeColumns = [
             'sno',
             'holder_type',
@@ -1134,15 +1169,18 @@ function getChequeList(cp_id) {
         ];
         appendDataToTable('#noc_cheque_list_table', response, nocChequeColumns);
         setdtable('#noc_cheque_list_table');
-        
+
     }, 'json');
 }
 
 function getMortgageList(cp_id) {
     $.post('api/noc_files/noc_mortgage_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.mortgage-div').show();
+        }
         let nocMortgageColumns = [
             'sno',
-            'fam_name',
+            'holder_name',
             'relationship',
             'property_details',
             'mortgage_name',
@@ -1160,9 +1198,12 @@ function getMortgageList(cp_id) {
 
 function getEndorsementList(cp_id) {
     $.post('api/noc_files/noc_endorsement_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.endorsement-div').show();
+        }
         let nocEndorseColumns = [
             'sno',
-            'fam_name',
+            'holder_name',
             'relationship',
             'vehicle_details',
             'endorsement_name',
@@ -1180,11 +1221,14 @@ function getEndorsementList(cp_id) {
 
 function getOtherDocumentList(cp_id) {
     $.post('api/noc_files/noc_document_info_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.doc_div').show();
+        }
         let nocDocInfoColumns = [
             'sno',
             'doc_name',
             'doc_type',
-            'fam_name',
+            'holder_name',
             'upload',
             'date_of_noc',
             'noc_member',
@@ -1195,7 +1239,19 @@ function getOtherDocumentList(cp_id) {
         setdtable('#noc_document_list_table');
     }, 'json');
 }
-
+function getGoldList(cp_id) {
+    $.post('api/noc_files/noc_gold_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.gold-div').show();
+        }
+        let nocGoldColumns = [
+            'sno', 'gold_type', 'purity', 'weight', 'date_of_noc',
+            'noc_member', 'noc_relationship', 'action'
+        ];
+        appendDataToTable('#noc_gold_list_table', response, nocGoldColumns);
+        setdtable('#noc_gold_list_table');
+    }, 'json');
+}
 
 
 function getFamilyMember() {
@@ -1204,7 +1260,7 @@ function getFamilyMember() {
     $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value=''>Select Member Name</option>";
-        appendOption += "<option value='"+cus_name+"'>" + cus_name + "</option>";
+        appendOption += "<option value='" + cus_name + "'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
             appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
         });
@@ -1219,8 +1275,8 @@ function getRelationship(id) {
     }, 'json');
 }
 
-function setSubmittedDisabled(){
-    $('.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function(){
+function setSubmittedDisabled() {
+    $('.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function () {
         if ($(this).attr('data-id') == '1') {
             $(this).closest('tr').addClass('disabled-row');
             $(this).attr('checked', true).attr('disabled', true);
@@ -1233,9 +1289,9 @@ function setSubmittedDisabled(){
     var doc_checkDisabled = $('.noc_doc_info_chkbx:disabled').length === $('.noc_doc_info_chkbx').length;
     var gold_checkDisabled = $('.noc_gold_chkbx:disabled').length === $('.noc_gold_chkbx').length;
 
-    if (cheque_checkDisabled && mort_checkDisabled && endorse_checkDisabled && doc_checkDisabled && gold_checkDisabled ) {
+    if (cheque_checkDisabled && mort_checkDisabled && endorse_checkDisabled && doc_checkDisabled && gold_checkDisabled) {
         $('#submit_noc').hide();
-    }else{
+    } else {
         $('#submit_noc').show();
     }
 

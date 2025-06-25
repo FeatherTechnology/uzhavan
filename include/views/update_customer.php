@@ -7,6 +7,7 @@
                     <tr>
                         <th>S.NO</th>
                         <th>Customer ID</th>
+                        <th>Aadhar Number</th>
                         <th>Customer Name</th>
                         <th>Area</th>
                         <th>Line</th>
@@ -54,8 +55,14 @@
                                 <div class="row">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
-                                            <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cus_id" name="cus_id" tabindex="1" readonly>
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="auto_gen_cus_id"> Customer ID</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" id="auto_gen_cus_id" name="auto_gen_cus_id" tabindex="1" data-type="adhaar-number" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -131,13 +138,7 @@
                                             <input type="number" class="form-control" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="10">
                                         </div>
                                     </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="addaadhar_id" value='0'>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             <div class="col-4">
@@ -172,6 +173,7 @@
                                                 <th width="20">S.NO</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
+                                                <th>Remarks</th>
                                                 <th>Age</th>
                                                 <th>Live/Deceased</th>
                                                 <th>Occupation</th>
@@ -298,7 +300,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th width="20">S.NO</th>
-                                                        <th>Customer ID</th>
+                                                        <th>Aadhar Number</th>
                                                         <th>Name</th>
                                                         <th>Relationship</th>
                                                         <th>Under Customer Name</th>
@@ -499,7 +501,7 @@
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
-                                                <th>Proof Member</th>
+                                                <th>Proof Number</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -514,37 +516,36 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="card-title">Customer Summary</div>
-                        <button type="button" class="btn btn-primary" id="add_cus_sum" name="add_cus_sum" data-toggle="modal" data-target="#add_cus_info_modal" onclick="getFeedbackTable()" style="padding: 5px 35px; float: right;" tabindex='34'><span class="icon-add"></span></button>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                <div class="form-group">
-                                    <table id="cus_sum_table" class="table custom-table">
-                                        <thead>
-                                            <tr>
-                                                <th width="20">S.NO</th>
-                                                <th>Feedback Label</th>
-                                                <th>Feedback</th>
-                                                <th>Remarks</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-body" style="display:none;" id="loan_count_div">
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="35">
+                                    <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="33">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="36"></textarea>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="34"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -599,6 +600,28 @@
                     </div>
                 </div>
                 <!--Loan List End--->
+                <div class="card" id="document_type_div" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-title">Document Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="document_type">Document Type</label>
+                                    <select class="form-control" id="document_type" name="document_type" tabindex="2">
+                                        <option value="">Select Document Type</option>
+                                        <option value="1">Cheque Info</option>
+                                        <option value="2">Document Info</option>
+                                        <option value="3">Mortgage Info</option>
+                                        <option value="4">Endorsement Info</option>
+                                        <option value="5">Gold Info</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card" id="cheque_info_card" style="display: none;">
                     <div class="card-header">
@@ -814,6 +837,12 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" name="remarks" id="remarks" tabindex="1"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <label for="fam_age">Age</label>
                                     <input type="number" class="form-control" name="fam_age" id="fam_age" tabindex="1" placeholder="Enter Age">
                                     <input type="hidden" id="addage_id" value='0'>
@@ -870,6 +899,7 @@
                                     <th width="10">S.No.</th>
                                     <th>Name</th>
                                     <th>Relationship</th>
+                                    <th>Remarks</th>
                                     <th>Age</th>
                                     <th>Live/Deceased</th>
                                     <th>Occupation</th>
@@ -1133,15 +1163,15 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Member</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Member">
+                                    <label for="proof_detail">Proof Number</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Number">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="upload"> Upload</label>
-                                    <input type="file" class="form-control" id="upload" name="upload" tabindex="1">
+                                    <input type="file" class="form-control" id="upload" name="upload" onchange="compressImage(this, 200)" tabindex="1">
                                     <input type="hidden" id="kyc_upload">
                                 </div>
                             </div>
@@ -1164,7 +1194,7 @@
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>
-                                    <th>Proof Member</th>
+                                    <th>Proof Number</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>
@@ -1297,7 +1327,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cq_upload">Upload</label>
-                                    <input type="file" class="form-control" name="cq_upload" id="cq_upload" tabindex="8" multiple>
+                                    <input type="file" class="form-control" name="cq_upload" id="cq_upload" onchange="compressImage(this, 200)" tabindex="8" multiple>
                                     <input type="hidden" id="cq_upload_edit">
                                 </div>
                             </div>
@@ -1392,7 +1422,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_upload">Upload</label><span class="text-danger">*</span>
-                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" tabindex="5">
+                                    <input type="file" class="form-control" name="doc_upload" id="doc_upload" onchange="compressImage(this, 200)" tabindex="5">
                                     <input type="hidden" name="doc_upload_edit" id="doc_upload_edit">
                                 </div>
                             </div>
@@ -1501,7 +1531,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="mort_upload">Upload</label><span class="text-danger">*</span>
-                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" tabindex="9">
+                                    <input type="file" class="form-control" name="mort_upload" id="mort_upload" onchange="compressImage(this, 200)" tabindex="9">
                                     <input type="hidden" name="mort_upload_edit" id="mort_upload_edit">
                                 </div>
                             </div>
@@ -1609,7 +1639,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="endorsement_upload"> Upload</label><span class="text-danger">*</span>
-                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" tabindex="8">
+                                    <input type="file" class="form-control" id="endorsement_upload" name="endorsement_upload" onchange="compressImage(this, 200)" tabindex="8">
                                     <input type="hidden" id="endorsement_upload_edit">
                                 </div>
                             </div>
@@ -1724,81 +1754,3 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
- <!--Customer Summary Modal Start-->
-<div class="modal fade" id="add_cus_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg " role="document">
-        <div class="modal-content" style="background-color: white">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add Customer Feedback </h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getFeedbackInfoTable()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <form id="feedback_form">
-                        <div class="row">
-                        <input type="hidden" name="feedback_id" id='feedback_id'>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="feed_label">Feedback Label</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="feed_label" id="feed_label" tabindex="1" placeholder="Enter Feedback Label">
-                                    <input type="hidden" id="addprop_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="feedback">Feedback</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="feedback" name="feedback" tabindex="1">
-                                        <option value="">Select Feedback</option>
-                                        <option value="5"> Excellent </option>
-                                        <option value="4"> Good </option>
-                                        <option value="3"> Average </option>
-                                        <option value="2"> Poor </option>
-                                        <option value="1"> Bad </option>
-
-                                    </select>
-                                    <input type="hidden" id="addholder_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="remark">Remarks </label>
-                                    <textarea class="form-control" name="remark" id="remark" tabindex='1'></textarea>
-                                    <input type="hidden" id="addproprelation_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <button name="submit_feedback" id="submit_feedback" class="btn btn-primary" tabindex="6" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
-                                    <button type="reset" id="clear_feed_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="1">Clear</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <table id="feedback_creation_table" class="table custom-table">
-                            <thead>
-                                <tr>
-                                    <th width="20">S.No.</th>
-                                    <th>Feedback Label</th>
-                                    <th>Feedback</th>
-                                    <th>Remarks</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody> </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" onclick="getFeedbackInfoTable()" tabindex="1">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Customer Summary Modal End-->

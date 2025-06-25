@@ -19,8 +19,14 @@
                                     <!-- Fields -->
                                     <div class="col-md-4 col-sm-6">
                                         <div class="form-group">
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-group">
                                             <label for="cust_id">Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control" id="cust_id" name="cust_id" placeholder="Enter Customer ID" tabindex="1">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6">
@@ -63,6 +69,7 @@
                             <thead>
                                 <th width="20">S No.</th>
                                 <th>Customer ID</th>
+                                <th>Aadhar Number</th>
                                 <th>Customer Name</th>
                                 <th>Area</th>
                                 <th>Branch</th>
@@ -110,12 +117,13 @@
             <div class="row gutters" id="noc_summary" style="display:none">
                 <input type="hidden" id="cp_id">
                 <div class="col-12">
-                    <div class="card" style="box-shadow: none;background-color: transparent;">
+                    <div class="card">
+                        <!-- style="box-shadow: none;background-color: transparent;" -->
                         <div class="card-header">
                             <h5 class="card-title">NOC Summary&nbsp;<button type="button" id="back_to_cus_status" style="float:right" class="btn btn-primary "><span class="icon-arrow-left"></span>&nbsp;Back</button></h5>
                         </div>
                         <div class="card-body">
-                            <div class="card">
+                            <div class="card cheque-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Cheque List</h5>
                                 </div>
@@ -137,7 +145,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card mortgage-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Mortgage List</h5>
                                 </div>
@@ -160,7 +168,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card endorsement-div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Endorsement List</h5>
                                 </div>
@@ -183,7 +191,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card doc_div" style="display:none">
                                 <div class="card-header">
                                     <h5 class="card-title">Other Document List</h5>
                                 </div>
@@ -195,6 +203,26 @@
                                             <th>Document Type</th>
                                             <th>Document Holder</th>
                                             <th>Document</th>
+                                            <th>Date of NOC</th>
+                                            <th>Handover Person</th>
+                                            <th>Relationship</th>
+                                            <th>Checklist</th>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card gold-div" style="display:none">
+                                <div class="card-header">
+                                    <h5 class="card-title">Gold List</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table custom-table" id="noc_gold_list_table">
+                                        <thead>
+                                            <th>S No.</th>
+                                            <th>Gold Type</th>
+                                            <th>Purity</th>
+                                            <th>Weight</th>
                                             <th>Date of NOC</th>
                                             <th>Handover Person</th>
                                             <th>Relationship</th>
@@ -341,7 +369,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow-x: auto;">
                 <div class="container-fluid" id="fine_chart_table_div">
                     <div class="row">
                         <table class="table custom-table">
@@ -390,6 +418,12 @@
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
                                             <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="adhar_num"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="adhar_num" id="adhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -465,6 +499,7 @@
                                                 <th width="20">S.NO</th>
                                                 <th>Name</th>
                                                 <th>Relationship</th>
+                                                <th>Remarks</th>
                                                 <th>Age</th>
                                                 <th>Live/Deceased</th>
                                                 <th>Occupation</th>
@@ -808,7 +843,7 @@
                                                 <th>Proof Of</th>
                                                 <th>Relationship</th>
                                                 <th>Proof</th>
-                                                <th>Proof Detail</th>
+                                                <th>Proof Number</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -1201,7 +1236,7 @@
                 <!--- -------------------------------------- Document Need END ------------------------------- -->
 
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
-                <div class="card">
+                <div class="card cheque-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Cheque Info</div>
                     </div>
@@ -1231,7 +1266,7 @@
                 <!--- -------------------------------------- Cheque Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Document Info START ------------------------------- -->
-                <div class="card">
+                <div class="card doc_div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Document Info
                         </div>
@@ -1261,7 +1296,7 @@
                 <!--- -------------------------------------- Document Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Mortgage Info START ------------------------------- -->
-                <div class="card">
+                <div class="card mortgage-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Mortgage Info
                         </div>
@@ -1295,7 +1330,7 @@
                 <!--- -------------------------------------- Mortgage Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Endorsement Info START ------------------------------- -->
-                <div class="card">
+                <div class="card endorsement-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Endorsement Info
                         </div>
@@ -1327,7 +1362,7 @@
                 <!--- -------------------------------------- Endorsement Info END ------------------------------- -->
 
                 <!--- -------------------------------------- Gold Info START ------------------------------- -->
-                <div class="card">
+                <div class="card gold-div" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Gold Info
                         </div>

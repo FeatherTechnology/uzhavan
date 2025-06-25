@@ -131,21 +131,21 @@ $(document).ready(function () {
         });
 
         // if (isFormDataValid(schemeFormData)) {
-            if (isValid) {
-                $.post('api/loan_category_creation/submit_scheme.php', schemeFormData, function (response) {
-                    if (response == '0') {
-                        swalError('Warning', 'Processing Failed!');
-                    } else if (response == '1') {
-                        swalSuccess('Success', 'Scheme Updated Successfully!');
-                    } else if (response == '2') {
-                        swalSuccess('Success', 'Scheme Added Successfully!');
-                    } else if (response == '3') {
-                        swalError('Access Denied', 'Scheme Already Added.');
-                    }
-                    clearSchemeForm();
-                    getSchemeTable();
-                }, 'json');
-            }
+        if (isValid) {
+            $.post('api/loan_category_creation/submit_scheme.php', schemeFormData, function (response) {
+                if (response == '0') {
+                    swalError('Warning', 'Processing Failed!');
+                } else if (response == '1') {
+                    swalSuccess('Success', 'Scheme Updated Successfully!');
+                } else if (response == '2') {
+                    swalSuccess('Success', 'Scheme Added Successfully!');
+                } else if (response == '3') {
+                    swalError('Access Denied', 'Scheme Already Added.');
+                }
+                clearSchemeForm();
+                getSchemeTable();
+            }, 'json');
+        }
         // }
     });
 
@@ -156,6 +156,7 @@ $(document).ready(function () {
             $('#add_scheme_id').val(id);
             $('#add_scheme_name').val(response[0].scheme_name);
             $('#scheme_due_method').val(response[0].due_method);
+            $('#profit_method').val(response[0].profit_method.trim());
             $('#scheme_interest_rate').val(response[0].interest_rate_percent);
             $('#scheme_due_period').val(response[0].due_period_percent);
             $('#scheme_overdue_penalty').val(response[0].overdue_penalty_percent);
@@ -199,15 +200,15 @@ $(document).ready(function () {
 
     $('#submit_loan_category_creation').click(function (event) {
         event.preventDefault();
-    
+
         let isValid = true;
-    
+
         // Validate Loan Calculation Card
         let isLoanCalculationValid = validateLoanCalculationCard();
-    
+
         // Validate Loan Scheme Card
         let isLoanSchemeValid = validateLoanSchemeCard();
-    
+
         // Validate main form fields
         if (!validateField($('#loan_category').val(), 'loan_category')) {
             isValid = false;
@@ -215,12 +216,14 @@ $(document).ready(function () {
         if (!validateField($('#loan_limit').val(), 'loan_limit')) {
             isValid = false;
         }
-    
+
         // Proceed with form submission if either Loan Calculation or Loan Scheme card is fully valid
         if (isValid && (isLoanCalculationValid || isLoanSchemeValid)) {
+            let loan_limit_value = $('#loan_limit').val().replace(/,/g, '')
             let formData = {
                 loan_category: $('#loan_category').val(),
-                loan_limit: $('#loan_limit').val(),
+
+                loan_limit: loan_limit_value,
                 due_method: $('#due_method').val(),
                 due_type: $('#due_type').val(),
                 interest_rate_min: $('#interest_rate_min').val(),
@@ -235,11 +238,11 @@ $(document).ready(function () {
                 scheme_name: $('#scheme_name').val(),
                 id: $('#loan_cat_creation_id').val()
             };
-    
+
             if (Array.isArray(formData.scheme_name)) {
                 formData.scheme_name = formData.scheme_name.join(",");
             }
-    
+
             // Submit form via AJAX
             $.post('api/loan_category_creation/submit_loan_category_creation.php', formData, function (response) {
                 if (response === '2') {
@@ -257,35 +260,48 @@ $(document).ready(function () {
     });
     function validateLoanCalculationCard() {
         let valid = true;
-        valid &= validateField($('#due_type').val(), 'due_type');
-        valid &= validateField($('#interest_rate_min').val(), 'interest_rate_min');
-        valid &= validateField($('#interest_rate_max').val(), 'interest_rate_max');
-        valid &= validateField($('#due_period_min').val(), 'due_period_min');
-        valid &= validateField($('#due_period_max').val(), 'due_period_max');
-        valid &= validateField($('#doc_charge_min').val(), 'doc_charge_min');
-        valid &= validateField($('#doc_charge_max').val(), 'doc_charge_max');
-        valid &= validateField($('#processing_fee_min').val(), 'processing_fee_min');
-        valid &= validateField($('#processing_fee_max').val(), 'processing_fee_max');
-        valid &= validateField($('#overdue_penalty').val(), 'overdue_penalty');
-        return valid;
+        let due_type = $("#due_type").val();
+        if (due_type == "") {
+            valid = false;
+            return valid;
+        }
+        else {
+            valid &= validateField($('#due_type').val(), 'due_type');
+            valid &= validateField($('#interest_rate_min').val(), 'interest_rate_min');
+            valid &= validateField($('#interest_rate_max').val(), 'interest_rate_max');
+            valid &= validateField($('#due_period_min').val(), 'due_period_min');
+            valid &= validateField($('#due_period_max').val(), 'due_period_max');
+            valid &= validateField($('#doc_charge_min').val(), 'doc_charge_min');
+            valid &= validateField($('#doc_charge_max').val(), 'doc_charge_max');
+            valid &= validateField($('#processing_fee_min').val(), 'processing_fee_min');
+            valid &= validateField($('#processing_fee_max').val(), 'processing_fee_max');
+            valid &= validateField($('#overdue_penalty').val(), 'overdue_penalty');
+            return valid;
+        }
     }
-    
+
     function validateLoanSchemeCard() {
         let valid = true;
-        valid &= validateField($('#scheme_name').val(), 'scheme_name');
-        $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
-        // Add additional validation for Loan Scheme fields if required
+        let value=$('#scheme_name').val();
+        if(value === '' || value === null || value === undefined){
+                 $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #ff0000');
+                 valid = false;
+        }else{
+
+            $('#scheme_name').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
+
+        }
         return valid;
     }
-    
-    
+
+
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
     $(document).on('click', '.loanCatCreationActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/loan_category_creation/loan_category_creation_data.php', { id }, function (response) {
             $('#loan_cat_creation_id').val(id);
             $('#loan_category2').val(response[0].loan_category);
-            $('#loan_limit').val(response[0].loan_limit);
+            $('#loan_limit').val(moneyFormatIndia(response[0].loan_limit));
             $('#due_type').val(response[0].due_type);
             $('#interest_rate_min').val(response[0].interest_rate_min);
             $('#interest_rate_max').val(response[0].interest_rate_max);
@@ -352,7 +368,6 @@ function swapTableAndCreation() {
         $('.add_loancategory_btn').show();
         $('#loan_category_creation_content').hide();
         $('.back_to_loancategory_btn').hide();
-
         getSchemeDropdown();
     }
 }
@@ -412,7 +427,7 @@ function getSchemeListTable(scheme_id) {
     if (Array.isArray(scheme_id)) {
         scheme_id = scheme_id.join(",");
     }
-    
+
     $.post('api/loan_category_creation/get_scheme_list_based_scheme_dropdown.php', { scheme_id }, function (response) {
         let schemeColumn = [
             "sno",
@@ -427,9 +442,9 @@ function getSchemeListTable(scheme_id) {
             "processing_fee_max",
             "overdue_penalty_percent"
         ]
-        
+
         appendDataToTable('#loan_scheme_table', response, schemeColumn);
-        setTimeout(function() {
+        setTimeout(function () {
             setdtable('#loan_scheme_table');
         }, 0);
     }, 'json');
@@ -439,10 +454,16 @@ function getSchemeDropdown() {
     $.post('api/loan_category_creation/get_scheme_list.php', function (response) {
         scheme_choices.clearStore();
         let selectedSchemeId = [];
+
+        // Clean and prepare the selected IDs
+        let schemename2 = ($('#scheme_name2').val() || '')
+            .split(',')
+            .map(s => s.trim()); // trim whitespace
+
         $.each(response, function (index, val) {
             let selected = '';
-            let schemename2 = $('#scheme_name2').val();
-            if (schemename2.includes(val.id)) {
+
+            if (schemename2.includes(val.id.toString())) {
                 selected = 'selected';
                 selectedSchemeId.push(val.id);
             }
@@ -471,8 +492,9 @@ function deleteLoanCategory(id) {
             swalError('Access Denied', 'Used in Loan Category Creation');
         } else {
             swalError('Error', 'Loan Category Delete Failed.');
-
         }
+        $('#addloan_category_name').val('');
+        $('#addloan_category_id').val('');
     }, 'json');
 }
 
@@ -531,16 +553,16 @@ function clearLoanCategory() {
 
 function clearLoanCategoryCreationForm() {
     // Reset all input fields except the ones specified
-    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee)').val('');
+    $('input:not(#due_method, #profit_method, #doc_charge_type, #processing_fee_type, #doc_charge_type_percent, #doc_charge_type_rupee, #processing_fee_type_percent, #processing_fee_type_rupee , #due_type)').val('');
     // Reset all select fields to their first option
     $('select').each(function () {
         $(this).val($(this).find('option:first').val());
     });
-  $('#loan_limit, #interest_rate_min, #interest_rate_max, #due_period_min, #due_period_max, #doc_charge_min, #doc_charge_max, #processing_fee_min, #processing_fee_max, #overdue_penalty').css('border', '1px solid #cecece');
+    $('#loan_limit, #interest_rate_min, #interest_rate_max, #due_period_min, #due_period_max, #doc_charge_min, #doc_charge_max, #processing_fee_min, #processing_fee_max, #overdue_penalty').css('border', '1px solid #cecece');
     // Reset all select fields to their first option
     $('#loan_category_creation select').css('border', '1px solid #cecece');
     scheme_choices.clearInput();
-    getSchemeDropdown();
+    // getSchemeDropdown();
 }
 
 function checkMinMaxValue(minSelector, maxSelector) {
@@ -555,4 +577,3 @@ function checkMinMaxValue(minSelector, maxSelector) {
         }
     }
 }
-

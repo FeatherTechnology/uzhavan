@@ -11,15 +11,17 @@
                 <thead>
                     <tr>
                         <th>S.NO</th>
+                        <th>Loan Date</th>
                         <th>Customer ID</th>
+                        <th>Aadhar Number</th>
                         <th>Customer Name</th>
-                        <th>Loan ID</th>
-                        <th>Loan Category</th>
-                        <th>Loan Amount</th>
                         <th>Area</th>
                         <th>Line</th>
                         <th>Branch</th>
                         <th>Mobile</th>
+                        <th>Loan Category</th>
+                        <th>Loan Amount</th>
+                        <th>Customer Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -57,33 +59,39 @@
                                 <div class="row">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
-                                            <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
-                                            <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                            <label for="aadhar_nums"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="aadhar_nums" id="aadhar_nums" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="hidden" id="aadhar_num_upd" name="aadhar_num_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="auto_gen_cus_id"> Customer ID</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" id="auto_gen_cus_id" name="auto_gen_cus_id" tabindex="1" data-type="adhaar-number" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_data"> Customer Data</label>
-                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="2">
+                                            <input type="text" class="form-control" id="cus_data" name="cus_data" disabled tabindex="3">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex="3">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex="4">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 cus_status_div" style="display:none;">
                                         <div class="form-group">
                                             <label for="cus_status"> Customer Status</label>
-                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="4">
+                                            <input type="text" class="form-control" id="cus_status" name="cus_status" disabled tabindex="5">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="5">
+                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="6">
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -94,25 +102,25 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="dob"> DOB</label>
-                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="6">
+                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="7">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="age"> Age</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="8">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="8">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="9">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="9">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="10">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -132,14 +140,7 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="whatsapp_no"> WhatsApp Number </label>
-                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="10">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                        <div class="form-group">
-                                            <label for="aadhar_num">Aadhar No</label>
-                                            <input type="text" class="form-control personal_info_disble" name="aadhar_num" id="aadhar_num" tabindex="11" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
-                                            <input type="hidden" id="addaadhar_id" value='0'>
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="11">
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +159,7 @@
                             </div>
                             <div class="col-md-12 ">
                                 <div class="text-right">
-                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Proceed</button>
+                                    <button type="submit" name="submit_personal_info" id="submit_personal_info" class="btn btn-primary" value="Submit"><span class="icon-check"></span>&nbsp;Next</button>
                                 </div>
                             </div>
                         </div>
@@ -181,6 +182,7 @@
                                                     <th width="20">S.NO</th>
                                                     <th>Name</th>
                                                     <th>Relationship</th>
+                                                    <th>Remarks</th>
                                                     <th>Age</th>
                                                     <th>Live/Deceased</th>
                                                     <th>Occupation</th>
@@ -237,9 +239,9 @@
                         </div>
                     </div>
 
-                    <div id="checking_hide" style="display: none;">
+                    <div id="checking_hide">
                         <div class="card">
-                            <div id="data_checking_div" style="display: none;">
+                            <div id="data_checking_div">
 
                                 <div class="card-header">
                                     <div class="card-title">Data Checking</div>
@@ -310,7 +312,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th width="20">S.NO</th>
-                                                            <th>Customer ID</th>
+                                                            <th>Aadhar Number</th>
                                                             <th>Name</th>
                                                             <th>Relationship</th>
                                                             <th>Under Customer Name</th>
@@ -335,7 +337,7 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_type">Residential Type</label>
+                                        <label for="res_type">Residential Type</label><span class="text-danger">*</span>
                                         <select type="text" class="form-control" id="res_type" name="res_type" tabindex="20">
                                             <option value="">Select Residential Type</option>
                                             <option value="1">Own</option>
@@ -347,19 +349,19 @@
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_detail"> Residential Details </label>
+                                        <label for="res_detail"> Residential Details </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" tabindex="21">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="res_address"> Address </label>
+                                        <label for="res_address"> Address </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" tabindex="22">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <label for="native_address"> Native Address </label>
+                                        <label for="native_address"> Native Address </label><span class="text-danger">*</span>
                                         <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" tabindex="23">
                                     </div>
                                 </div>
@@ -510,7 +512,7 @@
                                                     <th>Proof Of</th>
                                                     <th>Relationship</th>
                                                     <th>Proof</th>
-                                                    <th>Proof Member</th>
+                                                    <th>Proof Number</th>
                                                     <th>Upload</th>
                                                 </tr>
                                             </thead>
@@ -525,37 +527,37 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Customer Summary</div>
-                            <button type="button" class="btn btn-primary" id="add_cus_sum" name="add_cus_sum" data-toggle="modal" data-target="#add_cus_info_modal" onclick="getFeedbackTable()" style="padding: 5px 35px; float: right;" tabindex='34'><span class="icon-add"></span></button>
                         </div>
-                        <div class="card-body">
+
+                        <div class="card-body" style="display:none;" id="loan_count_div">
                             <div class="row">
-                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
-                                        <table id="cus_sum_table" class="table custom-table">
-                                            <thead>
-                                                <tr>
-                                                    <th width="20">S.NO</th>
-                                                    <th>Feedback Label</th>
-                                                    <th>Feedback</th>
-                                                    <th>Remarks</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                                        <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
                                     </div>
                                 </div>
                             </div>
+
+                        </div>
+                        <div class="card-body">
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="cus_limit"> Customer Limit</label>
-                                        <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="35">
+                                        <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="" disabled tabindex="36">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="about_cus"> About Customer </label>
-                                        <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="36"></textarea>
+                                        <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="37"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -565,8 +567,8 @@
                 <div class="customer_content" style="display:none;">
                     <div class="col-md-12 ">
                         <div class="text-right">
-                            <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="37"><span class="icon-check"></span>&nbsp;Submit</button>
-                            <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="38">Clear</button>
+                            <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="38"><span class="icon-check"></span>&nbsp;Submit</button>
+                            <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="37">Clear</button>
                         </div>
                     </div>
                 </div>
@@ -615,7 +617,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amount_calc"> Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="loan_amount_calc" name="loan_amount_calc" tabindex="4">
+                                    <input type="text" class="form-control" id="loan_amount_calc" name="loan_amount_calc" tabindex="4">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -651,12 +653,7 @@
                                     <input type="text" class="form-control" id="due_type_calc" name="due_type_calc" tabindex="7" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calc" style="display:none">
-                                <div class="form-group">
-                                    <label for="profit_method_calc">Profit Method</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="profit_method_calc" name="profit_method_calc" tabindex="8" value="After Benefit" readonly>
-                                </div>
-                            </div>
+
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme" style="display:none">
                                 <div class="form-group">
@@ -693,7 +690,12 @@
                                     </select>
                                 </div>
                             </div>
-
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 calcs">
+                                <div class="form-group">
+                                    <label for="profit_method_calc">Profit Method</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="profit_method_calc" name="profit_method_calc" tabindex="8" value="After Benefit" readonly>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="interest_rate_calc">Interest Rate</label><span class="text-danger min-max-int">*</span><!-- Min and max intrest rate-->
@@ -734,49 +736,49 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amnt_calc">Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="14" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="14" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="principal_amnt_calc">Principal Amount</label><span class="text-danger princ-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="15" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="15" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="interest_amnt_calc">Interest Amount</label><span class="text-danger int-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="16" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="16" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="total_amnt_calc">Total Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_amnt_calc">Due Amount</label><span class="text-danger due-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_charge_calculate">Document Charges</label><span class="text-danger doc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="19" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="19" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="processing_fees_calculate">Processing Fees</label><span class="text-danger proc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="20" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="20" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="net_cash_calc">Net Cash</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="21" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="21" readonly>
                                 </div>
                             </div>
                         </div>
@@ -860,7 +862,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
                                 <div class="form-group">
-                                    <label for="doc_need_calc">Document Need</label>
+                                    <label for="doc_need_calc">Documents</label>
                                     <input type="text" class="form-control" id="doc_need_calc" name="doc_need_calc" tabindex="28">
                                 </div>
                             </div>
@@ -944,6 +946,13 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea class="form-control" name="remarks" id="remarks" tabindex="1"></textarea>
+                                    <!-- <input type="hidden" id="addpropdetail_id" value='0'> -->
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <label for="fam_age">Age</label>
                                     <input type="number" class="form-control" name="fam_age" id="fam_age" tabindex="1" placeholder="Enter Age">
                                     <input type="hidden" id="addage_id" value='0'>
@@ -1000,6 +1009,7 @@
                                     <th width="10">S.No.</th>
                                     <th>Name</th>
                                     <th>Relationship</th>
+                                    <th>Remarks</th>
                                     <th>Age</th>
                                     <th>Live/Deceased</th>
                                     <th>Occupation</th>
@@ -1055,7 +1065,6 @@
                                     <label for="property_holder">Property Holder</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="property_holder" name="property_holder" tabindex="1">
                                         <option value="">Select Property Holder</option>
-
                                     </select>
                                     <input type="hidden" id="addholder_id" value='0'>
                                 </div>
@@ -1253,15 +1262,15 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Member</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Member">
+                                    <label for="proof_detail">Proof Number</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Number">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="upload"> Upload</label>
-                                    <input type="file" class="form-control" id="upload" name="upload" tabindex="1">
+                                    <input type="file" class="form-control" id="upload" name="upload" onchange="compressImage(this, 200)" tabindex="1">
                                     <input type="hidden" id="kyc_upload">
                                 </div>
                             </div>
@@ -1283,7 +1292,7 @@
                                     <th>Proof Of</th>
                                     <th>Relationship</th>
                                     <th>Proof</th>
-                                    <th>Proof Member</th>
+                                    <th>Proof Number</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>
@@ -1355,81 +1364,3 @@
     </div>
 </div>
 <!--KYC Proof Modal End-->
-<!--Customer Summary Modal Start-->
-<div class="modal fade" id="add_cus_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-lg " role="document">
-        <div class="modal-content" style="background-color: white">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add Customer Feedback </h5>
-                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getFeedbackInfoTable()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <form id="feedback_form">
-                        <div class="row">
-                        <input type="hidden" name="feedback_id" id='feedback_id'>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="feed_label">Feedback Label</label><span class="text-danger">*</span>
-                                    <input class="form-control" name="feed_label" id="feed_label" tabindex="1" placeholder="Enter Feedback Label">
-                                    <input type="hidden" id="addprop_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="feedback">Feedback</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="feedback" name="feedback" tabindex="1">
-                                        <option value="">Select Feedback</option>
-                                        <option value="5"> Excellent </option>
-                                        <option value="4"> Good </option>
-                                        <option value="3"> Average </option>
-                                        <option value="2"> Poor </option>
-                                        <option value="1"> Bad </option>
-
-                                    </select>
-                                    <input type="hidden" id="addholder_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="remark">Remarks </label>
-                                    <textarea class="form-control" name="remark" id="remark" tabindex='1'></textarea>
-                                    <input type="hidden" id="addproprelation_id" value='0'>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <button name="submit_feedback" id="submit_feedback" class="btn btn-primary" tabindex="6" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
-                                    <button type="reset" id="clear_feed_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="1">Clear</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <table id="feedback_creation_table" class="table custom-table">
-                            <thead>
-                                <tr>
-                                    <th width="20">S.No.</th>
-                                    <th>Feedback Label</th>
-                                    <th>Feedback</th>
-                                    <th>Remarks</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody> </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal" onclick="getFeedbackInfoTable()" tabindex="1">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Customer Summary Modal End-->

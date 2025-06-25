@@ -5,20 +5,29 @@ $type = $_POST['type'];
 $user_id = ($_POST['user_id'] != '') ? $userwhere = " AND insert_login_id = '" . $_POST['user_id'] . "' " : $userwhere = ''; //for user based
 
 if ($type == 'today') {
-    $where = " DATE(created_on) = CURDATE() - INTERVAL 1 DAY $userwhere";
-
+    $current_date = date('Y-m-d');
+    $where = " DATE(created_on) <='$current_date' - INTERVAL 1 DAY $userwhere";
 } else if ($type == 'day') {
     $from_date = $_POST['from_date'];
     $to_date = $_POST['to_date'];
-    $where = " (DATE(created_on) >= '$from_date' && DATE(created_on) <= '$to_date' ) $userwhere ";
-
+    //$where = " (DATE(created_on) >= '$from_date' && DATE(created_on) <= '$from_date' ) $userwhere ";
+    $where = " DATE(created_on) <= DATE('$from_date') - INTERVAL 1 DAY $userwhere";
 } else if ($type == 'month') {
-    $month = date('m', strtotime($_POST['month']));
-    $year = date('Y', strtotime($_POST['month']));
-    $where = " (MONTH(created_on) = '$month' AND YEAR(created_on) = $year) $userwhere";
-
+    // Get the selected month and subtract one month
+    $selectedMonth = $_POST['month'];
+    $previousMonth = date('Y-m', strtotime('-1 month', strtotime($selectedMonth)));
+    // Extract year and month parts
+    $year  = date('Y', strtotime($previousMonth));
+    $month = date('m', strtotime($previousMonth));
+    // Build your filter clause
+    $where = "(
+        YEAR(created_on) < '$year'
+        OR (
+            YEAR(created_on) = '$year'
+            AND MONTH(created_on) <= '$month'
+        )
+    ) $userwhere";
 }
-
 $op_data = array();
 $op_data[0]['hand_cash'] = 0;
 $op_data[0]['bank_cash'] = 0;
@@ -37,7 +46,19 @@ if ($c_cr_b_qry->rowCount() > 0) {
 } else {
     $c_cr_b = 0;
 }
-
+// Loan Issue
+$s_cr_h_qry = $pdo->query("SELECT COALESCE(SUM(cash),0) AS settlr_cr_amnt FROM loan_issue WHERE  $where "); //Hand Cash
+if ($s_cr_h_qry->rowCount() > 0) {
+    $s_cr_h = $s_cr_h_qry->fetch()['settlr_cr_amnt'];
+} else {
+    $s_cr_h = 0;
+}
+$s_cr_b_qry = $pdo->query("SELECT COALESCE(SUM(cheque_val) + SUM(transaction_val),0) AS settlr_br_amnt FROM loan_issue WHERE $where"); //Hand Cash
+if ($s_cr_b_qry->rowCount() > 0) {
+    $s_cr_b = $s_cr_b_qry->fetch()['settlr_br_amnt'];
+} else {
+    $s_cr_b= 0;
+}
 //Expenses Debit.
 $e_dr_h_qry = $pdo->query("SELECT SUM(amount) AS exp_dr_amnt FROM expenses WHERE coll_mode = 1 AND $where "); //Hand Cash
 if ($e_dr_h_qry->rowCount() > 0) {
@@ -83,9 +104,9 @@ if ($ot_dr_b_qry->rowCount() > 0) {
 }
 
 $hand_cr = intval($c_cr_h) + intval($ot_cr_h);
-$hand_dr = intval($e_dr_h) + intval($ot_dr_h);
+$hand_dr = intval($e_dr_h) + intval($ot_dr_h) + intval($s_cr_h);
 $bank_cr = intval($c_cr_b) + intval($ot_cr_b);
-$bank_dr = intval($e_dr_b) + intval($ot_dr_b);
+$bank_dr = intval($e_dr_b) + intval($ot_dr_b) +intval($s_cr_b);
 
 $op_data[0]['hand_cash'] = intval($hand_cr) - intval($hand_dr);
 $op_data[0]['bank_cash'] = intval($bank_cr) - intval($bank_dr);

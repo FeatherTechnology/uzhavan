@@ -71,7 +71,7 @@
                                     <p class="show-username"></p>
                                 </div>
                                 <a href="#"><i class="icon-user1"></i> My Profile</a>
-                                <a href="logout.php"><i class="icon-log-out1"></i> Sign Out</a>
+                                <a href="logout.php" class="logout-link"><i class="icon-log-out1"></i>Log Out</a>
                             </div>
                         </div>
                     </li>
@@ -82,8 +82,8 @@
 
         <br>
         <div class="page-header">
-            <div style="background-color:#343C63; width:100%; padding:12px; color: #ffff; font-size: 20px; border-radius:5px;">
-                Uzhavan<span id="pageHeaderName"></span>
+            <div style="background-color:var(--primary-color); width:100%; padding:12px; color: #ffff; font-size: 20px; border-radius:5px;">
+                Finance<span id="pageHeaderName"></span>
             </div>
         </div><br>
         <div class="main-container" id="main-container"></div>

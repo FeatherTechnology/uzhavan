@@ -11,3 +11,8 @@ Customer status Details:
 10 = Move to NOC;
 11 = NOC Completed;
 12 = Removed From NOC;
+13 = Cancel in Loan Issue;
+14 = Revoke in Loan Issue;
+/////////////////////////////////////////////////////////////
+Link used for auto-updating customer status in collection
+http://marudhamcapitals-001-site5.ntempurl.com/include/views/monthly_customer_update.php
