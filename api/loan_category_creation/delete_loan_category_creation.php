@@ -22,5 +22,5 @@ try {
         $result = '-1'; // Indicate a general error.
     }
 }
-
+$pdo = null;
 echo json_encode($result);

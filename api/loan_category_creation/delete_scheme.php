@@ -13,5 +13,5 @@ if ($qry->rowCount() > 0) {
         $result = 2; // Deleted.
     }
 }
-
+$pdo = null;
 echo json_encode($result);

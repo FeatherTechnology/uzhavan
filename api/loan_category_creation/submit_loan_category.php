@@ -19,5 +19,5 @@ if ($qry->rowCount() > 0) {
         $result = 1; //Insert
     }
 }
-
+$pdo = null;
 echo json_encode($result);

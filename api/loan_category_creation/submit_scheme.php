@@ -34,4 +34,6 @@ if ($id != '0' && $id != '') {
         }
     }
 }
+$pdo = null;
 echo json_encode($result);
+

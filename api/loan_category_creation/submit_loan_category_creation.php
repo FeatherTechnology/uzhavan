@@ -31,5 +31,5 @@ if ($loan_cat_creation_id != '') {
         $result = 2; //Insert.
     }
 }
-
+$pdo = null;
 echo json_encode($result);
