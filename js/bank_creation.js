@@ -9,7 +9,7 @@ $(document).ready(function () {
         swapTableAndCreation();
         getUnderBranchDropdown();
     });
-
+       ////////////////////////////////////////////////////////Bank submit Start///////////////////////////////////////////////////////
     $('#submit_bank_creation').click(function (event) {
         event.preventDefault();
         //Validation
@@ -63,6 +63,8 @@ $(document).ready(function () {
             });
         }
     });
+       ////////////////////////////////////////////////////////Bank submit End///////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////Bank Edit Start///////////////////////////////////////////////////////
     $(document).on('click', '.bankActionBtn', function () {
         var id = $(this).attr('data-value'); // Use data-value attribute
         $.post('api/bank_creation/get_bank_creation_data.php', { id: id }, function (response) {
@@ -81,7 +83,8 @@ $(document).ready(function () {
             getUnderBranchDropdown();
         }, 'json');
     });
-
+    ////////////////////////////////////////////////////////Bank Edit End///////////////////////////////////////////////////////
+     ////////////////////////////////////////////////////////Bank Delete Start///////////////////////////////////////////////////////
     $(document).on('click', '.bankDeleteBtn', function () {
         var id = $(this).attr('data-value');
         swalConfirm('Delete', 'Do you want to Delete the Bank Name?', getBankDelete, id);
@@ -95,9 +98,23 @@ $(document).ready(function () {
         return;
 
     })
+     ////////////////////////////////////////////////////////Bank Delete End///////////////////////////////////////////////////////
     $('#gpay').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
+    $('#back_btn').click(function (event) {
+        // event.preventDefault();
+        $('input, textarea').val('');
+        underBranchChoices.clearInput();
+        getUnderBranchDropdown();
+        $('#bank_name').css('border', '1px solid #cecece');
+        $('#bank_short_name').css('border', '1px solid #cecece');
+        $('#account_number').css('border', '1px solid #cecece');
+        $('#ifsc_code').css('border', '1px solid #cecece');
+        $('#branch_name').css('border', '1px solid #cecece');
+        $('#under_branch').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
+    });
+
 
 })
 
@@ -183,26 +200,4 @@ function getStatusChange(id) {
     }, 'json');
 }
 
-$('#family_info, #back_btn').click(function (event) {
-    // event.preventDefault();
-    $('input, textarea').val('');
-    underBranchChoices.clearInput();
-    getUnderBranchDropdown();
-    $('#bank_name').css('border', '1px solid #cecece');
-    $('#bank_short_name').css('border', '1px solid #cecece');
-    $('#account_number').css('border', '1px solid #cecece');
-    $('#ifsc_code').css('border', '1px solid #cecece');
-    $('#branch_name').css('border', '1px solid #cecece');
-    $('#under_branch').closest('.choices').find('.choices__inner').css('border', '1px solid #cecece');
-});
-// function validateMultiSelectField(fieldId) {
-//     const selectedValues = underBranchChoices.getValue(true);
-//     const choicesElement = $('#' + fieldId).closest('.choices'); // Targeting the Choices.js container
-//     if (selectedValues.length === 0) {
-//         choicesElement.find('.choices__inner').css('border', '1px solid #ff0000');
-//         return false;
-//     } else {
-//         choicesElement.find('.choices__inner').css('border', '1px solid #cecece');
-//         return true;
-//     }
-// }
+
