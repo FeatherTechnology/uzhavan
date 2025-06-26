@@ -15,7 +15,7 @@ $(document).ready(function () {
         event.preventDefault();
         //Validation
         let company_name = $('#company_name').val(); let address = $('#address').val(); let state = $('#state').val(); let district = $('#district').val(); let taluk = $('#taluk').val(); let place = $('#place').val(); let pincode = $('#pincode').val(); let website = $('#website').val(); let mailid = $('#mailid').val(); let mobile = $('#mobile').val(); let whatsapp = $('#whatsapp').val(); let landline_code = $('#landline_code').val(); let landline = $('#landline').val(); let companyid = $('#companyid').val();
-        var data = ['company_name', 'address', 'state','place', 'district', 'taluk', 'pincode']
+        var data = ['company_name', 'address', 'state', 'place', 'district', 'taluk', 'pincode']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -42,17 +42,26 @@ $(document).ready(function () {
     });
 
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
-    $(document).on('click', '.companyActionBtn', function () {
+   $(document).on('click', '.companyActionBtn', async function () {
         var id = $(this).attr('value'); // Get value attribute
-        $.post('api/company_creation_files/get_company_creation_data.php', { id }, function (response) {
+        swapTableAndCreation(); // Switch to form view
+
+        try {
+            const response = await $.ajax({
+                url: 'api/company_creation_files/get_company_creation_data.php',
+                type: 'POST',
+                data: { id },
+                dataType: 'json'
+            });
+
             $('#companyid').val(id);
             $('#company_name').val(response[0].company_name);
             $('#address').val(response[0].address);
             $('#state').val(response[0].state);
-
-            getDistrictList(response[0].state)
-            getTalukList(response[0].district)
-
+            await getDistrictList(response[0].state);
+            await getTalukList(response[0].district);
+            $('#district').val(response[0].district);
+            $('#taluk').val(response[0].taluk);
             $('#place').val(response[0].place);
             $('#pincode').val(response[0].pincode);
             $('#website').val(response[0].website);
@@ -62,26 +71,27 @@ $(document).ready(function () {
             $('#landline_code').val(response[0].landline_code);
             $('#landline').val(response[0].landline);
 
-            setTimeout(() => {
-                $('#district').val(response[0].district);
-                $('#taluk').val(response[0].taluk);
-            }, 1000);
-
-            swapTableAndCreation();//to change to div to table content.
-        }, 'json');
-    })
+        } catch (error) {
+            console.error('Error fetching company data:', error);
+        }
+    });
     ///////////////////////////////////// EDIT Screen END  /////////////////////////////////////
 
-    $('#mobile, #whatsapp').change(function () {       
+    $('#mobile, #whatsapp').change(function () {
         checkMobileNo($(this).val(), $(this).attr('id'));
     });
 
-    $('#landline').change(function () {       
+    $('#landline').change(function () {
         checkLandlineFormat($(this).val(), $(this).attr('id'));
     });
-    
+
     $('#mailid').on('change', function () {
         validateEmail($(this).val(), $(this).attr('id'));
+    });
+    $('button[type="reset"],  .backBtn').click(function () {
+        event.preventDefault();
+        $('#company_creation input').css('border', '1px solid #cecece');
+        $('#company_creation select').css('border', '1px solid #cecece');
     });
 
 });//Document END.
@@ -137,29 +147,30 @@ function getStateList() {
     }, 'json');
 }
 
-function getDistrictList(state_id) {
-    $.post('api/common_files/get_district_list.php', { state_id }, function (response) {
-        let appendDistrictOption = '';
-        appendDistrictOption += "<option value=''>Select District</option>";
-        $.each(response, function (index, val) {
-            appendDistrictOption += "<option value='" + val.id + "'>" + val.district_name + "</option>";
-        });
-        $('#district').empty().append(appendDistrictOption);
-    }, 'json');
+async function getDistrictList(state_id) {
+    return new Promise((resolve, reject) => {
+        $.post('api/common_files/get_district_list.php', { state_id }, function (response) {
+            let appendDistrictOption = '';
+            appendDistrictOption += "<option value=''>Select District</option>";
+            $.each(response, function (index, val) {
+                appendDistrictOption += "<option value='" + val.id + "'>" + val.district_name + "</option>";
+            });
+            $('#district').empty().append(appendDistrictOption);
+            resolve();
+        }, 'json');
+    });
 }
 
-function getTalukList(district_id) {
-    $.post('api/common_files/get_taluk_list.php', { district_id }, function (response) {
-        let appendTalukOption = '';
-        appendTalukOption += "<option value=''>Select Taluk</option>";
-        $.each(response, function (index, val) {
-            appendTalukOption += "<option value='" + val.id + "'>" + val.taluk_name + "</option>";
-        });
-        $('#taluk').empty().append(appendTalukOption);
-    }, 'json');
+async function getTalukList(district_id) {
+    return new Promise((resolve, reject) => {
+        $.post('api/common_files/get_taluk_list.php', { district_id }, function (response) {
+            let appendTalukOption = '';
+            appendTalukOption += "<option value=''>Select Taluk</option>";
+            $.each(response, function (index, val) {
+                appendTalukOption += "<option value='" + val.id + "'>" + val.taluk_name + "</option>";
+            });
+            $('#taluk').empty().append(appendTalukOption);
+            resolve();
+        }, 'json');
+    });
 }
-$('button[type="reset"],  .backBtn').click(function () {
-    event.preventDefault();
-    $('#company_creation input').css('border', '1px solid #cecece');
-    $('#company_creation select').css('border', '1px solid #cecece');
-});

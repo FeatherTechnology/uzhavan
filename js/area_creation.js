@@ -16,7 +16,9 @@ $(document).ready(function () {
         getLineNameDropdown();
         getAreaNameDropdown();
     });
+
     /////////////////////////////////////////////////////Line Modal START///////////////////////////////////////////////////
+
     $('#submit_addline').click(function () {
         event.preventDefault();
         let linename = $('#addline_name').val(); let branch_id = $('#branch_name').val(); let id = $('#addline_name_id').val();
@@ -66,9 +68,11 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Line Name?', deleteLineName, id);
         return;
     });
+
     /////////////////////////////////////////////////////Line Modal END///////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////Area Modal START///////////////////////////////////////////////////
+
     $('#submit_addarea').click(function () {
         event.preventDefault();
         let areaname = $('#addarea_name').val(); let status = $('#area_status').val(); let branch_id = $('#branch_name').val(); let id = $('#addarea_name_id').val();
@@ -120,30 +124,39 @@ $(document).ready(function () {
         swalConfirm('Delete', 'Do you want to Delete the Area Name?', deleteAreaName, id);
         return;
     });
+
     /////////////////////////////////////////////////////Area Modal END///////////////////////////////////////////////////
 
     $('#submit_area_creation').click(function () {
         event.preventDefault();
         //Validation
-        let branch_id = $('#branch_name').val(); let line_id = $('#line_name').val(); let area_id = $('#area_name').val(); let id = $('#area_creation_id').val();
-        var data = [ 'branch_name','line_name']
-        
+        let branch_id = $('#branch_name').val();
+        let line_id = $('#line_name').val();
+        let area_id = $('#area_name').val();
+        let area_name2 = $('#area_name2').val(); // Checking Existing Id For Area Multi Select
+        let id = $('#area_creation_id').val();
+        var data = ['branch_name', 'line_name']
+
         var isValid = true;
         data.forEach(function (entry) {
-            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
             if (!fieldIsValid) {
                 isValid = false;
             }
         });
-        let isMultiSelectValid = validateMultiSelectField('area_name',intance);
+        let isMultiSelectValid = validateMultiSelectField('area_name', intance);
         if (isValid && isMultiSelectValid) {
+
             /////////////////////////// submit page AJAX /////////////////////////////////////
-            area_id = area_id.join(",");
-            $.post('api/area_creation_files/submit_area_creation.php', { branch_id, line_id, area_id, id }, function (response) {
-                if (response == '1') {
+
+            $.post('api/area_creation_files/submit_area_creation.php', { branch_id, line_id, area_id, area_name2, id }, function (response) {
+
+                if (response === '2') {
                     swalSuccess('Success', 'Area Added Successfully!');
+                } else if (response === '1') {
+                    swalSuccess('Success', 'Area Updated Successfully!');
                 } else {
-                    swalSuccess('Success', 'Area Updated Successfully!')
+                    swalError('Error', 'Error Occurred!');
                 }
 
                 $('#area_creation').trigger('reset');
@@ -156,31 +169,45 @@ $(document).ready(function () {
     });
 
     ///////////////////////////////////// EDIT Screen START   /////////////////////////////////////
-    $(document).on('click', '.areaCreationActionBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        $.post('api/area_creation_files/area_creation_data.php', { id }, function (response) {
+
+    $(document).on('click', '.areaCreationActionBtn', async function () {
+        const id = $(this).attr('value');
+
+        try {
+            const response = await $.ajax({
+                url: 'api/area_creation_files/area_creation_data.php',
+                type: 'POST',
+                data: { id },
+                dataType: 'json'
+            });
+
+
             $('#area_creation_id').val(id);
             $('#line_name2').val(response[0].line_id);
 
-            getBranchList();
-            setTimeout(() => {
-                $('#branch_name').val(response[0].branch_id);
-                $('#area_name2').val(response[0].area_id);
-                getLineNameDropdown();
-                getAreaNameDropdown();
-            }, 500);
+            await getBranchList(); // make sure getBranchList is also async
 
-            setTimeout(() => {
-                $('#line_name').val(response[0].line_id);
-                $('#area_name').val(response[0].area_id);
-                getModalAttr();
-            }, 1000);
+            $('#branch_name').val(response[0].branch_id);
+            $('#area_name2').val(response[0].area_id);
 
-            swapTableAndCreation();//to change to div to table content.
-        }, 'json');
-    })
+            await getLineNameDropdown(); // make these functions async if they aren't
+            await getAreaNameDropdown();
+
+            $('#line_name').val(response[0].line_id);
+            // $('#area_name').val(response[0].area_id);
+
+            getModalAttr();
+            swapTableAndCreation();
+
+        } catch (error) {
+            console.error("Error loading area creation data:", error);
+        }
+    });
+
     ///////////////////////////////////// EDIT Screen END  /////////////////////////////////////
+
     ///////////////////////////////////// Delete Screen START  /////////////////////////////////////
+
     $(document).on('click', '.areaCreationDeleteBtn', function () {
         let id = $(this).attr('value'); // Get value attribute
         swalConfirm('Delete', 'Do you want to Delete the Area Creation?', deleteAreaCreation, id);
@@ -219,6 +246,7 @@ function getAreaCreationTable() {
         setdtable('#area_creation_table');
     }, 'json');
 }
+
 function swapTableAndCreation() {
     if ($('.area_table_content').is(':visible')) {
         $('.area_table_content').hide();
@@ -248,17 +276,25 @@ function swapTableAndCreation() {
     }
 }
 
-function getBranchList() {
-    $.post('api/common_files/get_branch_list.php', function (response) {
-        let appendBranchOption = '';
-        appendBranchOption += '<option value="">Select Branch</option>';
-        $.each(response, function (index, val) {
-            appendBranchOption += '<option value="' + val.id + '">' + val.branch_name + '</option>';
+async function getBranchList() {
+    try {
+        const response = await $.ajax({
+            url: 'api/common_files/get_branch_list.php',
+            type: 'POST',
+            dataType: 'json'
         });
-        $('#branch_name').empty().append(appendBranchOption);
 
-    }, 'json');
+        let appendBranchOption = '<option value="">Select Branch</option>';
+        $.each(response, function (index, val) {
+            appendBranchOption += `<option value="${val.id}">${val.branch_name}</option>`;
+        });
+
+        $('#branch_name').empty().append(appendBranchOption);
+    } catch (error) {
+        console.error("Error loading branch list:", error);
+    }
 }
+
 
 function getLineNameTable() {
     let branch_id = $('#branch_name').val();
@@ -278,25 +314,32 @@ function getLineNameTable() {
     }
 }
 
-function getLineNameDropdown() {
-    let branch_id = $('#branch_name').val();
-    let line_name2 = $('#line_name2').val();
-    $.post('api/area_creation_files/get_line_name_dropdown.php', { branch_id }, function (response) {
-        let appendLineNameOption = '';
-        appendLineNameOption += '<option value="">Select Line Name</option>';
+async function getLineNameDropdown() {
+    const branch_id = $('#branch_name').val();
+    const line_name2 = $('#line_name2').val();
+
+    try {
+        const response = await $.ajax({
+            url: 'api/area_creation_files/get_line_name_dropdown.php',
+            type: 'POST',
+            data: { branch_id },
+            dataType: 'json'
+        });
+
+        let options = '<option value="">Select Line Name</option>';
         $.each(response, function (index, val) {
             let disabled = (val.disabled == true) ? 'disabled' : '';
-            let selected = '';
-            if (val.id == line_name2) {
-                selected = 'selected';
-                disabled = '';
-            }
-            appendLineNameOption += '<option value="' + val.id + '" ' + selected + ' ' + disabled + '>' + val.linename + '</option>';
+            let selected = (val.id == line_name2) ? 'selected' : '';
+            if (selected) disabled = '';
+            options += `<option value="${val.id}" ${selected} ${disabled}>${val.linename}</option>`;
         });
-        $('#line_name').empty().append(appendLineNameOption);
 
+        $('#line_name').empty().append(options);
         clearLineNameFields();
-    }, 'json');
+
+    } catch (err) {
+        console.error("Error loading line names:", err);
+    }
 }
 
 function getAreaNameTable() {
@@ -309,32 +352,35 @@ function getAreaNameTable() {
     }
 }
 
-function getAreaNameDropdown() {
-    let branch_id = $('#branch_name').val();
-    let area_name2 = $('#area_name2').val();
-    $.post('api/area_creation_files/get_area_name_dropdown.php', { branch_id }, function (response) {
-        intance.clearStore();
-        $.each(response, function (index, val) {
-            let checked = val.disabled;
-            let selected = '';
-            if (area_name2.includes(val.id)) {
-                selected = 'selected';
-                checked = false;
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.areaname,
-                    selected: selected,
-                    disabled: checked,
-                }
-            ];
-            intance.setChoices(items);
-            intance.init();
+async function getAreaNameDropdown() {
+    const branch_id = $('#branch_name').val();
+    const area_name2 = $('#area_name2').val();
+
+    try {
+        const response = await $.ajax({
+            url: 'api/area_creation_files/get_area_name_dropdown.php',
+            type: 'POST',
+            data: { branch_id },
+            dataType: 'json'
         });
 
+        intance.clearStore();
+
+        const items = response.map(val => ({
+            value: val.id,
+            label: val.areaname,
+            selected: area_name2.includes(val.id),
+            disabled: val.disabled && !area_name2.includes(val.id)
+        }));
+
+        intance.setChoices(items);
+        intance.init();
+
         clearAreaNameFields();
-    }, 'json');
+
+    } catch (err) {
+        console.error("Error loading area name dropdown:", err);
+    }
 }
 
 function getModalAttr() {
@@ -415,6 +461,7 @@ function clearLineNameFields() {
     $('#addline_name_id').val('0');
     $('#addline_name').css('border', '1px solid #cecece');
 }
+
 $('button[type="reset"], .back_to_area_btn').click(function (event) {
     event.preventDefault();
     $('#branch_name').css('border', '1px solid #cecece');
