@@ -5,6 +5,7 @@ $update_cus_list_arr = array();
 $column = array(
     'cp.id',
     'cp.cus_id',
+    'cp.aadhar_num',
     'cp.cus_name',
     'anc.areaname',
     'lnc.linename',
@@ -13,7 +14,7 @@ $column = array(
     'cp.id'
 );
 $subQuery = "SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id";
-$query = "SELECT cp.id, cp.cus_id, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts 
+$query = "SELECT cp.id, cp.aadhar_num , cp.cus_id, cp.cus_name,anc.areaname , lnc.linename, bc.branch_name , cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts 
  FROM customer_profile cp 
  LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
  LEFT JOIN area_name_creation anc ON cp.area = anc.id
@@ -25,6 +26,7 @@ if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
         $query .= " AND (cp.cus_id LIKE '" . $search . "%'
+                      OR cp.aadhar_num LIKE '%" . $search . "%'
                       OR cp.cus_name LIKE '%" . $search . "%'
                       OR anc.areaname LIKE '%" . $search . "%'
                       OR lnc.linename LIKE '%" . $search . "%'
@@ -59,6 +61,7 @@ foreach ($result as $row) {
 
     $sub_array[] = $sno++;
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
+    $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';

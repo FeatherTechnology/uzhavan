@@ -28,7 +28,7 @@ $user_id = $_SESSION['user_id'];
 $kyc_id = $_POST['kyc_id'];
 
 if ($kyc_id != '') {
-    if ($proof_of == '1') {
+    if ($proof_of == '1') { 
         $qry = $pdo->query("UPDATE `kyc_info` SET `cus_id`='$cus_id',`cus_profile_id`='$cus_profile_id',`proof_of`='$proof_of',`proof`='$proof',`proof_detail`='$proof_detail',`upload`='$pic',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$kyc_id'");
     } else {
 

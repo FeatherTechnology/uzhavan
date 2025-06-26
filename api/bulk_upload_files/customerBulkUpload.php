@@ -20,12 +20,16 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
         $Reader->ChangeSheet($i);
         $rowChange = 0;
         foreach ($Reader as $Row) {
-            if ($rowChange != 0 AND $rowChange != 1 ) { // omitted 0,1 to avoid headers
+            if ($rowChange != 0 ) { // omitted 0,1 to avoid headers
 
                 $data = $obj->fetchAllRowData($Row);
                 $data['loan_id'] = isset($data['loan_id']) ? $data['loan_id'] : '';
                 if (isset($data['loan_id'])) {
                     $data['loan_id'] = $obj->getLoanCode($pdo, $data['loan_id']);
+                }
+                $data['cus_id'] = isset($data['cus_id']) ? $data['cus_id'] : '';
+                if (isset($data['cus_id'])) {
+                    $data['cus_id'] = $obj->getCustomerCode($pdo, $data['cus_id']);
                 }
 
                 $loan_cat_id = $obj->getLoanCategoryId($pdo, $data['loan_category']);
@@ -40,25 +44,25 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 $areaLine = $obj->getAreaLine($pdo, $data['area_id']);
                 $data['line_id'] = $areaLine;
                 
-                $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'], $data['cus_profile_id']);
-                $data['cus_data'] = $cus_data_response['cus_data'];
-                $data['id'] = $cus_data_response['id'];
-                
+                $data['bank_id'] = $obj->getBankId($pdo, $data['bank_name']);
                 // Set customer status based on the returned value
-                if ($cus_data_response['cus_data'] == 'Existing') {
-                    $data['cus_status'] = $cus_data_response['cus_status']; // 'Additional' or 'Renewal'
-                } else {
-                    $data['cus_status'] = ''; // For new customers, status is empty
-                }
+             
                 $data['scheme_id'] = $obj->getSchemeId($pdo, $data['scheme_name']);
 
                 $err_columns = $obj->handleError($data);
                 if (empty($err_columns)) {
                     // Call LoanEntryTables function
+                    $cus_data_response = $obj->checkCustomerData($pdo, $data['cus_id'],$data['aadhar_num']);
+                    $data['cus_data'] = $cus_data_response['cus_data'];
+                    $data['cus_status'] = $cus_data_response['cus_status'];
+                    $data['cus_id'] = $cus_data_response['cus_id'];
+
                     $obj->FamilyTable($pdo, $data);
                     $gur_id = $obj->guarantorName($pdo, $data['cus_id']);
                     $data['gur_id'] = $gur_id;   
-                    $obj->LoanEntryTables($pdo, $data);
+                    $cus_profile_id=$obj->LoanEntryTables($pdo, $data);
+                    
+                    
                 } else {
                     $errtxt = "Please Check the input given in Serial No: " . ($rowChange) . " on below. <br><br>";
                     $errtxt .= "<ul>";

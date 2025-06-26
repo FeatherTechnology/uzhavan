@@ -249,58 +249,58 @@ function hideOverlay() {
 	overlayDiv.remove();
 }
 function getUserAccess(callback) {
-    $.ajax({
-        url: 'api/user_creation_files/get_download_access.php', // Replace with your endpoint
-        method: 'POST',
-        dataType: 'json', // Expect JSON response
-        success: function(response) {
-            // Check if response contains download_access
-            const downloadAccess = response.download_access || 0; // Default to 0 if not found
-            callback(downloadAccess);
-        },
-    });
+	$.ajax({
+		url: 'api/user_creation_files/get_download_access.php', // Replace with your endpoint
+		method: 'POST',
+		dataType: 'json', // Expect JSON response
+		success: function (response) {
+			// Check if response contains download_access
+			const downloadAccess = response.download_access || 0; // Default to 0 if not found
+			callback(downloadAccess);
+		},
+	});
 }
 
 // Initialize DataTable with user access controls
 function setdtable(table_id) {
-    // Fetch user access and initialize DataTable based on it
-    getUserAccess(function(downloadAccess) {
-        let buttons = [];
+	// Fetch user access and initialize DataTable based on it
+	getUserAccess(function (downloadAccess) {
+		let buttons = [];
 
-        // Add Excel button if download access is 1
-        if (downloadAccess === 1) {
-            buttons.push({
-                extend: 'excel',
-                title: "Export Data"
-            });
-        }
+		// Add Excel button if download access is 1
+		if (downloadAccess === 1) {
+			buttons.push({
+				extend: 'excel',
+				title: "Export Data"
+			});
+		}
 
-        // Add other buttons
-        buttons.push({
-            extend: 'colvis',
-            collectionLayout: 'fixed four-column',
-        });
+		// Add other buttons
+		buttons.push({
+			extend: 'colvis',
+			collectionLayout: 'fixed four-column',
+		});
 
-        // Initialize DataTable with conditional buttons
-        $(table_id).DataTable({
-            'processing': true,
-            'iDisplayLength': 10,
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
-            "createdRow": function (row, data, dataIndex) {
-                $(row).find('td:first').html(dataIndex + 1);
-            },
-            "drawCallback": function (settings) {
-                this.api().column(0).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            },
-            dom: 'lBfrtip',
-            buttons: buttons,
-        });
-    });
+		// Initialize DataTable with conditional buttons
+		$(table_id).DataTable({
+			'processing': true,
+			'iDisplayLength': 10,
+			"lengthMenu": [
+				[10, 25, 50, -1],
+				[10, 25, 50, "All"]
+			],
+			"createdRow": function (row, data, dataIndex) {
+				$(row).find('td:first').html(dataIndex + 1);
+			},
+			"drawCallback": function (settings) {
+				this.api().column(0).nodes().each(function (cell, i) {
+					cell.innerHTML = i + 1;
+				});
+			},
+			dom: 'lBfrtip',
+			buttons: buttons,
+		});
+	});
 }
 ///////////////////////////////////////////////////////////////////////////////////
 ///Append Row in Table TBody after getting response from ajax. ///common for all table//// Just send table id, response from ajax, Column in table. 
@@ -337,52 +337,52 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 
 // / Function to initialize DataTable with conditional Excel button
 function serverSideTable(tableSelector, params, apiUrl) {
-    // Fetch user access and initialize DataTable based on it
-    getUserAccess(function(downloadAccess) {
-        let buttons = [];
+	// Fetch user access and initialize DataTable based on it
+	getUserAccess(function (downloadAccess) {
+		let buttons = [];
 
-        // Add Excel button if download access is 1
-        if (downloadAccess === 1) {
-            buttons.push({
-                extend: 'excel',
-                title: "Branch List"
-            });
-        }
+		// Add Excel button if download access is 1
+		if (downloadAccess === 1) {
+			buttons.push({
+				extend: 'excel',
+				title: "Branch List"
+			});
+		}
 
-        // Add other buttons
-        buttons.push({
-            extend: 'colvis',
-            collectionLayout: 'fixed four-column',
-        });
+		// Add other buttons
+		buttons.push({
+			extend: 'colvis',
+			collectionLayout: 'fixed four-column',
+		});
 
-        // Destroy existing DataTable instance
-        $(tableSelector).DataTable().destroy();
+		// Destroy existing DataTable instance
+		$(tableSelector).DataTable().destroy();
 
-        // Initialize DataTable with conditional buttons
-        $(tableSelector).DataTable({
-            'order': [[0, "desc"]],
-            'processing': true,
-            'serverSide': true,
-            'serverMethod': 'post',
-            'ajax': {
-                'url': apiUrl,
-                'data': function (data) {
-                    var search = $('input[type=search]').val();
-                    data.search = search;
-                    data.params = params;
-                }
-            },
-            dom: 'lBfrtip',
-            buttons: buttons,
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
-            'drawCallback': function () {
-                setDropdownScripts();
-            }
-        });
-    });
+		// Initialize DataTable with conditional buttons
+		$(tableSelector).DataTable({
+			'order': [[0, "desc"]],
+			'processing': true,
+			'serverSide': true,
+			'serverMethod': 'post',
+			'ajax': {
+				'url': apiUrl,
+				'data': function (data) {
+					var search = $('input[type=search]').val();
+					data.search = search;
+					data.params = params;
+				}
+			},
+			dom: 'lBfrtip',
+			buttons: buttons,
+			"lengthMenu": [
+				[10, 25, 50, -1],
+				[10, 25, 50, "All"]
+			],
+			'drawCallback': function () {
+				setDropdownScripts();
+			}
+		});
+	});
 }
 
 
@@ -467,27 +467,98 @@ function validateEmail(emailInput, selector) {
 
 function setDropdownScripts() {
 	$('.dropdown').off().click(function (event) {
-		event.preventDefault();
+		// Toggle dropdown
 		$('.dropdown').not(this).removeClass('active');
 		$(this).toggleClass('active');
 	});
 
 	$(document).click(function (event) {
 		var target = $(event.target);
-		if (!target.closest('.dropdown').length) {
+
+		// Close dropdown if clicking outside, but allow logout link to work
+		if (!target.closest('.dropdown').length && !target.closest('.logout-link').length) {
 			$('.dropdown').removeClass('active');
 		}
 	});
+
+	// Ensure logout works even when dropdown is active
+	$('.logout-link').off().click(function (event) {
+		$('.dropdown').removeClass('active'); // Close dropdowns
+	});
 }
 
-function checkInputFileSize(input, allowdsize, img) {
+// function checkInputFileSize(input, allowdsize, img) {
+// 	if (input.files.length > 0) {
+// 		const fileSize = input.files[0].size; // Get the size of the selected file
+// 		const maxSize = allowdsize * 1024; // Maximum size in bytes (200 KB)
+// 		if (fileSize > maxSize) {
+// 			alert("Maximum File Size " + allowdsize + " KB. Please select a smaller file.");
+// 			input.value = ''; // Clear the selected file
+// 			img.attr('src', 'img/avatar.png');
+// 		}
+// 	}
+// }
+function compressImage(input, targetSizeKB) {
 	if (input.files.length > 0) {
-		const fileSize = input.files[0].size; // Get the size of the selected file
-		const maxSize = allowdsize * 1024; // Maximum size in bytes (200 KB)
+		const fileSize = input.files[0].size;
+		const maxSize = targetSizeKB * 1024;
+
 		if (fileSize > maxSize) {
-			alert("Maximum File Size " + allowdsize + " KB. Please select a smaller file.");
-			input.value = ''; // Clear the selected file
-			img.attr('src', 'img/avatar.png');
+			const file = input.files[0];
+			const reader = new FileReader();
+
+			reader.onload = (event) => {
+				const img = new Image();
+
+				img.onload = () => {
+					const canvas = document.createElement("canvas");
+					const ctx = canvas.getContext("2d");
+
+					// Resize image if it exceeds max dimensions
+					const maxImageDimension = 800;
+					let { width, height } = img;
+
+					if (width > maxImageDimension || height > maxImageDimension) {
+						const scale = Math.min(maxImageDimension / width, maxImageDimension / height);
+						width *= scale;
+						height *= scale;
+					}
+
+					canvas.width = width;
+					canvas.height = height;
+					ctx.drawImage(img, 0, 0, width, height);
+
+					let quality = 0.9;
+					const targetSizeBytes = targetSizeKB * 1024;
+
+					function compress() {
+						canvas.toBlob((blob) => {
+							if (blob.size > targetSizeBytes && quality > 0.1) {
+								quality -= 0.1;
+								compress(); // Retry
+							} else if (blob.size <= targetSizeBytes) {
+								const compressedFile = new File([blob], file.name, {
+									type: file.type,
+									lastModified: Date.now(),
+								});
+								// ✅ Log compressed size in KB
+
+								const dataTransfer = new DataTransfer();
+								dataTransfer.items.add(compressedFile);
+								input.files = dataTransfer.files;
+							} else {
+								alert("Unable to compress below the target size.");
+							}
+						}, file.type, quality);
+					}
+
+					compress();
+				};
+
+				img.src = event.target.result;
+			};
+
+			reader.readAsDataURL(file);
 		}
 	}
 }

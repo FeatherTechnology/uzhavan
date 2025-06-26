@@ -36,11 +36,31 @@ $collection_mode = $_POST['collection_mode'];
 $bank_id = $_POST['bank_id'];
 $cheque_no = $_POST['cheque_no'];
 $trans_id = $_POST['trans_id'];
-$trans_date = $_POST['trans_date'];
+$trans_date = ($_POST['trans_date'] !='') ? $_POST['trans_date'] : '0000-00-00';
+try {
+
+    // Begin transaction
+    $pdo->beginTransaction();
+
+    $myStr = 'COL';
+    $selectIC = $pdo->query("SELECT coll_code FROM `collection` WHERE coll_code != '' ORDER BY id DESC LIMIT 1 FOR UPDATE");
+
+    if ($selectIC->rowCount() > 0) {
+        $row = $selectIC->fetch();
+        $ac2 = $row["coll_code"];
+        $appno2 = ltrim(strstr($ac2, '-'), '-');
+        $appno2 = intval($appno2) + 1;
+        $collection_id = $myStr . "-" . $appno2;
+    } else {
+        $collection_id = $myStr . "-101";
+    }
 
 $qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','".$collection_date.' '.date('H:i:s')."','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
 
+// $qry = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_status',`updated_on`='current_timestamp' WHERE cus_profile_id='$cp_id' ");
+
 if ($qry) {
+    $coll_id = $collection_id;
     $result = '1';
 } else {
     $result = '2';
@@ -70,7 +90,7 @@ $penalty_check = intval($penalty_track) + intval($penalty_waiver) - intval($pena
 $coll_charge_check = intval($coll_charge_track) + intval($coll_charge_waiver) - intval($coll_charge);
 
 if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
-    $closedQry = $pdo->query("UPDATE `customer_status` SET `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
+    $closedQry = $pdo->query("UPDATE `customer_status` SET `coll_status`='Closed', `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
     if ($closedQry) {
         $result = '3';
     }
@@ -94,5 +114,11 @@ if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
 // $response = file_get_contents($url);  
 // // Process your response here
 // return $response; 
-
-echo json_encode($result);
+    $pdo->commit(); //  Commit
+} catch (Exception $e) {
+    $pdo->rollBack(); //  Rollback on error
+    echo json_encode(['result' => 'error', 'message' => $e->getMessage()]);
+    exit;
+}
+$pdo = null;
+echo json_encode(['result' => $result, 'coll_id' => $coll_id]); // Return collection ID in response

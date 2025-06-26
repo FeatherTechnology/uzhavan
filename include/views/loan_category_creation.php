@@ -12,7 +12,7 @@
                         <table id="loancategory_creation_table" class="table custom-table">
                             <thead>
                                 <tr>
-                                    <th>S.No.</th>
+                                    <th width="100">S.No.</th>
                                     <th>Loan Category</th>
                                     <th>Loan Limit</th>
                                     <th>Action</th>
@@ -59,7 +59,7 @@
                                     <div class="col-lg-3 col-md-4">
                                         <div class="form-group">
                                             <label for="loan_limit">Loan Limit</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control" id="loan_limit" name="loan_limit" tabindex="3" placeholder="Enter Loan Limit">
+                                            <input type="text" class="form-control" id="loan_limit" name="loan_limit" tabindex="3" placeholder="Enter Loan Limit">
                                         </div>
                                     </div>
                                 </div>
@@ -84,11 +84,7 @@
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="due_type">Due Type</label><span class="text-danger">*</span>
-                                            <select class="form-control" id="due_type" name="due_type" tabindex="5">
-                                                <option value="">Select Due Type</option>
-                                                <option value="emi">EMI</option>
-                                                <option value="interest">Interest</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="due_type" name="due_type" tabindex="5" value="EMI" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -353,7 +349,11 @@
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label for="profit_method">Profit Method</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="profit_method" name="profit_method" tabindex="4" value="Pre Benefit" readonly>
+                                    <select class="form-control" id="profit_method" name="profit_method" tabindex="4">
+                                                <option value="">Select Profit Method</option>
+                                                <option value="Pre Benefit">Pre Benefit</option>
+                                                <option value="After Benefit">After Benefit</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

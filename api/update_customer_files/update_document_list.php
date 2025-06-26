@@ -1,10 +1,22 @@
 <?php
 require '../../ajaxconfig.php';
 $status = [
-    1 => 'Loan Entry', 2 => 'Loan Entry', 3 => 'Loan Approval',
-    4 => 'Loan Issued', 5 => 'Loan Approval', 6 => 'Loan Approval',
-    7 => 'Present', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC',11=>'NOC'
+    1 => 'Loan Entry',
+    2 => 'Loan Entry',
+    3 => 'Loan Approval',
+    4 => 'Loan Issued',
+    5 => 'Loan Approval',
+    6 => 'Loan Approval',
+    7 => 'Present',
+    8 => 'Closed',
+    9 => 'Closed',
+    10 => 'NOC',
+    11 => 'NOC',
+    12 => 'NOC',
+    13 => 'Loan Issue',
+    14 => 'Loan Issue'
 ];
+//$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : null;
@@ -19,17 +31,20 @@ if ($qry->rowCount() > 0) {
         $loanInfo['loan_date'] = $loanDate->format('d-m-Y');
         $closedDate = new DateTime($updateDocInfo['closed_date']);
         $loanInfo['closed_date'] = $closedDate->format('d-m-Y');
-        $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
+        $originalStatus = $updateDocInfo['c_sts']; // Convert numeric status to its string representation for display 
+        $updateDocInfo['c_sts'] = isset($status[$originalStatus]) ? $status[$originalStatus] : '';
+        // $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
         $loanCustomerStatus = loanCustomerStatus($pdo, $updateDocInfo['cus_profile_id']);
         $updateDocInfo['sub_status']  = $loanCustomerStatus;
-        $updateDocInfo['action'] = "<div class='dropdown'>
-            <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
-            <div class='dropdown-content'>";
+        $updateDocInfo['action'] = '<div class="dropdown">
+        <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
+        <div class="dropdown-content">';
+        if ($originalStatus <= 10) {
+            $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['cus_profile_id'] . "' data-id='" . $updateDocInfo['cus_id'] . "' title='update details'>Update</a>";
+        }
+        $updateDocInfo['action'] .= "<a href='#' class='doc-print' value='" . $updateDocInfo['cus_profile_id'] . "' title='print'>Print</a>";
 
-            $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['id'] . "' data-id='".$updateDocInfo['cus_id']."' title='update details'>Update</a>";
-            $updateDocInfo['action'] .= "<a href='#' class='doc-print' value='" . $updateDocInfo['id'] . "' title='print'>Print</a>";
-            
-        
+
         $updateDocInfo['action'] .= "</div></div>";
 
         $update_doc_list_arr[] = $updateDocInfo; // Append to the array
@@ -54,7 +69,7 @@ function loanCustomerStatus($pdo, $cus_profile_id)
         $due_nil_sts = isset($_POST["due_nil_sts"]) ? explode(',', $_POST["due_nil_sts"]) : [];
         $bal_amt = isset($_POST["bal_amt"]) ? explode(',', $_POST["bal_amt"]) : [];
         $i = 1;
-        $status='';
+        $status = '';
         if ($cs_status == '1' || $cs_status == '2') {
             $status = 'Loan Entry';
         } elseif ($cs_status == '3') {
@@ -92,6 +107,12 @@ function loanCustomerStatus($pdo, $cus_profile_id)
             $status = 'Pending';
         } elseif ($cs_status == '11') {
             $status = 'Completed';
+        } elseif ($cs_status == '12') {
+            $status = 'Completed';
+        }elseif ($cs_status == '13') {
+            $status = 'Cancel';
+        } elseif ($cs_status == '14') {
+            $status = 'Revoke';
         }
 
         return $status;
@@ -99,6 +120,3 @@ function loanCustomerStatus($pdo, $cus_profile_id)
 
     return ''; // Default return value if no conditions match
 }
-
-
-

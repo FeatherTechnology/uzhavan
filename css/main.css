@@ -13,7 +13,7 @@
 :root {
   --white: #fff;
   --smoke-white: #f1f3f5;
-  --primary-color: #343C63;
+  --primary-color: #7CA5B8;
 }
 /************************************************
 	************************************************
@@ -1174,7 +1174,7 @@ ul.header-tasks:last-child {
 }
 
 .page-wrapper .sidebar-wrapper .sidebar-menu .sidebar-dropdown .sidebar-submenu ul li a:hover {
-  background:#6D7591;
+  background: rgba(0, 0, 0, 0.2);
   /* background: #646969d9; */
 }
 
