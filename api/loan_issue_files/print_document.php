@@ -83,44 +83,6 @@ $cus_profile_id = $_POST['cus_profile_id'];
     </tbody>
 </table> </br></br>
 <!--////////////////////////////////////////////////////////////////////Personal Info End//////////////////////////////////////////////////////////////-->
-<?php
-/////////////////////////////////////////////////////////////////////////// Document Need START ////////////////////////////////////////////////////////
-$qry = $pdo->query("SELECT document_name FROM document_need where cus_profile_id = '$cus_profile_id' ");
-?>
-<table class="table custom-table">
-    <thead>
-        <tr>
-            <th colspan="2">Document Need</th>
-        </tr>
-        <tr>
-            <th>S.No</th>
-            <th>Document Name</th>
-        </tr>
-    </thead>
-    <tbody>
-<?php
-if ($qry->rowCount() > 0) {
-    $a = 1;
-    while ($doc_need = $qry->fetchObject()) {
-        ?>
-        <tr>
-            <td><?php echo $a++; ?></td>
-            <td><?php echo $doc_need->document_name; ?></td>
-        </tr>
-        <?php
-    }
-}else{
-    ?>
-    <tr>
-        <td colspan="2"><center>No data available in table</center></td>
-    </tr>
-<?php
-}
-?>
-</tbody>
-</table> </br></br>
-<!-- /////////////////////////////////////////////////////////////////////////// Document Need END //////////////////////////////////////////////////////// -->
-
 
 <!-- /////////////////////////////////////////////////////////////////////////// Cheque Info START //////////////////////////////////////////////////////// -->
 <table class="table custom-table">
