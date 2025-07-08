@@ -6,7 +6,7 @@
 	<!-- Sidebar brand start  -->
 	<div class="sidebar-brand" style="background-color: var(--primary-color)">
 		<a href="#" class="logo">
-			<h2 class="ml-4" style="color: white">FINANCE</h2>
+			<h2 class="ml-4" style="color: white">UZHAVAN</h2>
 		</a>
 	</div>
 

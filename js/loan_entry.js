@@ -3285,39 +3285,57 @@ $('#submit_cheque_info').click(function (event) {
     }
 });
 
-$(document).on('click', '.chequeActionBtn', function () {
-    let id = $(this).attr('value');
-    $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (response) {
-        $('#cq_holder_type').val(response.result[0].holder_type);
-        $('#cq_holder_name').val(response.result[0].holder_name);
-        $('#cq_holder_name').attr('data-id', response.result[0].holder_id);
-        $('#cq_relationship').val(response.result[0].relationship);
-        $('#cq_bank_name').val(response.result[0].bank_name);
-        $('#cheque_count').val(response.result[0].cheque_cnt);
-        $('#cheque_info_id').val(response.result[0].id);
-        if (response.result[0].holder_type == '3') {
-            getFamilyMember('Select Family Member', '#cq_fam_mem')
-            $('.cq_fam_member').show();
-            setTimeout(() => {
-                $('#cq_fam_mem').val(response.result[0].holder_id);
-            }, 1000);
-        } else {
-            $('#cq_fam_mem').val('');
-            $('.cq_fam_member').hide();
-        }
-        if (response.upd.length > 0) {
-            let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
-            $('#cq_upload_edit').val(uploadFiles.join(','));
-        }
+ $(document).on('click', '.chequeActionBtn', async function () {
+        let id = $(this).attr('value');
 
-        $('#cheque_no').empty();
-        for (let key in response.no) {
-            let cheque = response.no[key];
-            $('#cheque_no').append("<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'><div class='form-group'><input type='number' class='form-control chequeno' name='chequeno[]' id='chequeno' value='" + cheque['cheque_no'] + "'/> </div></div>");
-        }
+        try {
+            const response = await new Promise((resolve, reject) => {
+                $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (data) {
+                    resolve(data);
+                }, 'json').fail(reject);
+            });
 
-    }, 'json');
-});
+            let res = response.result[0];
+            $('#cq_holder_type').val(res.holder_type);
+            $('#cq_holder_name').val(res.holder_name);
+            $('#cq_holder_name').attr('data-id', res.holder_id);
+            $('#cq_relationship').val(res.relationship);
+            $('#cq_bank_name').val(res.bank_name);
+            $('#cheque_count').val(res.cheque_cnt);
+            $('#cheque_info_id').val(res.id);
+
+            if (res.holder_type == '3') {
+                $('.cq_fam_member').show();
+
+                await getFamilyMember('Select Family Member', '#cq_fam_mem'); // Wait for family list to load
+
+                $('#cq_fam_mem').val(res.holder_id); // Set value after load
+            } else {
+                $('#cq_fam_mem').val('');
+                $('.cq_fam_member').hide();
+            }
+
+            if (response.upd.length > 0) {
+                let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
+                $('#cq_upload_edit').val(uploadFiles.join(','));
+            }
+
+            $('#cheque_no').empty();
+            for (let key in response.no) {
+                let cheque = response.no[key];
+                $('#cheque_no').append(
+                    `<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'>
+                    <div class='form-group'>
+                        <input type='number' class='form-control chequeno' name='chequeno[]' value='${cheque['cheque_no']}'/>
+                    </div>
+                </div>`
+                );
+            }
+
+        } catch (err) {
+            console.error('Cheque info load failed:', err);
+        }
+    });
 
 $(document).on('click', '.chequeDeleteBtn', function () {
     let id = $(this).attr('value');
@@ -3760,24 +3778,32 @@ function getDocNeedTable(cusProfileId) {
 }
 
 function getFamilyMember(optn, selector) {
-    let cus_id = $('#auto_gen_cus_id').val();
-    let holderType = $('#cq_holder_type').val(); // Get current holder type
-    $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {
-        let appendOption = '';
-        appendOption += "<option value=''>" + optn + "</option>"; // Default option 
-
-        // Dynamic options from the response
-        $.each(response, function (index, val) {
-            // Differentiating between customer and family member
-            if (val.type === 'Customer' && holderType !== '3') {
-                appendOption += "<option value='0'>" + val.name + "</option>";  // Customer
-            } else if (val.type === 'Family') {
-                appendOption += "<option value='" + val.id + "'>" + val.name + " </option>";  // Family Member
+    return new Promise((resolve, reject) => {
+        const cus_id = $('#auto_gen_cus_id').val();
+        const holderType = $('#cq_holder_type').val(); // Get current holder type
+        $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {
+            if (!Array.isArray(response)) {
+                reject("Invalid response format");
+                return;
             }
-        });
 
-        $(selector).empty().append(appendOption);  // Append options to the select element
-    }, 'json');
+            let appendOption = `<option value=''>${optn}</option>`; // Default option
+
+            // Loop through response to build options
+            $.each(response, function (index, val) {
+                if (val.type === 'Customer' && holderType !== '3') {
+                    appendOption += `<option value='0'>${val.name}</option>`;
+                } else if (val.type === 'Family') {
+                    appendOption += `<option value='${val.id}'>${val.name}</option>`;
+                }
+            });
+
+            $(selector).empty().append(appendOption); // Populate the select box
+            resolve();
+        }, 'json').fail((jqXHR, textStatus, errorThrown) => {
+            reject(`Request failed: ${textStatus}`);
+        });
+    });
 }
 
 
