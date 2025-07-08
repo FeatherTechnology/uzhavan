@@ -4,22 +4,25 @@ $(document).ready(function () {
         getAgentCode();
 
     });
+      $('#mobile1, #mobile2').change(function () {
+        checkMobileNo($(this).val(), $(this).attr('id'));
+    });
+//////////////////////////////////////////////Submit Agent Creation Start//////////////////////////////////////////////////////////////////////////
     $('#submit_agent_creation').click(function (event) {
         event.preventDefault();
         //Validation
         let agent_code = $('#agent_code').val(); let agent_name = $('#agent_name').val(); let mobile1 = $('#mobile1').val(); let mobile2 = $('#mobile2').val(); let area = $('#area').val(); let occupation = $('#occupation').val(); let agent_id = $('#agent_id').val();
-        //validateField(agent_name, '#agent_name');
-        var data = [ 'agent_code','agent_name','mobile1']
-        
+        var data = ['agent_code', 'agent_name', 'mobile1']
+
         var isValid = true;
         data.forEach(function (entry) {
-            var fieldIsValid = validateField($('#'+entry).val(), entry);
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
             if (!fieldIsValid) {
                 isValid = false;
             }
         });
 
-         if (isValid) {
+        if (isValid) {
             $.post('api/agent_creation/submit_agent_creation.php', { agent_code, agent_name, mobile1, mobile2, area, occupation, agent_id }, function (response) {
                 if (response == '2') {
                     swalSuccess('Success', 'Agent Added Successfully!');
@@ -37,9 +40,9 @@ $(document).ready(function () {
 
         }
     });
-    $('#mobile1, #mobile2').change(function () {
-        checkMobileNo($(this).val(), $(this).attr('id'));
-    });
+///////////////////////////////////////////////////////////////////////////////////////Submit Agent Creation End//////////////////////////////////////////////////////////////////////////
+  
+    ////////////////////////////////////////////////////////Agent Edit Start///////////////////////////////////////////////////////
     $(document).on('click', '.agentActionBtn', function () {
         var id = $(this).attr('value'); // Get value attribute
         $.post('api/agent_creation/agent_creation_data.php', { id: id }, function (response) {
@@ -54,11 +57,22 @@ $(document).ready(function () {
 
         }, 'json');
     });
+ ////////////////////////////////////////////////////////Agent Edit End///////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////Agent Delete Start///////////////////////////////////////////////////////
     $(document).on('click', '.agentDeleteBtn', function () {
         var id = $(this).attr('value');
         swalConfirm('Delete', 'Do you want to Delete the Agent Details?', getAgentDelete, id);
         return;
     });
+ ////////////////////////////////////////////////////////Agent Delete End///////////////////////////////////////////////////////
+    $('button[type="reset"], #back_btn').click(function (event) {
+        event.preventDefault();
+        $('input').each(function () {
+            $(this).val('');
+        });
+        $('input').css('border', '1px solid #cecece');
+    });
+
 
 })
 $(function () {
@@ -119,12 +133,5 @@ function getAgentDelete(id) {
         }
     }, 'json');
 }
-$('button[type="reset"], #back_btn').click(function (event) {
-    event.preventDefault();
-    $('input').each(function () {
-        $(this).val('');
-    });
-    $('input').css('border', '1px solid #cecece');
-});
 
 

@@ -617,17 +617,6 @@ function getLoanCategoryName(loan_cat_edit_it) {
     }, 'json');
 }
 
-// Function to check if all values in an object are not empty
-// function isFormDataValid(formData) {
-//     for (let key in formData) {
-//         if (key != 'id' && key != 'address' && key != 'place' && key != 'email' && key != 'mobile_no') {
-//             if (formData[key] == '' || formData[key] == null || formData[key] == undefined) {
-//                 return false;
-//             }
-//         }
-//     }
-//     return true;
-// }
 
 function deleteUser(id) {
     $.post('api/user_creation_files/delete_user.php', { id }, function (response) {

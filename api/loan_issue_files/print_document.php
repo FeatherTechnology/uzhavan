@@ -83,45 +83,74 @@ $cus_profile_id = $_POST['cus_profile_id'];
     </tbody>
 </table> </br></br>
 <!--////////////////////////////////////////////////////////////////////Personal Info End//////////////////////////////////////////////////////////////-->
-<?php
-/////////////////////////////////////////////////////////////////////////// Document Need START ////////////////////////////////////////////////////////
-$qry = $pdo->query("SELECT document_name FROM document_need where cus_profile_id = '$cus_profile_id' ");
-?>
+<!-- /////////////////////////////////////////////////////////////////////////// Signed Doc Info START //////////////////////////////////////////////////////// -->
 <table class="table custom-table">
     <thead>
         <tr>
-            <th colspan="2">Document Need</th>
+            <th colspan="6">Signed Doc Info</th>
         </tr>
         <tr>
-            <th>S.No</th>
-            <th>Document Name</th>
+            <th width="20">S.NO</th>
+            <th>Doc Name</th>
+            <th>Signed Type</th>
+            <th>Relationship</th>
+            <th>Count</th>
         </tr>
     </thead>
     <tbody>
 <?php
+$qry = $pdo->query("
+    SELECT 
+        si.id as s_id, 
+        si.sign_type, 
+        CASE 
+            WHEN si.sign_type = 0 THEN 'NIL'
+            WHEN si.sign_type IN (1, 2, 3) THEN CONCAT(fi.fam_name, '-', fi.fam_relationship)
+        END as holder_name, 
+        si.doc_name,
+        si.doc_Count
+    FROM signed_doc_info si 
+    LEFT JOIN family_info fi ON si.signType_relationship = fi.id
+    WHERE si.cus_profile_id = '$cus_profile_id'
+");
 if ($qry->rowCount() > 0) {
-    $a = 1;
-    while ($doc_need = $qry->fetchObject()) {
+    $a=1;
+    while ($signed_info = $qry->fetchObject()) {
+         if($signed_info->sign_type =='0'){
+            $sign_type = 'Customer';
+            
+        }
+       else if($signed_info->sign_type =='1'){
+            $sign_type = 'Guarantor';
+            
+        }else if($signed_info->sign_type =='2'){
+            $sign_type = 'Combined';
+            
+        }else if($signed_info->sign_type =='3'){
+            $sign_type = 'Family Members';
+        }
+        $signed_info->sign_type = $sign_type;
         ?>
         <tr>
             <td><?php echo $a++; ?></td>
-            <td><?php echo $doc_need->document_name; ?></td>
+            <td><?php echo ($signed_info->doc_name == '0') ? 'Signed Document' : ''; ?></td>
+            <td><?php echo $signed_info->sign_type; ?></td>
+            <td><?php echo $signed_info->holder_name; ?></td>
+            <td><?php echo $signed_info->doc_Count; ?></td>
         </tr>
         <?php
     }
 }else{
     ?>
     <tr>
-        <td colspan="2"><center>No data available in table</center></td>
+        <td colspan="6"><center>No data available in table</center></td>
     </tr>
-<?php
+    <?php
 }
 ?>
 </tbody>
 </table> </br></br>
-<!-- /////////////////////////////////////////////////////////////////////////// Document Need END //////////////////////////////////////////////////////// -->
-
-
+<!-- /////////////////////////////////////////////////////////////////////////// Signed Doc Info END //////////////////////////////////////////////////////// -->
 <!-- /////////////////////////////////////////////////////////////////////////// Cheque Info START //////////////////////////////////////////////////////// -->
 <table class="table custom-table">
     <thead>
@@ -192,7 +221,10 @@ if ($qry->rowCount() > 0) {
     </thead>
     <tbody>
 <?php
-$qry = $pdo->query("SELECT di.doc_name, di.doc_type, di.relationship, fi.fam_name FROM document_info di LEFT JOIN family_info fi ON di.holder_name = fi.id WHERE di.cus_profile_id = '$cus_profile_id' ");
+$qry = $pdo->query("SELECT di.doc_name, di.doc_type, di.relationship,  CASE 
+            WHEN di.holder_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM document_info di LEFT JOIN family_info fi ON di.holder_name = fi.id  LEFT JOIN customer_profile cp ON di.cus_profile_id= cp.id WHERE di.cus_profile_id = '$cus_profile_id'  ");
 if ($qry->rowCount() > 0) {
     $c=1;
     while ($doc_info = $qry->fetchObject()) {
@@ -200,8 +232,8 @@ if ($qry->rowCount() > 0) {
         <tr>
             <td><?php echo $c++; ?></td>
             <td><?php echo $doc_info->doc_name; ?></td>
-            <td><?php echo $doc_info->doc_type; ?></td>
-            <td><?php echo $doc_info->fam_name; ?></td>
+              <td><?php echo ($doc_info->doc_type == '1') ? 'Original' : 'Xerox'; ?></td>
+            <td><?php echo $doc_info->holder_name; ?></td>
             <td><?php echo $doc_info->relationship; ?></td>
         </tr>
         <?php
@@ -238,14 +270,17 @@ if ($qry->rowCount() > 0) {
     </thead>
     <tbody>
 <?php
-$qry = $pdo->query("SELECT mi.relationship, mi.property_details, mi.mortgage_name, mi.designation, mi.mortgage_number, mi.reg_office, mi.mortgage_value, fi.fam_name FROM mortgage_info mi LEFT JOIN family_info fi ON mi.property_holder_name = fi.id WHERE mi.cus_profile_id = '$cus_profile_id' ");
+$qry = $pdo->query("SELECT mi.relationship, mi.property_details, mi.mortgage_name, mi.designation, mi.mortgage_number, mi.reg_office, mi.mortgage_value, CASE 
+            WHEN mi.property_holder_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM mortgage_info mi LEFT JOIN family_info fi ON mi.property_holder_name = fi.id LEFT JOIN customer_profile cp ON mi.cus_profile_id= cp.id WHERE mi.cus_profile_id = '$cus_profile_id' ");
 if ($qry->rowCount() > 0) {
     $d=1;
     while ($mortgage_info = $qry->fetchObject()) {
         ?>
         <tr>
             <td><?php echo $d++; ?></td>
-            <td><?php echo $mortgage_info->fam_name; ?></td>
+            <td><?php echo $mortgage_info->holder_name; ?></td>
             <td><?php echo $mortgage_info->relationship; ?></td>
             <td><?php echo $mortgage_info->property_details; ?></td>
             <td><?php echo $mortgage_info->mortgage_name; ?></td>
@@ -286,14 +321,17 @@ if ($qry->rowCount() > 0) {
     </thead>
     <tbody>
 <?php
-$qry = $pdo->query("SELECT ei.relationship, ei.vehicle_details, ei.endorsement_name, ei.key_original, ei.rc_original, fi.fam_name FROM endorsement_info ei LEFT JOIN family_info fi ON ei.owner_name = fi.id WHERE ei.cus_profile_id = '$cus_profile_id' ");
+$qry = $pdo->query("SELECT ei.relationship, ei.vehicle_details, ei.endorsement_name, ei.key_original, ei.rc_original,  CASE 
+            WHEN ei.owner_name = 0 THEN cp.cus_name 
+            ELSE fi.fam_name 
+        END as holder_name FROM endorsement_info ei LEFT JOIN family_info fi ON ei.owner_name = fi.id LEFT JOIN customer_profile cp ON ei.cus_profile_id= cp.id WHERE ei.cus_profile_id = '$cus_profile_id'");
 if ($qry->rowCount() > 0) {
     $e=1;
     while ($endorsement_info = $qry->fetchObject()) {
         ?>
         <tr>
             <td><?php echo $e++; ?></td>
-            <td><?php echo $endorsement_info->fam_name; ?></td>
+            <td><?php echo $endorsement_info->holder_name; ?></td>
             <td><?php echo $endorsement_info->relationship; ?></td>
             <td><?php echo $endorsement_info->vehicle_details; ?></td>
             <td><?php echo $endorsement_info->endorsement_name; ?></td>

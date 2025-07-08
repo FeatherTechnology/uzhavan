@@ -1,7 +1,7 @@
 <script>
     //fetching current page name
     const urlPathname = window.location.pathname.split('/');
-    const currentPage = urlPathname[urlPathname.length - 1] != 'finance_software' ? urlPathname[urlPathname.length - 1] : 'null';
+    const currentPage = urlPathname[urlPathname.length - 1] != 'uzhavan' ? urlPathname[urlPathname.length - 1] : 'null';
     // localStorage.setItem('currentPage', 'home.php');
 </script>
 
