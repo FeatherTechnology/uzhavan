@@ -85,6 +85,74 @@ $cus_profile_id = $_POST['cus_profile_id'];
     </tbody>
 </table> </br></br>
 <!--////////////////////////////////////////////////////////////////////Personal Info End//////////////////////////////////////////////////////////////-->
+<!-- /////////////////////////////////////////////////////////////////////////// Signed Doc Info START //////////////////////////////////////////////////////// -->
+<table class="table custom-table">
+    <thead>
+        <tr>
+            <th colspan="6">Signed Doc Info</th>
+        </tr>
+        <tr>
+            <th width="20">S.NO</th>
+            <th>Doc Name</th>
+            <th>Signed Type</th>
+            <th>Relationship</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+<?php
+$qry = $pdo->query("
+    SELECT 
+        si.id as s_id, 
+        si.sign_type, 
+        CASE 
+            WHEN si.sign_type = 0 THEN 'NIL'
+            WHEN si.sign_type IN (1, 2, 3) THEN CONCAT(fi.fam_name, '-', fi.fam_relationship)
+        END as holder_name, 
+        si.doc_name,
+        si.doc_Count
+    FROM signed_doc_info si 
+    LEFT JOIN family_info fi ON si.signType_relationship = fi.id
+    WHERE si.cus_profile_id = '$cus_profile_id'
+");
+if ($qry->rowCount() > 0) {
+    $a=1;
+    while ($signed_info = $qry->fetchObject()) {
+         if($signed_info->sign_type =='0'){
+            $sign_type = 'Customer';
+            
+        }
+       else if($signed_info->sign_type =='1'){
+            $sign_type = 'Guarantor';
+            
+        }else if($signed_info->sign_type =='2'){
+            $sign_type = 'Combined';
+            
+        }else if($signed_info->sign_type =='3'){
+            $sign_type = 'Family Members';
+        }
+        $signed_info->sign_type = $sign_type;
+        ?>
+        <tr>
+            <td><?php echo $a++; ?></td>
+            <td><?php echo ($signed_info->doc_name == '0') ? 'Signed Document' : ''; ?></td>
+            <td><?php echo $signed_info->sign_type; ?></td>
+            <td><?php echo $signed_info->holder_name; ?></td>
+            <td><?php echo $signed_info->doc_Count; ?></td>
+        </tr>
+        <?php
+    }
+}else{
+    ?>
+    <tr>
+        <td colspan="6"><center>No data available in table</center></td>
+    </tr>
+    <?php
+}
+?>
+</tbody>
+</table> </br></br>
+<!-- /////////////////////////////////////////////////////////////////////////// Signed Doc Info END //////////////////////////////////////////////////////// -->
 <!-- /////////////////////////////////////////////////////////////////////////// Cheque Info START //////////////////////////////////////////////////////// -->
 <table class="table custom-table">
     <thead>

@@ -513,50 +513,147 @@
                     </div>
                 </div>
 
+                <!-- Fingerprint Info start-->
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Customer Summary</div>
-                    </div>
-                    <div class="card-body" style="display:none;" id="loan_count_div">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="loan_count"> Loan Count </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="first_loan_date"> First Loan Date </label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                    <div class="card-header"> Fingerprint Info </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Enter Limit" tabindex="33">
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="34"></textarea>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group fingerprintTable">
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <!-- Fingerprint Info End-->
 
-            <div class="col-md-12 ">
-                <div class="text-right">
-                    <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="35"><span class="icon-check"></span>&nbsp;Submit</button>
-                    <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="36">Clear</button>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Customer Summary</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- How to Know -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="how_to_know">How To Know</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="how_to_know" name="how_to_know" tabindex="29">
+                                        <option value="">Select How To Know</option>
+                                        <option value="1">Customer Reference</option>
+                                        <option value="2">Advertisement</option>
+                                        <option value="3">Promotion activity</option>
+                                        <option value="4">Agent Reference</option>
+                                        <option value="5">Staff Reference</option>
+                                        <option value="6">Other Reference</option>
+                                        <option value="7">Renewal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="loan_count">Loan Count</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="travel_with_company">Travel With Company</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="travel_with_company" name="travel_with_company" disabled tabindex="36" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_income">Monthly Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_income" name="monthly_income" placeholder=" Enter Monthly Income" tabindex="37">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="other_income">Other Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="other_income" name="other_income" placeholder="Enter Other Income" tabindex="38">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="support_income">Support Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="support_income" name="support_income" placeholder="Enter Support Income" tabindex="39">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="commitment">Commitment</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="commitment" name="commitment" placeholder="Enter Commitment" tabindex="40">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_due_capacity">Monthly Due Capacity</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_due_capacity" name="monthly_due_capacity" placeholder="Enter Due Capacity" tabindex="41">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="cus_limit">Customer Limit</label>
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" tabindex="42">
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-primary" id="add_cus_label" name="add_cus_label" data-toggle="modal" data-target="#addCusLabel" onclick="getFeedBackTable()" style="padding: 5px 35px; float: right;" tabindex="61"><span class="icon-add"></span></button>
+                            </div>
+                        </div> <br>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table class="table custom-table" id="feedbackListTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Feedback Label </th>
+                                                <th> Feedback </th>
+                                                <th> Remarks </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <!-- About Customer -->
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="about_cus">About Customer</label>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="43"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 ">
+                            <div class="text-right">
+                                <button type="submit" name="submit_customer_profile" id="submit_customer_profile" class="btn btn-primary" value="Submit" tabindex="35"><span class="icon-check"></span>&nbsp;Submit</button>
+                                <button type="reset" id="clear_loan" class="btn btn-outline-secondary" tabindex="36">Clear</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -611,17 +708,52 @@
                                     <label for="document_type">Document Type</label>
                                     <select class="form-control" id="document_type" name="document_type" tabindex="2">
                                         <option value="">Select Document Type</option>
-                                        <option value="1">Cheque Info</option>
-                                        <option value="2">Document Info</option>
-                                        <option value="3">Mortgage Info</option>
-                                        <option value="4">Endorsement Info</option>
-                                        <option value="5">Gold Info</option>
+                                        <option value="1">Signed Doc Info</option>
+                                        <option value="2">Cheque Info</option>
+                                        <option value="3">Document Info</option>
+                                        <option value="4">Mortgage Info</option>
+                                        <option value="5">Endorsement Info</option>
+                                        <option value="6">Gold Info</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Signed Doc Info START -->
+                <div class="card signed-div" style="display: none;">
+                    <div class="card-header"> Signed Doc Info
+                        <button type="button" class="btn btn-primary" id="add_sign_doc" name="add_sign_doc" data-toggle="modal" data-target=".addSignDoc" style="padding: 5px 35px;  float: right;" tabindex="9" onclick="getSignedDocTable()"><span class="icon-add"></span></button>
+                    </div>
+                    <span class="text-danger" style='display:none' id='signed_infoCheck'>Please Fill Signed Doc Info </span>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table id="signDocResetTable" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Doc Name </th>
+                                                <th> Sign Type </th>
+                                                <th> Relationship </th>
+                                                <th> Count </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Signed Doc Info END -->
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card" id="cheque_info_card" style="display: none;">
                     <div class="card-header">
@@ -789,9 +921,6 @@
 
 
     <!--- -------------------------------------- Documents END ------------------------------- -->
-
-
-    <!-- -------------------------------------- Loan Calculation END ------------------------------ -->
 </div> <!-- Loan entry Content END - Customer profile & Documentation -->
 
 
@@ -1266,6 +1395,177 @@
     </div>
 </div>
 <!--KYC Proof Modal End-->
+<!--FeedBack Start-->
+<div class="modal fade" id="addCusLabel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Customer Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" onclick="getFeedBackInfoTable()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="feedback_form">
+                        <div class="row">
+                            <input type="hidden" name="add_feedBack" id='add_feedBack'>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="feedback_label">FeedBack Label</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="feedback_label" id="feedback_label" tabindex="1" placeholder="Enter FeedBack Label">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="feedback">FeedBack</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="feedback" name="feedback" tabindex="1">
+                                        <option value=""> Select Feedback </option>
+                                        <option value="5"> Excellent </option>
+                                        <option value="4"> Good </option>
+                                        <option value="3"> Average </option>
+                                        <option value="2"> Poor </option>
+                                        <option value="1"> Bad </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="cus_remark">Remark</label>
+                                    <textarea class="form-control" name="cus_remark" id="cus_remark" placeholder="Enter Remark" tabindex="43"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <button name="submit_feedback" id="submit_feedback" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                    <button type="reset" id="clear_feedback_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="8">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="row">
+                    <div class="col-12 overflow-x-cls">
+                        <table id="feedback_table" class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th width="20">S.No.</th>
+                                    <th>FeedBack Label</th>
+                                    <th>FeedBack</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody> </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="getFeedBackInfoTable()" tabindex="1">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FeedBack End -->
+<!-- Add Signed Doc info Modal  START -->
+<div class="modal fade addSignDoc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Add Signed Doc Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="getSignedDocInfoTable()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="doc_name"> Doc Name </label> <span class="required">&nbsp;*</span>
+                            <input type="hidden" name="doc_name" id="doc_name" value="0">
+                            <input type="text" class="form-control" name="doc_name_dummy" id="doc_name_dummy" value="Signed Document" disabled tabindex='1'>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="sign_type"> Sign Type </label> <span class="required">&nbsp;*</span>
+                            <select type="text" class="form-control" id="sign_type" name="sign_type" tabindex='2'>
+                                <option value=""> Select Sign Type </option>
+                                <option value="0"> Customer </option>
+                                <option value="1"> Guarantor </option>
+                                <option value="2"> Combined </option>
+                                <option value="3"> Family Members </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="cus_name_div">
+                        <div class="form-group">
+                            <label for="signType_cus_name"> Customer Name </label>
+                            <input type="text" class="form-control" id="signType_cus_name" name="signType_cus_name" readonly tabindex='3'>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="guar_name_div">
+                        <div class="form-group">
+                            <label for="guar_name"> Guarentor Name </label>
+                            <input type="text" class="form-control" id="guar_name" name="guar_name" readonly tabindex='4'>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="relation_doc">
+                        <div class="form-group">
+                            <label for="signType_relationship"> Relationship </label>
+                            <select type="text" class="form-control" id="signType_relationship" name="signType_relationship" tabindex='5'>
+                                <option value=""> Select Relationship </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="doc_Count"> Count </label> <span class="required">&nbsp;*</span>
+                            <input type="number" class="form-control" id="doc_Count" name="doc_Count" placeholder="Enter Count" tabindex='6'>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">
+                        <input type="hidden" name="signedID" id="signedID">
+                        <button type="button" name="signInfoBtn" id="signInfoBtn" class="btn btn-primary" style="margin-top: 19px;" tabindex='7'>Submit</button>
+                    </div>
+
+                </div>
+                </br>
+
+                <div id="signTable">
+                    <table id="singnedTable" class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th width="50"> S.No </th>
+                                <th> Doc Name </th>
+                                <th> Sign Type </th>
+                                <th> Relationship </th>
+                                <th> Count </th>
+                                <th> ACTION </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="getSignedDocInfoTable()" tabindex='8'>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END  Add Signed Doc Info Modal -->
 <!-- ------------------------------------------------------------ Cheque Info Modal START ------------------------------------------------------------- -->
 <div class="modal fade" id="add_cheque_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg " role="document">
@@ -1391,8 +1691,8 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="doc_name">Document Name</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" name="doc_name" id="doc_name" tabindex="1" placeholder="Enter Document Name">
+                                    <label for="document_name">Document Name</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" name="document_name" id="document_name" tabindex="1" placeholder="Enter Document Name">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -1754,3 +2054,11 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- to get icons like fingerprint -->
+<!-- Old jQuery for MFS100 (fingerprint) -->
+<script src="vendor/mfs100/Library/js/jquery-1.8.2.js"></script>
+<script>
+    var jqOld = jQuery.noConflict(true); // Isolate old jQuery
+</script>
+<script src="vendor/mfs100/Library/js/mfs100.js"></script>
