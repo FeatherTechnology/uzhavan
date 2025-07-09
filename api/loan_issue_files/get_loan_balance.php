@@ -1,20 +1,26 @@
 <?php
 require '../../ajaxconfig.php';
 
-$cus_profile_id = $_POST['cus_profile_id'];;
-$qry = $pdo->query("
-    SELECT si.balance_amount
-    FROM loan_issue si
-    WHERE si.cus_profile_id = '$cus_profile_id' 
-    ORDER BY si.id DESC
-    LIMIT 1
-");
-if ($qry->rowCount() > 0) {
-    $result = $qry->fetch(PDO::FETCH_ASSOC);
+$detailrecords = array();
+
+if (isset($_POST['cus_profile_id'])) {
+    $cus_profile_id = $_POST['cus_profile_id'];
+
+    $qry = $pdo->query("SELECT balance_amount FROM loan_issue WHERE cus_profile_id = '$cus_profile_id' ORDER BY id DESC LIMIT 1");
+    $rowCnt = $qry->rowCount();
+
+    if ($rowCnt > 0) {
+        $row = $qry->fetch(PDO::FETCH_ASSOC);
+        $detailrecords['rowCnt'] = $rowCnt;
+        $detailrecords['balance_amount'] = $row['balance_amount'];
+    } else {
+        $detailrecords['rowCnt'] = 0;
+        $detailrecords['balance_amount'] = 0;
+    }
 } else {
-    $result = ['balance_amount' => null]; // Default to 0 if no records found
+    $detailrecords['rowCnt'] = 0;
+    $detailrecords['balance_amount'] = 0;
 }
 
-$pdo = null; // Close connection
-echo json_encode($result);
-?>
+$pdo = null;
+echo json_encode($detailrecords);

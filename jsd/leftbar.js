@@ -18,6 +18,7 @@ $(document).ready(function () {
         'accounts': 'accounts',
         'bank_clearance': 'accounts',
         'balance_sheet': 'accounts',
+        'accounts_loan_issue': 'accounts',
         'update_customer': 'update',
         'update_document': 'update',
         'customer_data': 'customer_data',

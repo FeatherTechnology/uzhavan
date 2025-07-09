@@ -1,5 +1,5 @@
 <?php
-require '../../ajaxconfig.php';
+require '../../../ajaxconfig.php';
 @session_start();
 $user_id = $_SESSION['user_id'];
 
@@ -31,7 +31,7 @@ LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE cs.status = 4 AND cp.payment_mode_status = 1 AND u.id ='$user_id' AND us.id ='$user_id'";
+WHERE cs.status = 4 AND cp.payment_mode_status = 2 AND u.id ='$user_id' AND us.id ='$user_id'";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -93,13 +93,19 @@ foreach ($result as $row) {
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
     <div class='dropdown-content'>";
-    $action .= "<a href='#' class='edit-loan-issue' value='" . $row['id'] . "' data-id='" . $row['cus_id'] . "' title='Edit details'>Edit</a>";
-    $action .= "<a href='#' class='loan-issue-cancel' value='" . $row['cus_sts_id'] . "' title='Cancel'>Cancel</a>";
-    $action .= "<a href='#' class='loan-issue-revoke' value='" . $row['cus_sts_id'] . "' title='Revoke'>Revoke</a>";
+
+    $cus_status = $row['c_sts'];
+
+    if ($cus_status == '4') {
+        $action .= "<a href='#' class='edit-accounts-loan-issue' value='" . $row['id'] . "' data-id='" . $row['cus_id'] . "' title='Edit details'>Edit Loan Issue</a>";
+    }
+
+    $action .= "<a href='#' class='move-loan-issue' value='" . $row['id'] . "' title='Move'>Move to Loan Issue</a>";
     $action .= "</div></div>";
     $sub_array[] = $action;
     $data[] = $sub_array;
 }
+
 
 function count_all_data($pdo)
 {
@@ -116,7 +122,6 @@ $output = array(
     'data' => $data
 );
 
-$pdo = null; //Close Connection
 echo json_encode($output);
 
 //Format number in Indian Format
