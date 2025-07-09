@@ -1,3 +1,4 @@
+<?php include("fingerprint_link.php"); ?>
 <!-- Loan Entry List Start -->
 <div class="text-right">
     <button type="button" class="btn btn-primary " id="add_loan"><span class="fa fa-plus"></span>&nbsp; Add Loan Entry</button>
@@ -2311,15 +2312,5 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
-
-
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- to get icons like fingerprint -->
-<!-- Old jQuery for MFS100 (fingerprint) -->
-<script src="vendor/mfs100/Library/js/jquery-1.8.2.js"></script>
-<script>
-    var jqOld = jQuery.noConflict(true); // Isolate old jQuery
-</script>
-<script src="vendor/mfs100/Library/js/mfs100.js"></script>
-
 
 

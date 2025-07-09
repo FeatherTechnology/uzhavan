@@ -2,7 +2,7 @@
 session_start();
 require '../../ajaxconfig.php';
 
-$userid = $_SESSION['userid'];
+$userid = $_SESSION['user_id'];
 
 $fdata = $_POST['fdata'];
 $hand = $_POST['hand'];
