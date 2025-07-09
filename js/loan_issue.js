@@ -362,20 +362,14 @@ $(document).ready(function () {
             $('#issue_relationship').val('');
         }
 
-        let AdhaarNo = document.querySelector("#issue_person").value;
+        let adhaar_cus = $('#issue_person').val();
         $('#cash_guarantor').hide();
         $('#compare_finger').val('')
-        var cusId = $('#cus_id').val();
-        if (AdhaarNo == cusId) {
-            var cus = '1';
-        } else {
-            var cus = '2';
-        }
 
         $.ajax({
-            url: 'api/loan_issue_files/getFamRelationship.php',
+            url: 'api/loan_issue_files/get_finger_print.php',
             type: 'POST',
-            data: { "adhaarno": AdhaarNo, "cus": cus, "cusId": cusId },
+            data: { "adhaar_cus": adhaar_cus, },
             dataType: 'json',
             cache: false,
             success: function (result) {
