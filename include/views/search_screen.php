@@ -1,3 +1,4 @@
+<?php include("fingerprint_link.php"); ?>
 <div class="row gutters">
     <div class="col-12">
         <!----------------------------- CARD START  SEARCH FORM ------------------------------>
@@ -45,6 +46,18 @@
                                         <div class="form-group">
                                             <label for="cus_mobile">Mobile Number</label><span class="text-danger">*</span>
                                             <input type="number" class="form-control" id="cus_mobile" name="cus_mobile" placeholder="Enter Mobile Number" tabindex="4" onKeyPress="if(this.value.length==10) return false;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="scanBtn">FingerPrint</label><span class="text-danger">*</span><br>
+
+                                            <!-- finger print value from Device when scanning.-->
+                                            <input type="hidden" class="form-control" id="match_fingerprint" name="match_fingerprint">
+                                            <input type="hidden" class="form-control" id="matched_aadhar" name="matched_aadhar">
+                                            <button type="button" class='btn btn-success scanBtn' style='background-color:#7CA5B8;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
+                                            <input type='hidden' id='fingerprint' name='fingerprint[]'>
+                                            <span class="text-danger" id="hand_type" style="position: relative;top: 12px;"> </span>
                                         </div>
                                     </div>
                                     <div class="col-12 mt-3 text-right">
@@ -416,26 +429,26 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_id"> Customer ID</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_id" name="cus_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14" readonly>
                                             <input type="hidden" id="cus_id_upd" name="cus_id_upd">
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="adhar_num"> Aadhar Number</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" name="adhar_num" id="adhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
+                                            <input type="text" class="form-control personal_info_disble" name="adhar_num" id="adhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="cus_name"> Customer Name</label><span class="text-danger">*</span>
-                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2">
+                                            <input type="text" class="form-control personal_info_disble" id="cus_name" name="cus_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="gender">Gender</label><span class="text-danger">*</span>
-                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3">
+                                            <select type="text" class="form-control  personal_info_disble" id="gender" name="gender" tabindex="3" readonly>
                                                 <option value="">Select Gender</option>
                                                 <option value="1">Male</option>
                                                 <option value="2">Female</option>
@@ -446,25 +459,25 @@
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="dob"> DOB</label>
-                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4">
+                                            <input type="date" class="form-control  personal_info_disble" id="dob" name="dob" placeholder="Enter Date Of Birth" tabindex="4" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="age"> Age</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="5">
+                                            <input type="number" class="form-control  personal_info_disble" id="age" name="age" readonly placeholder="Age" tabindex="5" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile1" name="mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6" readonly>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="mobile2"> Mobile Number 2</label>
-                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7">
+                                            <input type="number" class="form-control  personal_info_disble" id="mobile2" name="mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -861,21 +874,118 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
+                            <!-- How to Know -->
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cus_limit"> Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" disabled placeholder="Enter Limit" tabindex="32">
+                                    <label for="how_to_know">How To Know</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="how_to_know" name="how_to_know" tabindex="29" disabled>
+                                        <option value="">Select How To Know</option>
+                                        <option value="1">Customer Reference</option>
+                                        <option value="2">Advertisement</option>
+                                        <option value="3">Promotion activity</option>
+                                        <option value="4">Agent Reference</option>
+                                        <option value="5">Staff Reference</option>
+                                        <option value="6">Other Reference</option>
+                                        <option value="7">Renewal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="loan_count">Loan Count</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="travel_with_company">Travel With Company</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="travel_with_company" name="travel_with_company" disabled tabindex="36" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_income">Monthly Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_income" name="monthly_income" placeholder=" Enter Monthly Income" tabindex="37" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="about_cus"> About Customer </label>
-                                    <textarea class="form-control" name="about_cus" id="about_cus" disabled placeholder="Enter About Customer" tabindex="33"></textarea>
+                                    <label for="other_income">Other Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="other_income" name="other_income" placeholder="Enter Other Income" tabindex="38" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="support_income">Support Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="support_income" name="support_income" placeholder="Enter Support Income" tabindex="39" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="commitment">Commitment</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="commitment" name="commitment" placeholder="Enter Commitment" tabindex="40" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_due_capacity">Monthly Due Capacity</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_due_capacity" name="monthly_due_capacity" placeholder="Enter Due Capacity" tabindex="41" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="cus_limit">Customer Limit</label>
+                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                        </div> <br>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table class="table custom-table" id="feedbackListTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Feedback Label </th>
+                                                <th> Feedback </th>
+                                                <th> Remarks </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <!-- About Customer -->
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="about_cus">About Customer</label>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="43" readonly></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </form>
@@ -1161,33 +1271,6 @@
                     </div>
                 </div>
                 <!--- -------------------------------------- Other Info END ------------------------------- -->
-
-                <!--- -------------------------------------- Documents START ------------------------------- -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Documents</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <table id="doc_need_table" class="table custom-table">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No.</th>
-                                            <th>Document Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody> </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <!--- -------------------------------------- Documents END ------------------------------- -->
             </div>
         </div>
     </form>
@@ -1211,30 +1294,38 @@
         </div>
         <div class="row gutters">
             <div class="col-12">
-                <!--- -------------------------------------- Document Need START ------------------------------- -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Document Need</div>
+                <!-- Signed Doc Info START -->
+                <div class="card signed-div" style="display: none;">
+                    <div class="card-header"> Signed Doc Info
                     </div>
                     <div class="card-body">
+
                         <div class="row">
-                            <div class="col-12">
-                                <table id="doc_table" class="table custom-table">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No</th>
-                                            <th>Document Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody> </tbody>
-                                </table>
+
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table id="signDocResetTable" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Doc Name </th>
+                                                <th> Sign Type </th>
+                                                <th> Relationship </th>
+                                                <th> Count </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+
                         </div>
 
                     </div>
                 </div>
-                <!--- -------------------------------------- Document Need END ------------------------------- -->
-
+                <!-- Signed Doc Info END -->
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card cheque-div" style="display: none;">
                     <div class="card-header">

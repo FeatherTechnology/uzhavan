@@ -9,6 +9,73 @@ $(document).ready(function () {
         }
     });
 
+     $('.scanBtn').click(function () {
+    const scanButton = $(this);
+    scanButton.attr('disabled', true);
+    showOverlay();
+
+    setTimeout(() => {
+        const quality = 60;
+        const timeout = 10;
+        const res = CaptureFinger(quality, timeout);
+
+        if (res.httpStaus && res.data.ErrorCode == "0") {
+            const match_fingerprint = res.data.AnsiTemplate;
+            $('#match_fingerprint').val(match_fingerprint);
+
+            // 🔁 Get stored templates from DB
+            $.ajax({
+                url: 'api/search_files/get_match_fingerprint.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function (fingerList) {
+                    let matchFound = false;
+
+                    for (let i = 0; i < fingerList.length; i++) {
+                        const storedTemplate = fingerList[i].ansi_template;
+                        const aadhar = fingerList[i].adhar_num;
+
+                        const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
+
+                        if (verifyRes.httpStaus && verifyRes.data.Status === true) {
+                            matchFound = true;
+
+                            Swal.fire({
+                                title: 'Fingerprint Matched',
+                                icon: 'success',
+                                confirmButtonColor: '#009688'
+                            });
+
+                            $('#matched_aadhar').val(aadhar);
+                            $("#hand_type").text('Done').attr('class', 'text-success');
+                        }
+                    }
+
+                    if (!matchFound) {
+                        Swal.fire({
+                            title: 'Fingerprint Not Matching',
+                            icon: 'error',
+                            confirmButtonColor: '#009688'
+                        });
+                    }
+                },
+                error: function () {
+                    alert('Failed to fetch stored fingerprints');
+                },
+                complete: function () {
+                    scanButton.removeAttr('disabled');
+                    hideOverlay();
+                }
+            });
+
+        } else {
+            alert('Fingerprint scan failed or device not connected');
+            scanButton.removeAttr('disabled');
+            hideOverlay();
+        }
+    }, 700);
+});
+
 
     $(document).on('click', '.view_customer', function (event) {
         event.preventDefault();
@@ -20,7 +87,7 @@ $(document).ready(function () {
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();
-
+    
         OnLoadFunctions(cus_id, aadhar_num, cus_name, area, mobile)
     })
     $(document).on('click', '.noc-summary', function (event) {
@@ -165,12 +232,13 @@ $(document).ready(function () {
         $('#customer_profile_id').val(id);
         let cusID = $(this).attr('data-id'); //Cus id From List Page.
         $('#cus_id').val(cusID);
+        $('.signed-div').hide();
         $('.cheque-div').hide();
         $('.doc_div').hide();
         $('.mortgage-div').hide();
         $('.endorsement-div').hide();
         $('.gold-div').hide();
-        getDocTable(id);
+        getSignedDocInfoTable();
         getChequeInfoTable();
         getDocInfoTable();
         getMortInfoTable();
@@ -186,12 +254,13 @@ $(document).ready(function () {
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();
+        let matched_aadhar = $('#matched_aadhar').val();
 
         if (validate()) {
             $.ajax({
                 url: 'api/search_files/search_customer.php',
                 type: 'POST',
-                data: { cus_id, aadhar_num, cus_name, area, mobile },
+                data: { cus_id, aadhar_num, cus_name, area, mobile,matched_aadhar },
                 success: function (data) {
                     $('#custome_list').show();
                     getSearchTable(data);
@@ -274,12 +343,13 @@ function validate() {
     let cus_name = $('#cust_name').val().trim();
     let area = $('#cus_area').val().trim();
     let mobile = $('#cus_mobile').val().trim();
+     let matched_aadhar = $('#matched_aadhar').val();
 
     // Reset all field borders initially
     $('#cust_id, #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
 
     // Check if any one field is filled
-    if (cus_id || aadhar_num || cus_name || area || mobile) {
+    if (cus_id || aadhar_num || cus_name || area || mobile || matched_aadhar ) {
         // If any field is filled, reset the other fields' borders
         if (cus_id) {
             $('#cust_name, #cus_area, #cus_mobile ,#aadhar_nums').css('border', '1px solid #cecece');
@@ -291,6 +361,8 @@ function validate() {
             $('#cust_id , #aadhar_nums , #cust_name, #cus_mobile ').css('border', '1px solid #cecece');
         } else if (mobile) {
             $('#cust_id, #aadhar_nums , #cust_name, #cus_area').css('border', '1px solid #cecece');
+        }else if (matched_aadhar) {
+            $('#cust_id, #aadhar_nums , #cust_name, #cus_area,#matched_aadhar').css('border', '1px solid #cecece');
         }
     } else {
         // If no fields are filled, show validation errors
@@ -307,6 +379,9 @@ function validate() {
             response = false;
         }
         if (!validateField(mobile, 'cus_mobile')) {
+            response = false;
+        }
+        if (!validateField(matched_aadhar, 'matched_aadhar')) {
             response = false;
         }
 
@@ -514,20 +589,38 @@ function getKycInfoTable() {
         setdtable('#kyc_info');
     }, 'json')
 }
+function getFeedBackInfoTable() {
+    let cus_id = $('#cus_id').val();
+    let cus_profile_id = $('#customer_profile_id').val()
+    $.post('api/loan_entry/feedback_list.php', { cus_id, cus_profile_id }, function (response) {
+        var columnMapping = [
+            'sno',
+            'feedback_label',
+            'feedback_text',
+            'cus_remark'
+        ];
+        appendDataToTable('#feedbackListTable', response, columnMapping);
+        setdtable('#feedbackListTable');
+    }, 'json')
+}
 function getAreaName() {
-    $.post('api/loan_entry/get_area.php', function (response) {
-        let appendAreaOption = '';
-        appendAreaOption += "<option value='0'>Select Area Name</option>";
-        $.each(response, function (index, val) {
-            let selected = '';
+    return new Promise((resolve, reject) => {
+        $.post('api/loan_entry/get_area.php', function (response) {
+            let appendAreaOption = "<option value=''>Select Area Name</option>";
             let editArea = $('#area_edit').val();
-            if (val.id == editArea) {
-                selected = 'selected';
-            }
-            appendAreaOption += "<option value='" + val.id + "' " + selected + ">" + val.areaname + "</option>";
+
+            $.each(response, function (index, val) {
+                let selected = (val.id == editArea) ? 'selected' : '';
+                appendAreaOption += `<option value="${val.id}" ${selected}>${val.areaname}</option>`;
+            });
+
+            $('#area').empty().append(appendAreaOption);
+            resolve(); // resolve the promise after appending
+        }, 'json').fail(function (xhr, status, error) {
+            console.error("Error fetching area list:", error);
+            reject(error); // reject the promise on error
         });
-        $('#area').empty().append(appendAreaOption);
-    }, 'json');
+    });
 }
 
 function getAlineName(areaId) {
@@ -579,21 +672,25 @@ function dataCheckList(aadhar_num, cus_name, cus_mble_no) {
 }
 function getGuarantorName() {
     let cus_id = $('#cus_id').val();
-    $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
-        let appendGuarantorOption = '';
-        appendGuarantorOption += "<option value='0'>Select Guarantor Name</option>";
-        $.each(response, function (index, val) {
-            let selected = '';
-            let editGId = $('#guarantor_name_edit').val();
-            if (val.id == editGId) {
-                selected = 'selected';
-            }
-            appendGuarantorOption += "<option value='" + val.id + "' " + selected + ">" + val.fam_name + "</option>";
-        });
-        $('#guarantor_name').empty().append(appendGuarantorOption);
-    }, 'json');
-}
 
+    return new Promise((resolve, reject) => {
+        $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
+            let appendGuarantorOption = "<option value=''>Select Guarantor Name</option>";
+            let editGId = $('#guarantor_name_edit').val();
+
+            $.each(response, function (index, val) {
+                let selected = (val.id == editGId) ? 'selected' : '';
+                appendGuarantorOption += `<option value="${val.id}" ${selected}>${val.fam_name}</option>`;
+            });
+
+            $('#guarantor_name').empty().append(appendGuarantorOption);
+            resolve(); // Fulfill the promise once data is populated
+        }, 'json').fail(function (xhr, status, error) {
+            console.error("Error fetching guarantor name:", error);
+            reject(error); // Reject on error
+        });
+    });
+}
 function getGrelationshipName(guarantorId) {
     $.ajax({
         url: 'api/loan_entry/getGrelationship.php',
@@ -610,73 +707,122 @@ function getGrelationshipName(guarantorId) {
         }
     });
 }
+function getLoanCount(cus_id) {
+    $.ajax({
+        url: 'api/loan_entry/get_loan_count.php',
+        type: 'POST',
+        data: { cus_id: cus_id },
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            $('#loan_count').val(response.loan_count);
+            let formattedDate = response.first_loan_date;
+            $('#first_loan_date').val(formattedDate);
+            $('#travel_with_company').val(response.travel);
+        },
+    });
+}
+async function editCustmerProfile(id) {
+    try {
+        const response = await $.post('api/loan_entry/customer_profile_data.php', { id: id }, null, 'json');
 
-function editCustmerProfile(id) {
-    $.post('api/loan_entry/customer_profile_data.php', { id: id }, function (response) {
-        $('#customer_profile_id').val(response[0].id);
-        $('#area_edit').val(response[0].area);
-        $('#cus_id').val(response[0].cus_id);
-        $('#adhar_num').val(response[0].aadhar_num);
-        $('#cus_name').val(response[0].cus_name);
-        $('#gender').val(response[0].gender);
-        $('#dob').val(response[0].dob);
-        $('#age').val(response[0].age);
-        $('#mobile2').val(response[0].mobile2);
-        $('#mobile1').val(response[0].mobile1);
-        $('#guarantor_name_edit').val(response[0].guarantor_name);
-        $('#cus_data').val(response[0].cus_data);
-        $('#cus_status').val(response[0].cus_status);
-        $('#res_type').val(response[0].res_type);
-        $('#res_detail').val(response[0].res_detail);
-        $('#res_address').val(response[0].res_address);
-        $('#native_address').val(response[0].native_address);
-        $('#occupation').val(response[0].occupation);
-        $('#occ_address').val(response[0].occ_address);
-        $('#occ_detail').val(response[0].occ_detail);
-        $('#occ_income').val(response[0].occ_income);
-        $('#area_confirm').val(response[0].area_confirm);
-        $('#line').val(response[0].line);
-        $('#cus_limit').val(response[0].cus_limit);
-        $('#about_cus').val(response[0].about_cus);
-        dataCheckList(response[0].aadhar_num, response[0].cus_name, response[0].mobile1)
-        getGuarantorName()
-        getAreaName()
-        setTimeout(() => {
-            getFamilyInfoTable()
-            getPropertyInfoTable()
-            getBankInfoTable()
-            getKycInfoTable()
-            $('#area').trigger('change');
-            $('#guarantor_name').trigger('change');
-        }, 1000);
+        if (!response || response.length === 0) {
+            console.error("No customer data returned.");
+            return;
+        }
 
-        if (response[0].cus_data == 'Existing') {
-            $('#cus_status').show();
-            $('#data_checking_div').show();
+        const data = response[0];
+
+        $('#customer_profile_id').val(id);
+        $('#area_edit').val(data.area);
+        $('#cus_id').val(data.cus_id);
+        $('#aadhar_nums, #adhar_num').val(data.aadhar_num);
+        $('#cus_name').val(data.cus_name);
+        $('#gender').val(data.gender);
+        $('#dob').val(data.dob);
+        $('#age').val(data.age);
+        $('#mobile1').val(data.mobile1);
+        $('#mobile2').val(data.mobile2);
+        $('#whatsapp_no').val(data.whatsapp_no);
+        $('#guarantor_name_edit').val(data.guarantor_name);
+        $('#cus_data').val(data.cus_data);
+        $('#cus_status').val(data.cus_status);
+        $('#res_type').val(data.res_type);
+        $('#res_detail').val(data.res_detail);
+        $('#res_address').val(data.res_address);
+        $('#native_address').val(data.native_address);
+        $('#occupation').val(data.occupation);
+        $('#occ_address').val(data.occ_address);
+        $('#occ_detail').val(data.occ_detail);
+        $('#occ_income').val(data.occ_income);
+        $('#area_confirm').val(data.area_confirm);
+        $('#line').val(data.line);
+        $('#cus_limit').val(data.cus_limit);
+        $('#about_cus').val(data.about_cus);
+        $('#how_to_know').val(data.how_to_know);
+        $('#monthly_income').val(data.monthly_income);
+        $('#other_income').val(data.other_income);
+        $('#support_income').val(data.support_income);
+        $('#commitment').val(data.commitment);
+        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+
+        // Handle WhatsApp number radio selection
+        if (data.whatsapp_no === data.mobile1) {
+            $('#mobile1_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile1');
+        } else if (data.whatsapp_no === data.mobile2) {
+            $('#mobile2_radio').prop('checked', true);
+            $('#selected_mobile_radio').val('mobile2');
+        }
+
+        // Load checklist and dropdowns
+        dataCheckList(data.cus_id, data.cus_name, data.mobile1, data.aadhar_num);
+        await getGuarantorName();
+        await getAreaName();
+
+        getFamilyInfoTable();
+        getPropertyInfoTable();
+        getBankInfoTable();
+        getKycInfoTable();
+        getFeedBackInfoTable();
+
+        $('#area').trigger('change');
+        $('#guarantor_name').trigger('change');
+
+        // Show/hide based on customer data
+        if (data.cus_data === 'Existing') {
+            $('.cus_status_div').show();
+            $('.loan_count_div').show();
+            let cus_id = $('#cus_id').val();
+            getLoanCount(cus_id);
         } else {
-            $('#cus_status').hide();
-            $('#data_checking_div').hide();
+            $('.cus_status_div').hide();
             $('#data_checking_table_div').hide();
+            $('.loan_count_div').hide();
         }
+
+
+        // Set customer picture
         let path = "uploads/loan_entry/cus_pic/";
-        if (response[0].pic) {
-            $('#per_pic').val(response[0].pic);
-            var img = $('#imgshow');
-            img.attr('src', path + response[0].pic);
-        }
-        else {
-            $('#imgshow').attr('src', 'img/avatar.png');
-        }
-        let paths = "uploads/loan_entry/gu_pic/";
-        if (response[0].gu_pic) {
-            $('#gur_pic').val(response[0].gu_pic);
-            $('#gur_imgshow').attr('src', paths + response[0].gu_pic);
+        $('#per_pic').val(data.pic);
+        $('#imgshow').attr('src', path + data.pic);
+
+        // Set guarantor picture or fallback
+        let guPath = "uploads/loan_entry/gu_pic/";
+        if (data.gu_pic) {
+            $('#gur_pic').val(data.gu_pic);
+            $('#gur_imgshow').attr('src', guPath + data.gu_pic);
         } else {
             $('#gur_imgshow').attr('src', 'img/avatar.png');
         }
+
+        // Disable editing
         $('.personal_info_disble').attr("disabled", true);
         $('#submit_personal_info').attr('disabled', true);
-    }, 'json');
+
+    } catch (error) {
+        console.error('Error in editCustmerProfile:', error);
+    }
 }
 ///////////////////////////////////////////////////////////Documentation////////////////////////////////////////////////////////////////////
 function getChequeInfoTable() {
@@ -699,16 +845,25 @@ function getChequeInfoTable() {
         setdtable('#cheque_info_table');
     }, 'json');
 }
-function getDocTable(cusProfileId) {
-    $.post('api/loan_entry/loan_calculation/document_need_list.php', { cusProfileId }, function (response) {
-        let docColumn = [
+function getSignedDocInfoTable() {
+    let cus_profile_id = $('#customer_profile_id').val();
+    $.post('api/loan_entry/get_signeddoc_info_list.php', { cus_profile_id }, function (response) {
+        if (response && response.length > 0) {
+            // Show the cheque div and populate the table if the condition is met
+            $('.signed-div').show();
+        }
+        let signColumn = [
             "sno",
-            "document_name"
+            "doc_name",
+            "sign_type",
+            "signed_name",
+            "doc_Count"
         ]
-        appendDataToTable('#doc_table', response, docColumn);
-        setdtable('#doc_table')
+        appendDataToTable('#signDocResetTable', response, signColumn);
+        setdtable('#signDocResetTable');
     }, 'json');
 }
+
 function getDocInfoTable() {
     let cus_profile_id = $('#customer_profile_id').val();
     $.post('api/loan_issue_files/doc_info_list.php', { cus_profile_id }, function (response) {
@@ -909,16 +1064,15 @@ $(document).ready(function () {
     $('#referred_calc').change(function () {
         let referred = $('#referred_calc').val();
         if (referred == '0') {
-            $('#agent_id_calc').prop('disabled', false).val('');
+            $('#agent_id_calc').prop('disabled', true).val('');
             $('#agent_name_calc').val('');
             getAgentID();
         } else {
+
             $('#agent_id_calc').prop('disabled', true).val('');
             $('#agent_name_calc').prop('readonly', true).val('');
         }
     });
-
-
 
 
 }); //Document END.
@@ -959,7 +1113,7 @@ function getAgentID() {
             if (val.id == agent_id_edit_it) {
                 selected = 'selected';
             }
-            appendAgentIdOption += '<option value="' + val.id + '" ' + selected + '>' + val.agent_code + '</option>';
+            appendAgentIdOption += '<option value="' + val.id + '" ' + selected + '>' + val.agent_name + '</option>';
         });
         $('#agent_id_calc').empty().append(appendAgentIdOption);
     }, 'json');
@@ -1119,7 +1273,6 @@ function loanCalculationEdit(id) {
             $('.scheme').show();
             schemeCalAjax(response[0].scheme_name)
         }
-
 
         setTimeout(() => {
 

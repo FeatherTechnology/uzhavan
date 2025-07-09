@@ -2,7 +2,7 @@
 require '../../ajaxconfig.php';
 
 $search_list_arr = array();
-
+$matched_aadhar = isset($_POST['matched_aadhar']) ? $_POST['matched_aadhar'] : null;
 $cus_id = isset($_POST['cus_id']) ? $_POST['cus_id'] : '';
 $aadhar_num = isset($_POST['aadhar_num']) ? $_POST['aadhar_num'] : '';
 $cus_name = isset($_POST['cus_name']) ? $_POST['cus_name'] : '';
@@ -27,6 +27,10 @@ $parameters = [];
 if (!empty($cus_id)) {
     $conditions[] = "cp.cus_id LIKE :cus_id";
     $parameters[':cus_id'] = '%' . $cus_id . '%';
+}
+if (!empty($matched_aadhar)) {
+    $conditions[] = "cp.cus_id LIKE :matched_aadhar";
+    $parameters[':matched_aadhar'] = '%' . $matched_aadhar . '%';
 }
 if (!empty($aadhar_num)) {
     $conditions[] = "cp.aadhar_num LIKE :aadhar_num";
