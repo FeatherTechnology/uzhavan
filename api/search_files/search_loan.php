@@ -7,6 +7,7 @@ $cus_name = isset($_POST['cus_name']) ? trim($_POST['cus_name']) : '';
 $area = isset($_POST['area']) ? trim($_POST['area']) : '';
 $mobile = isset($_POST['mobile']) ? trim($_POST['mobile']) : '';
 
+
 $cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : null;
 $loan_list_arr = array();
 $status = [
@@ -64,7 +65,7 @@ if ($qry->rowCount() > 0) {
         $response['loan_date'] = $loanDate->format('d-m-Y');
         $response['loan_id'] = $row['loan_id'];
         $response['loan_category'] = $row['loan_category'];
-        $response['loan_amount'] = $row['loan_amount'];
+        $response['loan_amount'] = moneyFormatIndia($row['loan_amount']);
         $response['status'] = $status[$row['status']];
 
         // Calculate loan customer status and store in variable
@@ -185,4 +186,35 @@ function loanCustomerStatus($pdo, $cus_profile_id)
     }
 
     return ''; // Default return value if no conditions match
+}
+function moneyFormatIndia($num1)
+{
+    if ($num1 < 0) {
+        $num = str_replace("-", "", $num1);
+    } else {
+        $num = $num1;
+    }
+    $explrestunits = "";
+    if (strlen($num) > 3) {
+        $lastthree = substr($num, strlen($num) - 3, strlen($num));
+        $restunits = substr($num, 0, strlen($num) - 3);
+        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
+        $expunit = str_split($restunits, 2);
+        for ($i = 0; $i < sizeof($expunit); $i++) {
+            if ($i == 0) {
+                $explrestunits .= (int)$expunit[$i] . ",";
+            } else {
+                $explrestunits .= $expunit[$i] . ",";
+            }
+        }
+        $thecash = $explrestunits . $lastthree;
+    } else {
+        $thecash = $num;
+    }
+
+    if ($num1 < 0 && $num1 != '') {
+        $thecash = "-" . $thecash;
+    }
+
+    return $thecash;
 }
