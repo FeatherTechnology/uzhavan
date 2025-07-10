@@ -478,7 +478,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
                                 <div class="form-group">
                                     <label for="">Cheque Value</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="chequeValue" name="chequeValue" tabindex="38">
+                                    <input type="text" class="form-control" id="chequeValue" name="chequeValue" tabindex="38">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 checque" style="display:none">
@@ -500,7 +500,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
                                 <div class="form-group">
                                     <label for="disabledInput">Transaction Value </label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="transaction_value" name="transaction_value" tabindex="41">
+                                    <input type="text" class="form-control" id="transaction_value" name="transaction_value" tabindex="41">
                                     <span class="text-danger" style="display: none;" id="transact_val"> Please Enter Transaction Value </span>
                                 </div>
                             </div>

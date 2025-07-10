@@ -379,7 +379,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 cash_issue" style="display:none">
                                 <div class="form-group">
                                     <label for="disabledInput">Cash</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="cash" name="cash" tabindex="36">
+                                    <input type="text" class="form-control" id="cash" name="cash" tabindex="36">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 balance_remark_container" style="display:none">
@@ -410,7 +410,7 @@
 
                 <!------------------------------------------------------------------- Cash Info Start --------------------------------------------------------->
 
-                <div class="card" id="cash_acknowledgement" style="display:none">
+                <div class="card" id="cash_acknowledgement">
                     <div class="card-header">
                         <div class="card-title">Cash Acknowledgement</div>
                     </div>
@@ -431,7 +431,7 @@
                                     <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="46" placeholder="Relationship" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" id ="finger_hide" style="display:none">
                                 <div class="form-group">
 
                                     <!--Already Store in Finger Print Table... when select fam name above the finger print will be shown here to compare. -->

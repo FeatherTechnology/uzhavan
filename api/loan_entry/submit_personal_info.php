@@ -65,10 +65,8 @@ try {
     $pdo->beginTransaction();
     // Step 1: Check if this aadhar number already exists
     $checkAadhar = $pdo->query("SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'");
-
     if ($checkAadhar->rowCount() > 0) {
         // Aadhar exists, reuse the existing cus_id
-    
         $existing = $checkAadhar->fetch();
         $cus_id = $existing['cus_id'];
     } else {
@@ -78,11 +76,12 @@ try {
         $company_name = $qry_info["company_name"];
         $str = preg_replace('/\s+/', '', $company_name);
         $myStr = mb_substr($str, 0, 1);
-        if ($selectIC->rowCount() > 0) {
-            $row = $selectIC->fetch();
-            $ac2 = $row["cus_id"];
+        $row = $selectIC->fetch();
+        $ac2 = $row["cus_id"];
+
+        if (!empty($ac2)) {
             $appno2 = ltrim(strstr($ac2, '-'), '-');
-            $appno2 = $appno2 + 1;
+            $appno2 = (int)$appno2 + 1;
             $cus_id = $myStr . "-" . $appno2;
         } else {
             $initialapp = $myStr . "-101";
