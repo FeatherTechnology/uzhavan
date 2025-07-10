@@ -88,7 +88,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';
     $sub_array[] = isset($row['mobile1']) ? $row['mobile1'] : '';
     $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
-    $sub_array[] = isset($row['loan_amount']) ? $row['loan_amount'] : '';
+    $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount']) : '';
     $sub_array[] = isset($row['cus_data']) ? $row['cus_data'] : '';
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>

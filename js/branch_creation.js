@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $(document).on('click', '#add_branch, #back_btn', function () {
-        swapTableAndCreation();
+        swapTableAndCreation();  
+        getCompanyName();
     });
 
     $('#state').change(function () {
@@ -129,8 +130,6 @@ function swapTableAndCreation() {
         $('.addbranchBtn').hide();
         $('#branch_creation_content').show();
         $('.backBtn').show();
-
-        getCompanyName();
         getStateList();
 
     } else {

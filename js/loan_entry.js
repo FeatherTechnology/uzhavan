@@ -1170,6 +1170,7 @@ function getFamilyTable() {
         $('#fam_relationship').val('');
         $('#remarks').val('');
         $('#fam_live').val('');
+        fingerprintTable();
         dataCheckList(cus_id, cus_name, customerMobile, aadhar_num)
     }, 'json')
 }

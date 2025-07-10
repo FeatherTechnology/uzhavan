@@ -88,7 +88,7 @@ if ($qry->rowCount() > 0) {
         }
         $response['info'] .=  "  </div> </div>";
 
-        if ($row['status'] < 7) { // Condition: Less than 7
+        if ($row['status'] < 7 || $row['status'] == 13 || $row['status'] == 14){ // Condition: Less than 7 and 13 and 14 
             $response['charts'] = "<div class='dropdown'>
                 <button class='btn btn-outline-secondary' disabled>
                     <i class='fa'>&#xf107;</i>

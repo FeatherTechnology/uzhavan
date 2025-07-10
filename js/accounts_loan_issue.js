@@ -44,18 +44,18 @@ $(document).ready(function () {
             'cus_profile_id': $('#customer_profile_id').val(),
             'loan_amnt': $('#loan_amount_calc').val().replace(/,/g, ''),
             'net_cash_calc': $('#net_cash_calc').val().replace(/,/g, ''),
-            'bal_net_cash': $('#balance_net_cash').val(),
+            'bal_net_cash': $('#balance_net_cash').val().replace(/,/g, ''),
             'payment_type': $('#payment_type').val(),
             'payment_mode': $('#payment_mode').val(),
             'bank_names': $('#bank_names').val(),
             'cash': $('#cash').val(),
             'chequeno': $('#chequeno').val(),
-            'chequeValue': $('#chequeValue').val(),
+            'chequeValue': $('#chequeValue').val().replace(/,/g, ''),
             'chequeRemark': $('#chequeRemark').val(),
             'transaction_id': $('#transaction_id').val(),
-            'transaction_value': $('#transaction_value').val(),
+            'transaction_value': $('#transaction_value').val().replace(/,/g, ''),
             'transaction_remark': $('#transaction_remark').val(),
-            'bal_amount': $('#balance_amount').val(),
+            'bal_amount': $('#balance_amount').val().replace(/,/g, ''),
             'issue_date': $('#issue_date').val(),
             'issue_person': $('#issue_person').val(),
             'issue_relationship': $('#issue_relationship').val(),
@@ -134,7 +134,7 @@ function personalInfo() {
                 $('#loan_id_calc').val(response[0].loan_id);
                 $('#loan_category_calc').val(response[0].loan_category);
                 $('#category_info_calc').val(response[0].category_info);
-                $('#loan_amount_calc').val(response[0].loan_amnt);
+                $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amnt));
                 $('#profit_type_calc').val(response[0].profit_type);
                 $('#due_method_calc').val(response[0].due_method);
                 $('#scheme_due_method_calc').val(response[0].scheme_due_method);
@@ -146,13 +146,13 @@ function personalInfo() {
                 $('#due_period_upd').val(response[0].due_period);
                 $('#doc_charge_upd').val(response[0].doc_charge);
                 $('#proc_fees_upd').val(response[0].processing_fees);
-                $('#principal_amnt_calc').val(response[0].principal_amnt);
-                $('#interest_amnt_calc').val(response[0].interest_amnt);
-                $('#total_amnt_calc').val(response[0].total_amnt);
-                $('#due_amnt_calc').val(response[0].due_amnt);
-                $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-                $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-                $('#net_cash_calc').val(response[0].net_cash);
+                $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+                $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+                $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+                $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+                $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+                $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+                $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
                 $('#loan_date_calc').val(response[0].loan_date);
                 $('#due_startdate_calc').val(response[0].due_startdate);
                 $('#maturity_date_calc').val(response[0].maturity_date);
@@ -333,10 +333,10 @@ function checkBalance() {
                 let balanceAmount = parseFloat(response['balance_amount']);
 
                 if (rowCnt > 0) {
-                    $('#balance_net_cash').val(balanceAmount);
+                    $('#balance_net_cash').val(moneyFormatIndia(balanceAmount));
                 } else {
                     let netcashamnt = parseFloat($('#net_cash_calc').val().replace(/,/g, ''));
-                    $('#balance_net_cash').val(netcashamnt);
+                    $('#balance_net_cash').val(moneyFormatIndia(netcashamnt));
                 }
 
                 resolve(); // Resolves when AJAX completes successfully
@@ -357,7 +357,7 @@ function calculateBalance() {
     let remainingBalance = settlementBalance - (cheqVal + transVal);
 
     // Format the remaining balance using the moneyFormatIndia function
-    $('#balance_amount').val((remainingBalance));
+    $('#balance_amount').val(moneyFormatIndia(remainingBalance));
 }
 
 function getBankDetails() {

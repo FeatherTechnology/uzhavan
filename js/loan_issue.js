@@ -186,7 +186,7 @@ $(document).ready(function () {
                 $('#bank_container').hide();
                 $('#balance_amount').val('');
                 $('#bankInfo').hide();
-                $('#cash_acknowledgement').show();
+                $('#finger_hide').show();
 
             } else if (type == '2') {
                 $('#cash').val('');
@@ -196,7 +196,7 @@ $(document).ready(function () {
                 $('.balance_remark_container').hide();
                 $('#balance_amount').val('');
                 $('#bankInfo').show();
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
 
             } else if (type == '3') {
                 $('#cash').val('');
@@ -206,12 +206,12 @@ $(document).ready(function () {
                 $('.balance_remark_container').hide();
                 $('#balance_amount').val('');
                 $('#bankInfo').show();
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
             }
             else {
                 $('.cash_issue').hide();
                 $('#bank_container').hide();//hide bank id
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
             }
         } else if (paymentType == '2') {  // Single Payment (Read-only)
 
@@ -224,7 +224,7 @@ $(document).ready(function () {
                 $('.cash_issue').show();
                 $('#bank_container').hide();
                 $('#bankInfo').hide();
-                $('#cash_acknowledgement').show();
+                $('#finger_hide').show();
 
             } else if (type == '2') {
                 $('#cash').val('');
@@ -232,7 +232,7 @@ $(document).ready(function () {
                 $('.cash_issue').hide();
                 $('#bank_container').show();
                 $('#bankInfo').show();
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
 
             } else if (type == '3') {
                 $('#cash').val('');
@@ -240,12 +240,13 @@ $(document).ready(function () {
                 $('.cash_issue').hide();
                 $('#bank_container').show();
                 $('#bankInfo').show();
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
             }
             else {
                 $('.cash_issue').hide();
                 $('#bank_container').hide();//hide bank id
-                $('#cash_acknowledgement').hide();
+                $('#finger_hide').hide();
+
             }
         }
     });
@@ -490,14 +491,14 @@ $(document).ready(function () {
             'net_cash_calc': $('#net_cash_calc').val().replace(/,/g, ''),
             'due_startdate': $('#due_startdate_calc').val(),
             'maturity_date': $('#maturity_date_calc').val(),
-            'bal_net_cash': $('#balance_net_cash').val(),
-            'bal_amount': $('#balance_amount').val(),
+            'bal_net_cash': $('#balance_net_cash').val().replace(/,/g, ''),
+            'bal_amount': $('#balance_amount').val().replace(/,/g, ''),
             'payment_type': $('#payment_type').val(),
-            'cash': $('#cash').val(),
+            'cash': $('#cash').val().replace(/,/g, ''),
             'bank_names': $('#bank_names').val(),
             'payment_mode': $('#payment_mode').val(),
             'issue_date': $('#issue_date').val(),
-            'issue_person': $('#issue_person').val(),
+            'issue_person': $('#issue_person option:selected').text(),
             'issue_relationship': $('#issue_relationship').val(),
         }
 
@@ -601,7 +602,7 @@ function personalInfo() {
         $('#loan_id_calc').val(response[0].loan_id);
         $('#loan_category_calc').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(response[0].loan_amnt);
+        $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amnt));
         $('#profit_type_calc').val(response[0].profit_type);
         $('#due_method_calc').val(response[0].due_method);
         $('#scheme_due_method_calc').val(response[0].scheme_due_method);
@@ -613,13 +614,13 @@ function personalInfo() {
         $('#due_period_upd').val(response[0].due_period);
         $('#doc_charge_upd').val(response[0].doc_charge);
         $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
+        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#maturity_date_calc').val(response[0].maturity_date);
@@ -1211,9 +1212,8 @@ function getLoanCount(cus_id) {
         cache: false,
         success: function (response) {
             $('#loan_count').val(response.loan_count);
-
             if (response.first_loan_date) {
-                let formattedDate = response.first_loan_date.split('-').reverse().join('-');
+                let formattedDate = response.first_loan_date;
                 $('#first_loan_date').val(formattedDate);
             } else {
                 $('#first_loan_date').val(''); // or a default placeholder
@@ -1369,7 +1369,7 @@ function checkBalance() {
             let balanceAmount = parseFloat(response['balance_amount']);
 
             if (rowCnt > 0) {
-                $('#balance_net_cash').val(balanceAmount);
+                $('#balance_net_cash').val(moneyFormatIndia(balanceAmount));
 
                 if (balanceAmount > 0) {
                     $('#interest_rate_calc').attr('readonly', true);
@@ -1392,7 +1392,7 @@ function checkBalance() {
             } else {
                 // No record in DB: use net cash as balance
                 let netcashamnt = parseFloat($('#net_cash_calc').val().replace(/,/g, ''));
-                $('#balance_net_cash').val(netcashamnt);
+                $('#balance_net_cash').val(moneyFormatIndia(netcashamnt));
                 $('#interest_rate_calc').attr('readonly', false);
                 $('#due_period_calc').attr('readonly', false);
                 $('#doc_charge_calc').attr('readonly', false);
@@ -1412,7 +1412,7 @@ function calculateBalance() {
     let remainingBalance = settlementBalance - (cashVal);
 
     // Format the remaining balance using the moneyFormatIndia function
-    $('#balance_amount').val((remainingBalance));
+    $('#balance_amount').val(moneyFormatIndia(remainingBalance));
 }
 
 function getBankName() {
