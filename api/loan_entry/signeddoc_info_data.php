@@ -48,8 +48,18 @@ if ($signedDoc['sign_type'] == '2' || $signedDoc['sign_type'] == '3') {
     $signedDoc['holder_name'] = $holder_name;
     $signedDoc['selected_relationship'] = $selected_id; // ✅ ADD THIS LINE
 }
-
-
+// Fetch uploaded file names
+$updresult = [];
+$qry2 = $pdo->query("SELECT uploads FROM `signed_upload` WHERE signed_info_id ='$id'");
+if ($qry2->rowCount() > 0) {
+    $updresult = $qry2->fetchAll(PDO::FETCH_ASSOC);
+}
 
 $pdo = null;
-echo json_encode($signedDoc);
+
+// Return both signedDoc and uploads as a single JSON object
+echo json_encode([
+    'signedDoc' => $signedDoc,
+    'upd' => $updresult
+]);
+

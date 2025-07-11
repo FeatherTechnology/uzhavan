@@ -3100,21 +3100,54 @@ $('#signInfoBtn').click(function () {
         }
     }
     if (isValid) {
-        $.post('api/loan_entry/signed_doc_info_submit.php', { cus_id, doc_name, sign_type, signType_relationship, doc_Count, signedID, cus_profile_id }, function (response) {
-            if (response == '1') {
-                swalSuccess('Success', 'Signed Doc Info Added Successfully!');
-            } else if (response == '2') {
-                swalSuccess('Success', 'Signed Doc Info Updated Successfully!')
-            } else {
-                swalError('Error', 'Error Occured')
+        let signedInfo = new FormData();
+
+        // Append values to FormData
+        signedInfo.append('doc_name', doc_name);
+        signedInfo.append('sign_type', sign_type);
+        signedInfo.append('signType_relationship', signType_relationship);
+        signedInfo.append('doc_Count', doc_Count);
+        signedInfo.append('cus_id', cus_id);
+        signedInfo.append('cus_profile_id', cus_profile_id);
+        signedInfo.append('signedID', signedID);
+
+        // Handle file inputs
+        let sign_upload = $('#sign_upload')[0]?.files;
+        let sign_upload_edit = $('#sign_upload_edit').val() || '';
+
+        signedInfo.append('sign_upload_edit', sign_upload_edit);
+
+        if (sign_upload && sign_upload.length > 0) {
+            for (let i = 0; i < sign_upload.length; i++) {
+                signedInfo.append('sign_upload[]', sign_upload[i]);
             }
-            getSignedDocTable();
-            $('#signedID').val('');
+        }
 
-            $("#cus_name_div").hide();
-            $("#guar_name_div").hide();
-            $("#relation_doc").hide();
+        // Send using AJAX
+        $.ajax({
+            url: 'api/loan_entry/signed_doc_info_submit.php',
+            type: 'POST',
+            data: signedInfo,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response == '1') {
+                    swalSuccess('Success', 'Signed Doc Info Added Successfully!');
+                } else if (response == '2') {
+                    swalSuccess('Success', 'Signed Doc Info Updated Successfully!');
+                } else {
+                    swalError('Error', 'Error Occurred');
+                }
 
+                getSignedDocTable();
+                $('#signedID').val('');
+                $("#cus_name_div").hide();
+                $("#guar_name_div").hide();
+                $("#relation_doc").hide();
+            },
+            error: function () {
+                swalError('Error', 'Request Failed. Please try again.');
+            }
         });
     }
 })
@@ -3124,38 +3157,38 @@ $(document).on('click', '.signdocActionBtn', function () {
 
     $.post('api/loan_entry/signeddoc_info_data.php', { id }, function (response) {
         // Populate form with response data
-        $("#sign_type").val(response.sign_type);
-        $("#signedID").val(response.id);
-        $("#doc_name").val(response.doc_name);
-        $("#doc_Count").val(response.doc_Count);
-
+        const signedDoc = response.signedDoc;
+        $("#sign_type").val(signedDoc.sign_type);
+        $("#signedID").val(signedDoc.id);
+        $("#doc_name").val(signedDoc.doc_name);
+        $("#doc_Count").val(signedDoc.doc_Count);
         // Clear and reset signType_relationship
         $("#signType_relationship").empty().append(`<option value=''>Select Relationship</option>`);
 
         // Show/hide and populate customer name if type is Customer
-        if (response.sign_type === "0") {
+        if (signedDoc.sign_type === "0") {
             $("#cus_name_div").show();
-            $("#signType_cus_name").val(response.signType_cus_name);
+            $("#signType_cus_name").val(signedDoc.signType_cus_name);
             $("#guar_name_div").hide();
             $("#relation_doc").hide();
         }
 
         // Show/hide and populate guarantor name if type is Guarantor
-        else if (response.sign_type === "1") {
+        else if (signedDoc.sign_type === "1") {
             $("#cus_name_div").hide();
             $("#guar_name_div").show();
-            $("#guar_name").val(response.guar_name);
+            $("#guar_name").val(signedDoc.guar_name);
             $("#relation_doc").hide();
         }
 
         // If Combined (2 or 3), show both guarantor and relationship dropdown
-        else if (response.sign_type === "2" || response.sign_type === "3") {
+        else if (signedDoc.sign_type === "2" || signedDoc.sign_type === "3") {
             $("#cus_name_div").hide();
             $("#guar_name_div").hide();
             $("#relation_doc").show();
 
-            let selectedId = response.selected_relationship; // ✅ Now you're getting this from the backend
-            let familyList = response.holder_name;
+            let selectedId = signedDoc.selected_relationship; // ✅ Now you're getting this from the backend
+            let familyList = signedDoc.holder_name;
 
             $("#signType_relationship").empty().append(`<option value=''>Select Relationship</option>`);
 
@@ -3166,7 +3199,12 @@ $(document).on('click', '.signdocActionBtn', function () {
                 );
             });
         }
-
+        if (response.upd && response.upd.length > 0) {
+            let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
+            $('#sign_upload_edit').val(uploadFiles.join(','));
+        } else {
+            $('#sign_upload_edit').val('');
+        }
 
     }, 'json');
 });
@@ -3286,57 +3324,57 @@ $('#submit_cheque_info').click(function (event) {
     }
 });
 
- $(document).on('click', '.chequeActionBtn', async function () {
-        let id = $(this).attr('value');
+$(document).on('click', '.chequeActionBtn', async function () {
+    let id = $(this).attr('value');
 
-        try {
-            const response = await new Promise((resolve, reject) => {
-                $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (data) {
-                    resolve(data);
-                }, 'json').fail(reject);
-            });
+    try {
+        const response = await new Promise((resolve, reject) => {
+            $.post('api/loan_issue_files/cheque_info_data.php', { id }, function (data) {
+                resolve(data);
+            }, 'json').fail(reject);
+        });
 
-            let res = response.result[0];
-            $('#cq_holder_type').val(res.holder_type);
-            $('#cq_holder_name').val(res.holder_name);
-            $('#cq_holder_name').attr('data-id', res.holder_id);
-            $('#cq_relationship').val(res.relationship);
-            $('#cq_bank_name').val(res.bank_name);
-            $('#cheque_count').val(res.cheque_cnt);
-            $('#cheque_info_id').val(res.id);
+        let res = response.result[0];
+        $('#cq_holder_type').val(res.holder_type);
+        $('#cq_holder_name').val(res.holder_name);
+        $('#cq_holder_name').attr('data-id', res.holder_id);
+        $('#cq_relationship').val(res.relationship);
+        $('#cq_bank_name').val(res.bank_name);
+        $('#cheque_count').val(res.cheque_cnt);
+        $('#cheque_info_id').val(res.id);
 
-            if (res.holder_type == '3') {
-                $('.cq_fam_member').show();
+        if (res.holder_type == '3') {
+            $('.cq_fam_member').show();
 
-                await getFamilyMember('Select Family Member', '#cq_fam_mem'); // Wait for family list to load
+            await getFamilyMember('Select Family Member', '#cq_fam_mem'); // Wait for family list to load
 
-                $('#cq_fam_mem').val(res.holder_id); // Set value after load
-            } else {
-                $('#cq_fam_mem').val('');
-                $('.cq_fam_member').hide();
-            }
+            $('#cq_fam_mem').val(res.holder_id); // Set value after load
+        } else {
+            $('#cq_fam_mem').val('');
+            $('.cq_fam_member').hide();
+        }
 
-            if (response.upd.length > 0) {
-                let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
-                $('#cq_upload_edit').val(uploadFiles.join(','));
-            }
+        if (response.upd.length > 0) {
+            let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
+            $('#cq_upload_edit').val(uploadFiles.join(','));
+        }
 
-            $('#cheque_no').empty();
-            for (let key in response.no) {
-                let cheque = response.no[key];
-                $('#cheque_no').append(
-                    `<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'>
+        $('#cheque_no').empty();
+        for (let key in response.no) {
+            let cheque = response.no[key];
+            $('#cheque_no').append(
+                `<div class='col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12'>
                     <div class='form-group'>
                         <input type='number' class='form-control chequeno' name='chequeno[]' value='${cheque['cheque_no']}'/>
                     </div>
                 </div>`
-                );
-            }
-
-        } catch (err) {
-            console.error('Cheque info load failed:', err);
+            );
         }
-    });
+
+    } catch (err) {
+        console.error('Cheque info load failed:', err);
+    }
+});
 
 $(document).on('click', '.chequeDeleteBtn', function () {
     let id = $(this).attr('value');
@@ -3843,6 +3881,7 @@ function getSignedDocTable() {
             "sign_type",
             "signed_name",
             "doc_Count",
+            "upload",
             "action"
         ]
         appendDataToTable('#singnedTable', response, signColumn);
@@ -3855,6 +3894,8 @@ function getSignedDocTable() {
         $("#relation_doc").hide();
         $("#signType_relationship").val("");
         $("#doc_Count").val("");
+        $("#sign_upload_edit").val("");
+        $('#sign_upload').val('');
         $('#sign_type').css('border', '1px solid #cecece');
         $('#doc_Count').css('border', '1px solid #cecece');
         $('#signType_relationship').css('border', '1px solid #cecece');
@@ -3872,7 +3913,8 @@ function getSignedDocInfoTable() {
             "doc_name",
             "sign_type",
             "signed_name",
-            "doc_Count"
+            "doc_Count",
+            "upload"
         ]
         appendDataToTable('#signDocResetTable', response, signColumn);
         setdtable('#signDocResetTable');

@@ -138,6 +138,36 @@
             <div class="row gutters" id="noc_summary" style="display:none">
                 <input type="hidden" id="cp_id">
                 <div class="col-12">
+                    <div class="card signed-div" style="display: none;">
+                        <div class="card-header"> Signed Doc List
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group table-responsive">
+                                        <table id="noc_sign_doc_table" class="table custom-table">
+                                            <thead>
+                                                <tr>
+                                                    <th width="50"> S.No </th>
+                                                    <th> Doc Name </th>
+                                                    <th> Sign Type </th>
+                                                    <th> Holder Name </th>
+                                                    <th> Document</th>
+                                                    <th>Date of NOC</th>
+                                                    <th>Handover Person</th>
+                                                    <th>Relationship</th>
+                                                    <th>Checklist</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card cheque-div" style="display:none">
                         <div class="card-header">
                             <h5 class="card-title">Cheque List</h5>
