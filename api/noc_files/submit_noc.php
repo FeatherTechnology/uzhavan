@@ -4,6 +4,7 @@ require "../../ajaxconfig.php";
 $user_id = $_SESSION['user_id'];
 
 $cheque_no_id = isset($_POST['chequeId']) ? $_POST['chequeId'] : [];
+$signed_id = isset($_POST['signedId']) ? $_POST['signedId'] : [];
 $mort_id = isset($_POST['mortId']) ? $_POST['mortId'] : [];
 $endorsement_id = isset($_POST['endorsementId']) ? $_POST['endorsementId'] : [];
 $doc_id = isset($_POST['docId']) ? $_POST['docId'] : [];
@@ -13,11 +14,16 @@ $noc_member = $_POST['noc_member'];
 $noc_relation = $_POST['noc_relation'];
 $cpid = $_POST['cpid'];
 $cus_id = $_POST['cus_id'];
+$signed_list_cnt = $_POST['signed_list_cnt'];
 $cheque_list_cnt = $_POST['cheque_list_cnt'];
 $mort_list_cnt = $_POST['mort_list_cnt'];
 $endorsemnt_list_cnt = $_POST['endorsemnt_list_cnt'];
 $doc_list_cnt = $_POST['doc_list_cnt'];
 $gold_list_cnt = $_POST['gold_list_cnt'];
+
+foreach ($signed_id as $id) {
+    $qry = $pdo->query("UPDATE `signed_doc_info` SET `noc_status`='1',`date_of_noc`='$date_of_noc',`noc_member`='$noc_member',`noc_relationship`='$noc_relation',`update_login_id`='$user_id',`updated_date`=now() WHERE `id`='$id'");
+}
 
 foreach ($cheque_no_id as $id) {
     $qry = $pdo->query("UPDATE `cheque_no_list` SET `noc_status`='1',`date_of_noc`='$date_of_noc',`noc_member`='$noc_member',`noc_relationship`='$noc_relation',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
@@ -48,6 +54,18 @@ if($c_qry->rowCount() == $cheque_list_cnt){
 
 } else{
     $cheque_sts = 0;
+    
+}
+
+$sign_qry = $pdo->query("SELECT * FROM signed_doc_info WHERE cus_profile_id = '$cpid' AND noc_status = '1'");
+if($sign_qry->rowCount() == $signed_list_cnt){
+    $sign_sts = 2;
+
+} else if($sign_qry->rowCount() < $signed_list_cnt && $sign_qry->rowCount() != '0' ){
+    $sign_sts = 1;
+
+} else{
+    $sign_sts = 0;
     
 }
 
@@ -99,7 +117,7 @@ if($g_qry->rowCount() == $gold_list_cnt){
     
 }
 
-if($cheque_sts == '2' && $mort_sts == '2' && $endorse_sts =='2' && $doc_sts =='2' && $gold_sts =='2'){
+if($sign_sts == '2' && $cheque_sts == '2' && $mort_sts == '2' && $endorse_sts =='2' && $doc_sts =='2' && $gold_sts =='2'){
     $status = '2';
     $pdo->query("UPDATE `customer_status` SET `status`='11',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cpid'");
 }else{
@@ -111,10 +129,10 @@ if($qry2->rowCount()>0){
      // Get the existing ID before update
     $row = $qry2->fetch();
     $last_id = $row['id'];
-    $qry = $pdo->query("UPDATE `noc` SET `cus_id`='$cus_id',`cheque_list`='$cheque_sts',`mortgage_list`='$mort_sts',`endorsement_list`='$endorse_sts',`document_list`='$doc_sts',`gold_info`='$gold_sts',`noc_status`='$status',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cpid' ");
+    $qry = $pdo->query("UPDATE `noc` SET `cus_id`='$cus_id',`signed_list`='$sign_sts',`cheque_list`='$cheque_sts',`mortgage_list`='$mort_sts',`endorsement_list`='$endorse_sts',`document_list`='$doc_sts',`gold_info`='$gold_sts',`noc_status`='$status',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cpid' ");
 
 }else{
-    $qry = $pdo->query("INSERT INTO `noc`( `cus_profile_id`, `cus_id`, `cheque_list`, `mortgage_list`, `endorsement_list`, `document_list`, `gold_info`, `noc_status`,  `insert_login_id`, `created_on`) VALUES ('$cpid','$cus_id','$cheque_sts','$mort_sts','$endorse_sts','$doc_sts','$gold_sts','$status','$user_id',now() )");
+    $qry = $pdo->query("INSERT INTO `noc`( `cus_profile_id`, `cus_id`,`signed_list`,`cheque_list`, `mortgage_list`, `endorsement_list`, `document_list`, `gold_info`, `noc_status`,  `insert_login_id`, `created_on`) VALUES ('$cpid','$cus_id','$sign_sts','$cheque_sts','$mort_sts','$endorse_sts','$doc_sts','$gold_sts','$status','$user_id',now() )");
     $last_id = $pdo->lastInsertId();
 }
     

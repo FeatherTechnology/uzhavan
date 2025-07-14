@@ -673,7 +673,7 @@ $(document).ready(function () {
         let native_address = $('#native_address').val();
         let occupation = $('#occupation').val();
         let occ_detail = $('#occ_detail').val();
-        let occ_income = $('#occ_income').val();
+        let occ_income = $('#occ_income').val().replace(/,/g, '');
         let occ_address = $('#occ_address').val();
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
@@ -684,11 +684,11 @@ $(document).ready(function () {
         let loan_count = $('#loan_count').val();
         let first_loan_date = $('#first_loan_date').val();
         let travel_with_company = $('#travel_with_company').val();
-        let monthly_income = $('#monthly_income').val();
-        let other_income = $('#other_income').val();
-        let support_income = $('#support_income').val();
-        let commitment = $('#commitment').val();
-        let monthly_due_capacity = $('#monthly_due_capacity').val();
+        let monthly_income = $('#monthly_income').val().replace(/,/g, '');
+        let other_income = $('#other_income').val().replace(/,/g, '');
+        let support_income = $('#support_income').val().replace(/,/g, '');
+        let commitment = $('#commitment').val().replace(/,/g, '');
+        let monthly_due_capacity = $('#monthly_due_capacity').val().replace(/,/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
         if (customer_profile_id === '') {
             swalError('Warning', 'Please Fill out personal Info!');
@@ -1799,17 +1799,17 @@ async function editCustmerProfile(id) {
         $('#occupation').val(data.occupation);
         $('#occ_address').val(data.occ_address);
         $('#occ_detail').val(data.occ_detail);
-        $('#occ_income').val(data.occ_income);
+        $('#occ_income').val(moneyFormatIndia(data.occ_income));
         $('#area_confirm').val(data.area_confirm);
         $('#line').val(data.line);
-        $('#cus_limit').val(data.cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(data.cus_limit));
         $('#about_cus').val(data.about_cus);
         $('#how_to_know').val(data.how_to_know);
-        $('#monthly_income').val(data.monthly_income);
-        $('#other_income').val(data.other_income);
-        $('#support_income').val(data.support_income);
-        $('#commitment').val(data.commitment);
-        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+        $('#monthly_income').val(moneyFormatIndia(data.monthly_income));
+        $('#other_income').val(moneyFormatIndia(data.other_income));
+        $('#support_income').val(moneyFormatIndia(data.support_income));
+        $('#commitment').val(moneyFormatIndia(data.commitment));
+        $('#monthly_due_capacity').val(moneyFormatIndia(data.monthly_due_capacity));
 
         // Handle WhatsApp number radio selection
         if (data.whatsapp_no === data.mobile1) {
@@ -3200,21 +3200,54 @@ $('#signInfoBtn').click(function () {
         }
     }
     if (isValid) {
-        $.post('api/loan_entry/signed_doc_info_submit.php', { cus_id, doc_name, sign_type, signType_relationship, doc_Count, signedID, cus_profile_id }, function (response) {
-            if (response == '1') {
-                swalSuccess('Success', 'Signed Doc Info Added Successfully!');
-            } else if (response == '2') {
-                swalSuccess('Success', 'Signed Doc Info Updated Successfully!')
-            } else {
-                swalError('Error', 'Error Occured')
+        let signedInfo = new FormData();
+
+        // Append values to FormData
+        signedInfo.append('doc_name', doc_name);
+        signedInfo.append('sign_type', sign_type);
+        signedInfo.append('signType_relationship', signType_relationship);
+        signedInfo.append('doc_Count', doc_Count);
+        signedInfo.append('cus_id', cus_id);
+        signedInfo.append('cus_profile_id', cus_profile_id);
+        signedInfo.append('signedID', signedID);
+
+        // Handle file inputs
+        let sign_upload = $('#sign_upload')[0]?.files;
+        let sign_upload_edit = $('#sign_upload_edit').val() || '';
+
+        signedInfo.append('sign_upload_edit', sign_upload_edit);
+
+        if (sign_upload && sign_upload.length > 0) {
+            for (let i = 0; i < sign_upload.length; i++) {
+                signedInfo.append('sign_upload[]', sign_upload[i]);
             }
-            getSignedDocTable();
-            $('#signedID').val('');
+        }
 
-            $("#cus_name_div").hide();
-            $("#guar_name_div").hide();
-            $("#relation_doc").hide();
+        // Send using AJAX
+        $.ajax({
+            url: 'api/loan_entry/signed_doc_info_submit.php',
+            type: 'POST',
+            data: signedInfo,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                if (response == '1') {
+                    swalSuccess('Success', 'Signed Doc Info Added Successfully!');
+                } else if (response == '2') {
+                    swalSuccess('Success', 'Signed Doc Info Updated Successfully!');
+                } else {
+                    swalError('Error', 'Error Occurred');
+                }
 
+                getSignedDocTable();
+                $('#signedID').val('');
+                $("#cus_name_div").hide();
+                $("#guar_name_div").hide();
+                $("#relation_doc").hide();
+            },
+            error: function () {
+                swalError('Error', 'Request Failed. Please try again.');
+            }
         });
     }
 })
@@ -3224,38 +3257,39 @@ $(document).on('click', '.signdocActionBtn', function () {
 
     $.post('api/loan_entry/signeddoc_info_data.php', { id }, function (response) {
         // Populate form with response data
-        $("#sign_type").val(response.sign_type);
-        $("#signedID").val(response.id);
-        $("#doc_name").val(response.doc_name);
-        $("#doc_Count").val(response.doc_Count);
+        const signedDoc = response.signedDoc;
+        $("#sign_type").val(signedDoc.sign_type);
+        $("#signedID").val(signedDoc.id);
+        $("#doc_name").val(signedDoc.doc_name);
+        $("#doc_Count").val(signedDoc.doc_Count);
 
         // Clear and reset signType_relationship
         $("#signType_relationship").empty().append(`<option value=''>Select Relationship</option>`);
 
         // Show/hide and populate customer name if type is Customer
-        if (response.sign_type === "0") {
+        if (signedDoc.sign_type === "0") {
             $("#cus_name_div").show();
-            $("#signType_cus_name").val(response.signType_cus_name);
+            $("#signType_cus_name").val(signedDoc.signType_cus_name);
             $("#guar_name_div").hide();
             $("#relation_doc").hide();
         }
 
         // Show/hide and populate guarantor name if type is Guarantor
-        else if (response.sign_type === "1") {
+        else if (signedDoc.sign_type === "1") {
             $("#cus_name_div").hide();
             $("#guar_name_div").show();
-            $("#guar_name").val(response.guar_name);
+            $("#guar_name").val(signedDoc.guar_name);
             $("#relation_doc").hide();
         }
 
         // If Combined (2 or 3), show both guarantor and relationship dropdown
-        else if (response.sign_type === "2" || response.sign_type === "3") {
+        else if (signedDoc.sign_type === "2" || signedDoc.sign_type === "3") {
             $("#cus_name_div").hide();
             $("#guar_name_div").hide();
             $("#relation_doc").show();
 
-            let selectedId = response.selected_relationship; // ✅ Now you're getting this from the backend
-            let familyList = response.holder_name;
+            let selectedId = signedDoc.selected_relationship; // ✅ Now you're getting this from the backend
+            let familyList = signedDoc.holder_name;
 
             $("#signType_relationship").empty().append(`<option value=''>Select Relationship</option>`);
 
@@ -3266,7 +3300,12 @@ $(document).on('click', '.signdocActionBtn', function () {
                 );
             });
         }
-
+        if (response.upd && response.upd.length > 0) {
+            let uploadFiles = response.upd.map(fileObj => fileObj.uploads).filter(Boolean);
+            $('#sign_upload_edit').val(uploadFiles.join(','));
+        } else {
+            $('#sign_upload_edit').val('');
+        }
 
     }, 'json');
 });
@@ -3943,6 +3982,7 @@ function getSignedDocTable() {
             "sign_type",
             "signed_name",
             "doc_Count",
+            "upload",
             "action"
         ]
         appendDataToTable('#singnedTable', response, signColumn);
@@ -3954,6 +3994,8 @@ function getSignedDocTable() {
         $("#guar_name").val("");
         $("#relation_doc").hide();
         $("#signType_relationship").val("");
+        $("#sign_upload_edit").val("");
+        $('#sign_upload').val('');
         $("#doc_Count").val("");
         $('#sign_type').css('border', '1px solid #cecece');
         $('#doc_Count').css('border', '1px solid #cecece');
@@ -3972,7 +4014,8 @@ function getSignedDocInfoTable() {
             "doc_name",
             "sign_type",
             "signed_name",
-            "doc_Count"
+            "doc_Count",
+            "upload"
         ]
         appendDataToTable('#signDocResetTable', response, signColumn);
         setdtable('#signDocResetTable');

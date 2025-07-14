@@ -316,7 +316,7 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="loan_date_calc">Loan date</label><span class="text-danger">*</span>
+                                    <label for="loan_date_calc">Loan Date</label><span class="text-danger">*</span>
                                     <input type="date" class="form-control" id="loan_date_calc" name="loan_date_calc" tabindex="29" readonly>
                                 </div>
                             </div>

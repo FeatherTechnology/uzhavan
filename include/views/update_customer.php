@@ -379,7 +379,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="25">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="25">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -606,7 +606,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit">Customer Limit</label>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" tabindex="42">
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" tabindex="42">
                                 </div>
                             </div>
                         </div>
@@ -741,6 +741,7 @@
                                                 <th> Sign Type </th>
                                                 <th> Relationship </th>
                                                 <th> Count </th>
+                                                <th> Upload</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1533,6 +1534,13 @@
                             <input type="number" class="form-control" id="doc_Count" name="doc_Count" placeholder="Enter Count" tabindex='6'>
                         </div>
                     </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="sign_upload">Upload</label>
+                            <input type="file" class="form-control sign_upload" name="sign_upload[]" id="sign_upload" tabindex="8" onchange="compressImage(this, 200)" multiple>
+                            <input type="hidden" id="sign_upload_edit">
+                        </div>
+                    </div>
 
                     <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">
                         <input type="hidden" name="signedID" id="signedID">
@@ -1542,7 +1550,7 @@
                 </div>
                 </br>
 
-                <div id="signTable">
+                <div id="signTable" class="overflow-x-cls">
                     <table id="singnedTable" class="table custom-table">
                         <thead>
                             <tr>
@@ -1551,7 +1559,8 @@
                                 <th> Sign Type </th>
                                 <th> Relationship </th>
                                 <th> Count </th>
-                                <th> ACTION </th>
+                                <th> Upload </th>
+                                <th> Action </th>
                             </tr>
                         </thead>
                         <tbody>

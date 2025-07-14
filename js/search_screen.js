@@ -857,7 +857,8 @@ function getSignedDocInfoTable() {
             "doc_name",
             "sign_type",
             "signed_name",
-            "doc_Count"
+            "doc_Count",
+            "upload"
         ]
         appendDataToTable('#signDocResetTable', response, signColumn);
         setdtable('#signDocResetTable');
@@ -1285,11 +1286,13 @@ function loanCalculationEdit(id) {
 //////////////////////////////////////////////////////////////// Loan Calculation END //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////// NOC //////////////////////////////////////////////////////////////////////
 function callAllFunctions(cp_id) {
+    $('.signed-div').hide();
     $('.cheque-div').hide();
     $('.doc_div').hide();
     $('.mortgage-div').hide();
     $('.endorsement-div').hide();
     $('.gold-div').hide();
+    getSignedDocList(cp_id);
     getChequeList(cp_id);
     getMortgageList(cp_id);
     getEndorsementList(cp_id);
@@ -1302,7 +1305,18 @@ function callAllFunctions(cp_id) {
         setSubmittedDisabled();
     }, 1000);
 }
-
+function getSignedDocList(cp_id) {
+    return $.post('api/noc_files/noc_signed_doc_list.php', { cp_id }, function (response) {
+        if (response && response.length > 0) {
+            $('.signed-div').show();
+        }
+        let nocSignedColumns = [
+            'sno', 'doc_name', 'sign_type', 'holder_name', 'upload', 'date_of_noc', 'noc_member', 'noc_relationship', 'action'
+        ];
+        appendDataToTable('#noc_sign_doc_table', response, nocSignedColumns);
+        setdtable('#noc_sign_doc_table');
+    }, 'json');
+}
 function getChequeList(cp_id) {
     $.post('api/noc_files/noc_cheque_list.php', { cp_id }, function (response) {
         if (response && response.length > 0) {
@@ -1429,7 +1443,7 @@ function getRelationship(id) {
 }
 
 function setSubmittedDisabled() {
-    $('.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function () {
+    $('.noc_signed_info_chkbx,.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx').each(function () {
         if ($(this).attr('data-id') == '1') {
             $(this).closest('tr').addClass('disabled-row');
             $(this).attr('checked', true).attr('disabled', true);
@@ -1437,6 +1451,7 @@ function setSubmittedDisabled() {
     });
 
     var cheque_checkDisabled = $('.noc_cheque_chkbx:disabled').length === $('.noc_cheque_chkbx').length;
+    var cheque_checkDisabled = $('.noc_signed_info_chkbx:disabled').length === $('.noc_signed_info_chkbx').length;
     var mort_checkDisabled = $('.noc_mortgage_chkbx:disabled').length === $('.noc_mortgage_chkbx').length;
     var endorse_checkDisabled = $('.noc_endorsement_chkbx:disabled').length === $('.noc_endorsement_chkbx').length;
     var doc_checkDisabled = $('.noc_doc_info_chkbx:disabled').length === $('.noc_doc_info_chkbx').length;

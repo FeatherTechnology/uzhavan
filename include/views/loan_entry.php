@@ -395,7 +395,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="occ_income"> Income</label>
-                                        <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
+                                        <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -528,21 +528,21 @@
                             </div>
                         </div>
                     </div>
-                    
-					<!-- Fingerprint Info start-->
-					<div class="card">
-						<div class="card-header"> Fingerprint Info </div>
-						<div class="card-body">
-							<div class="row">
-								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-									<div class="form-group fingerprintTable">
 
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- Fingerprint Info End-->
+                    <!-- Fingerprint Info start-->
+                    <div class="card">
+                        <div class="card-header"> Fingerprint Info </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div class="form-group fingerprintTable">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fingerprint Info End-->
 
                     <div class="card">
                         <div class="card-header">
@@ -621,7 +621,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="cus_limit">Customer Limit</label>
-                                        <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42">
+                                        <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42">
                                     </div>
                                 </div>
                             </div>
@@ -709,39 +709,40 @@
                     </div>
                 </div>
                 <!-- Signed Doc Info START -->
-					<div class="card signed-div"  style="display: none;">
-						<div class="card-header"> Signed Doc Info
-							<button type="button" class="btn btn-primary" id="add_sign_doc" name="add_sign_doc" data-toggle="modal" data-target=".addSignDoc" style="padding: 5px 35px;  float: right;" tabindex="9" onclick="getSignedDocTable()"><span class="icon-add"></span></button>
-						</div>
-						<span class="text-danger" style='display:none' id='signed_infoCheck'>Please Fill Signed Doc Info </span>
-						<div class="card-body">
+                <div class="card signed-div" style="display: none;">
+                    <div class="card-header"> Signed Doc Info
+                        <button type="button" class="btn btn-primary" id="add_sign_doc" name="add_sign_doc" data-toggle="modal" data-target=".addSignDoc" style="padding: 5px 35px;  float: right;" tabindex="9" onclick="getSignedDocTable()"><span class="icon-add"></span></button>
+                    </div>
+                    <span class="text-danger" style='display:none' id='signed_infoCheck'>Please Fill Signed Doc Info </span>
+                    <div class="card-body">
 
-							<div class="row">
+                        <div class="row">
 
-								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-									<div class="form-group table-responsive" >
-										<table id="signDocResetTable" class="table custom-table" >
-											<thead>
-												<tr>
-													<th width="50"> S.No </th>
-													<th> Doc Name </th>
-													<th> Sign Type </th>
-													<th> Relationship </th>
-													<th> Count </th>
-												</tr>
-											</thead>
-											<tbody>
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table id="signDocResetTable" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Doc Name </th>
+                                                <th> Sign Type </th>
+                                                <th> Relationship </th>
+                                                <th> Count </th>
+                                                <th> Upload</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-											</tbody>
-										</table>
-									</div>
-								</div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-							</div>
+                        </div>
 
-						</div>
-					</div>
-					<!-- Signed Doc Info END -->
+                    </div>
+                </div>
+                <!-- Signed Doc Info END -->
                 <!--- -------------------------------------- Cheque Info START ------------------------------- -->
                 <div class="card cheque-div" style="display: none;">
                     <div class="card-header">
@@ -1727,104 +1728,113 @@
     </div>
 </div>
 <!-- FeedBack End -->
- <!-- Add Signed Doc info Modal  START -->
+<!-- Add Signed Doc info Modal  START -->
 <div class="modal fade addSignDoc" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content" style="background-color: white">
-			<div class="modal-header">
-				<h5 class="modal-title" id="myLargeModalLabel">Add Signed Doc Info</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="getSignedDocInfoTable()">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div class="row">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Add Signed Doc Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="getSignedDocInfoTable()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
 
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-						<div class="form-group">
-							<label for="doc_name"> Doc Name </label> <span class="required">&nbsp;*</span>
-							<input type="hidden" name="doc_name" id="doc_name" value="0">
-							<input type="text" class="form-control" name="doc_name_dummy" id="doc_name_dummy" value="Signed Document" disabled tabindex='1'>
-						</div>
-					</div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="doc_name"> Doc Name </label> <span class="required">&nbsp;*</span>
+                            <input type="hidden" name="doc_name" id="doc_name" value="0">
+                            <input type="text" class="form-control" name="doc_name_dummy" id="doc_name_dummy" value="Signed Document" disabled tabindex='1'>
+                        </div>
+                    </div>
 
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-						<div class="form-group">
-							<label for="sign_type"> Sign Type </label> <span class="required">&nbsp;*</span>
-							<select type="text" class="form-control" id="sign_type" name="sign_type" tabindex='2'>
-								<option value=""> Select Sign Type </option>
-								<option value="0"> Customer </option>
-								<option value="1"> Guarantor </option>
-								<option value="2"> Combined </option>
-								<option value="3"> Family Members </option>
-							</select>
-						</div>
-					</div>
-					
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="cus_name_div">
-						<div class="form-group">
-							<label for="signType_cus_name"> Customer Name </label>
-							<input type="text" class="form-control" id="signType_cus_name" name="signType_cus_name" readonly tabindex='3'>
-						</div>
-					</div>
-					
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="guar_name_div">
-						<div class="form-group">
-							<label for="guar_name"> Guarentor Name </label>
-							<input type="text" class="form-control" id="guar_name" name="guar_name" readonly tabindex='4'>
-						</div>
-					</div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="sign_type"> Sign Type </label> <span class="required">&nbsp;*</span>
+                            <select type="text" class="form-control" id="sign_type" name="sign_type" tabindex='2'>
+                                <option value=""> Select Sign Type </option>
+                                <option value="0"> Customer </option>
+                                <option value="1"> Guarantor </option>
+                                <option value="2"> Combined </option>
+                                <option value="3"> Family Members </option>
+                            </select>
+                        </div>
+                    </div>
 
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="relation_doc">
-						<div class="form-group">
-							<label for="signType_relationship"> Relationship </label>
-							<select type="text" class="form-control" id="signType_relationship" name="signType_relationship" tabindex='5'>
-								<option value=""> Select Relationship </option>
-							</select>
-						</div>
-					</div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="cus_name_div">
+                        <div class="form-group">
+                            <label for="signType_cus_name"> Customer Name </label>
+                            <input type="text" class="form-control" id="signType_cus_name" name="signType_cus_name" readonly tabindex='3'>
+                        </div>
+                    </div>
 
-					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-						<div class="form-group">
-							<label for="doc_Count"> Count </label> <span class="required">&nbsp;*</span>
-							<input type="number" class="form-control" id="doc_Count" name="doc_Count" placeholder="Enter Count" tabindex='6'>
-						</div>
-					</div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="guar_name_div">
+                        <div class="form-group">
+                            <label for="guar_name"> Guarentor Name </label>
+                            <input type="text" class="form-control" id="guar_name" name="guar_name" readonly tabindex='4'>
+                        </div>
+                    </div>
 
-					<div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">
-						<input type="hidden" name="signedID" id="signedID">
-						<button type="button" name="signInfoBtn" id="signInfoBtn" class="btn btn-primary" style="margin-top: 19px;" tabindex='7'>Submit</button>
-					</div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="relation_doc">
+                        <div class="form-group">
+                            <label for="signType_relationship"> Relationship </label>
+                            <select type="text" class="form-control" id="signType_relationship" name="signType_relationship" tabindex='5'>
+                                <option value=""> Select Relationship </option>
+                            </select>
+                        </div>
+                    </div>
 
-				</div>
-				</br>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="doc_Count"> Count </label> <span class="required">&nbsp;*</span>
+                            <input type="number" class="form-control" id="doc_Count" name="doc_Count" placeholder="Enter Count" tabindex='6'>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="sign_upload">Upload</label>
+                            <input type="file" class="form-control sign_upload" name="sign_upload[]" id="sign_upload" tabindex="8" onchange="compressImage(this, 200)" multiple>
+                            <input type="hidden" id="sign_upload_edit">
+                        </div>
+                    </div>
 
-				<div id="signTable">
-					<table id ="singnedTable" class="table custom-table">
-						<thead>
-							<tr>
-								<th width="50"> S.No </th>
-								<th> Doc Name </th>
-								<th> Sign Type </th>
-								<th> Relationship </th>
-								<th> Count </th>
-								<th> ACTION </th>
-							</tr>
-						</thead>
-						<tbody>
+                    <div class="col-xl-2 col-lg-2 col-md-6 col-sm-4 col-12">
+                        <input type="hidden" name="signedID" id="signedID">
+                        <button type="button" name="signInfoBtn" id="signInfoBtn" class="btn btn-primary" style="margin-top: 19px;" tabindex='7'>Submit</button>
+                    </div>
 
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="getSignedDocInfoTable()" tabindex='8'>Close</button>
-			</div>
-		</div>
-	</div>
+                </div>
+                </br>
+
+                
+                <div id="signTable" class="overflow-x-cls">
+                    <table id="singnedTable" class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th width="50"> S.No </th>
+                                <th> Doc Name </th>
+                                <th> Sign Type </th>
+                                <th> Relationship </th>
+                                <th> Count </th>
+                                <th> Upload </th>
+                                <th> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="getSignedDocInfoTable()" tabindex='8'>Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- END  Add Signed Doc Info Modal -->
- <!-- ------------------------------------------------------------ Cheque Info Modal START ------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------ Cheque Info Modal START ------------------------------------------------------------- -->
 <div class="modal fade" id="add_cheque_info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content" style="background-color: white">
@@ -2312,5 +2322,3 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
-
-

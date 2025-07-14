@@ -56,60 +56,48 @@ $(document).ready(function () {
             // If mobile number is empty, return without executing AJAX
             return;
         }
-        $.post('api/customer_data_files/get_existing_mobiles.php', { mobile: mobile }, function (response) {
-            if (response.exists) {
-                // Show an alert with the customer status if the mobile number already exists
-                let statusMsg = "";
-                if (response.status == 1) {
-                    statusMsg = "Customer Profile Insert";
-                }
-                else if (response.status == 2) {
-                    statusMsg = "Loan Calculation Insert";
-                }
-                else if (response.status == 3) {
-                    statusMsg = "Moved To Approval";
-                }
-                else if (response.status == 4) {
-                    statusMsg = "Approved";
-                }
-                else if (response.status == 5) {
-                    statusMsg = "Cancel in Approval";
-                }
-                else if (response.status == 6) {
-                    statusMsg = "Revoke in Approval";
-                }
-                else if (response.status == 7) {
-                    statusMsg = "Loan Issue";
-                }
-                else if (response.status == 8) {
-                    statusMsg = "Closed";
-                }
-                else if (response.status == 9) {
-                    statusMsg = "Closed";
-                }
-                else if (response.status == 10) {
-                    statusMsg = "NOC";
-                }
-                else if (response.status == 11) {
-                    statusMsg = "NOC";
-                } else if (response.status == 12) {
-                    statusMsg = "NOC";
-                }
-                swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
-                return false;
-            } if (isValid) {
-                // Proceed with form submission
-                $.post('api/customer_data_files/submit_new.php', { cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id }, function (response) {
-                    if (response == '1') {
-                        swalSuccess('Success', 'Customer Data Added Successfully!');
-                        $('#new_form input').val('');
-                        $('#new_form input').css('border', '1px solid #cecece');
-                    } else {
-                        swalError('Error', 'Failed to add customer data.');
-                    }
-                });
+     $.post('api/customer_data_files/get_existing_mobiles.php', { mobile: mobile }, function (response) {
+    if (response.exists) {
+        // Show an alert with the customer status if the mobile number already exists
+        let statusMsg = "";
+
+        switch (parseInt(response.status)) {
+            case 1: statusMsg = "Customer Profile Insert"; break;
+            case 2: statusMsg = "Loan Calculation Insert"; break;
+            case 3: statusMsg = "Moved To Approval"; break;
+            case 4: statusMsg = "Approved"; break;
+            case 5: statusMsg = "Cancel in Approval"; break;
+            case 6: statusMsg = "Revoke in Approval"; break;
+            case 7: statusMsg = "Loan Issue"; break;
+            case 8: statusMsg = "In Close"; break;
+            case 9: statusMsg = "Closed"; break;
+            case 10: statusMsg = "In NOC"; break;
+            case 11: statusMsg = "NOC Completed"; break;
+            case 12: statusMsg = "NOC Removed"; break;
+            case 13: statusMsg = "Cancel in Loan Issue"; break;
+            case 14: statusMsg = "Revoke in Loan Issue"; break;
+            default: statusMsg = "Unknown Status"; break;
+        }
+
+        swalError('Warning', 'Mobile number already exists. Customer status: ' + statusMsg);
+        return;
+    }
+
+    // If mobile does not exist and form is valid, proceed with submission
+    if (isValid) {
+        $.post('api/customer_data_files/submit_new.php', {
+            cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id
+        }, function (response) {
+            if (response == '1') {
+                swalSuccess('Success', 'Customer Data Added Successfully!');
+                $('#new_form input').val('').css('border', '1px solid #cecece');
+            } else {
+                swalError('Error', 'Failed to add customer data.');
             }
-        }, 'json');
+        });
+    }
+}, 'json');
+
     });
 
     $('#mobile').change(function () {

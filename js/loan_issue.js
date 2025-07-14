@@ -584,88 +584,91 @@ function swapTableAndCreation() {
     }
 }
 
-function callLoanCaculationFunctions() {
-    personalInfo();
-    checkBalance();
-    getBankInfoTable();
+async function callLoanCaculationFunctions() {
+    await personalInfo();          // Wait for this to complete
+    getBankInfoTable();           // Independent
+    await checkBalance();         // Must be after personalInfo
 }
 
 function personalInfo() {
-    let id = $('#customer_profile_id').val();
-    $.post('api/loan_issue_files/loan_issue_data.php', { id }, function (response) {
-        $('#aadhar_nums').val(response[0].aadhar_num);
-        $('#cus_id').val(response[0].cus_id);
-        $('#cus_name').val(response[0].cus_name);
-        $('#cus_data').val(response[0].cus_data);
-        $('#mobile1').val(response[0].mobile1);
-        $('#cus_area').val(response[0].areaname);
-        $('#loan_id_calc').val(response[0].loan_id);
-        $('#loan_category_calc').val(response[0].loan_category);
-        $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amnt));
-        $('#profit_type_calc').val(response[0].profit_type);
-        $('#due_method_calc').val(response[0].due_method);
-        $('#scheme_due_method_calc').val(response[0].scheme_due_method);
-        $('#scheme_name_edit').val(response[0].scheme_name);
-        $('#scheme_day_calc').val(response[0].scheme_day);
-        $('#due_type_calc').val(response[0].due_type);
-        $('#profit_method_calc').val(response[0].profit_method);
-        $('#int_rate_upd').val(response[0].interest_rate);
-        $('#due_period_upd').val(response[0].due_period);
-        $('#doc_charge_upd').val(response[0].doc_charge);
-        $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
-        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
-        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
-        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
-        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
-        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
-        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
-        $('#loan_date_calc').val(response[0].loan_date);
-        $('#due_startdate_calc').val(response[0].due_startdate);
-        $('#maturity_date_calc').val(response[0].maturity_date);
-        $('#aadhar_num').val(response[0].aadhar_num);
-        getIssuePerson(response[0].cus_name);
-        $('#due_startdate_calc').attr('min', response[0].loan_date);
+    return new Promise((resolve, reject) => {
+        let id = $('#customer_profile_id').val();
 
-        if (response[0].cus_data == 'Existing') {
-            $('#loan_count_div').show();
-            let cus_id = response[0].cus_id; // Add this line
-            getLoanCount(cus_id);
-        } else {
-            $('#loan_count_div').hide();
-        }
+        $.post('api/loan_issue_files/loan_issue_data.php', { id }, function (response) {
+            $('#aadhar_nums').val(response[0].aadhar_num);
+            $('#cus_id').val(response[0].cus_id);
+            $('#cus_name').val(response[0].cus_name);
+            $('#cus_data').val(response[0].cus_data);
+            $('#mobile1').val(response[0].mobile1);
+            $('#cus_area').val(response[0].areaname);
+            $('#loan_id_calc').val(response[0].loan_id);
+            $('#loan_category_calc').val(response[0].loan_category);
+            $('#category_info_calc').val(response[0].category_info);
+            $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amnt));
+            $('#profit_type_calc').val(response[0].profit_type);
+            $('#due_method_calc').val(response[0].due_method);
+            $('#scheme_due_method_calc').val(response[0].scheme_due_method);
+            $('#scheme_name_edit').val(response[0].scheme_name);
+            $('#scheme_day_calc').val(response[0].scheme_day);
+            $('#due_type_calc').val(response[0].due_type);
+            $('#profit_method_calc').val(response[0].profit_method);
+            $('#int_rate_upd').val(response[0].interest_rate);
+            $('#due_period_upd').val(response[0].due_period);
+            $('#doc_charge_upd').val(response[0].doc_charge);
+            $('#proc_fees_upd').val(response[0].processing_fees);
+            $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+            $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+            $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+            $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+            $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+            $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+            $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
+            $('#loan_date_calc').val(response[0].loan_date);
+            $('#due_startdate_calc').val(response[0].due_startdate);
+            $('#maturity_date_calc').val(response[0].maturity_date);
+            $('#aadhar_num').val(response[0].aadhar_num);
+            getIssuePerson(response[0].cus_name);
+            $('#due_startdate_calc').attr('min', response[0].loan_date);
 
-        let path = "uploads/loan_entry/cus_pic/";
-        $('#per_pic').val(response[0].pic);
-        var img = $('#imgshow');
-        img.attr('src', path + response[0].pic);
-
-        $('.calc_scheme_title').text((response[0].profit_type == '0') ? 'Calculation' : 'Scheme');
-        $('#profit_type_calc_scheme').show();
-
-        if (response[0].profit_type == '0') { // Loan Calculation
-            $('.calc').show();
-            $('.scheme').hide();
-            $('.scheme_day').hide();
-            getLoanCatDetails(response[0].loan_category_id, 2);
-        } else if (response[0].profit_type == '1') { // Scheme
-            dueMethodScheme(response[0].scheme_due_method, response[0].loan_category_id)
-            $('.calc').hide();
-            $('.scheme').show();
-            schemeCalAjax(response[0].scheme_name);
-
-            if (response[0].scheme_due_method == '2') {
-                $('.scheme_day').show();
+            if (response[0].cus_data == 'Existing') {
+                $('#loan_count_div').show();
+                let cus_id = response[0].cus_id; // Add this line
+                getLoanCount(cus_id);
             } else {
-                $('.scheme_day').hide();
-                $('.scheme_day_calc').val('');
+                $('#loan_count_div').hide();
             }
-        }
 
-        $('#bankInfo').hide();
+            let path = "uploads/loan_entry/cus_pic/";
+            $('#per_pic').val(response[0].pic);
+            var img = $('#imgshow');
+            img.attr('src', path + response[0].pic);
 
-    }, 'json');
+            $('.calc_scheme_title').text((response[0].profit_type == '0') ? 'Calculation' : 'Scheme');
+            $('#profit_type_calc_scheme').show();
+
+            if (response[0].profit_type == '0') { // Loan Calculation
+                $('.calc').show();
+                $('.scheme').hide();
+                $('.scheme_day').hide();
+                getLoanCatDetails(response[0].loan_category_id, 2);
+            } else if (response[0].profit_type == '1') { // Scheme
+                dueMethodScheme(response[0].scheme_due_method, response[0].loan_category_id)
+                $('.calc').hide();
+                $('.scheme').show();
+                schemeCalAjax(response[0].scheme_name);
+
+                if (response[0].scheme_due_method == '2') {
+                    $('.scheme_day').show();
+                } else {
+                    $('.scheme_day').hide();
+                    $('.scheme_day_calc').val('');
+                }
+            }
+
+            $('#bankInfo').hide();
+            resolve(); // Resolve after everything is done
+        }, 'json').fail(() => reject());
+    });
 }
 
 function dueMethodScheme(schemeDueMethod, loanCatId) {
@@ -1273,7 +1276,12 @@ function isFormDataValid(formData) {
     if (!validateField(formData['payment_mode'], 'payment_mode')) {
         isValid = false;
     }
-
+    if (!validateField(formData['issue_person'], 'issue_person')) {
+        isValid = false;
+    }
+    if (!validateField(formData['issue_relationship'], 'issue_relationship')) {
+        isValid = false;
+    }
     // Check if payment_type is "1" (Split Payment)
     if (formData['payment_type'] === "1") {
         // Validate payment_mode again
@@ -1283,13 +1291,6 @@ function isFormDataValid(formData) {
 
         // Validate specific fields based on payment_mode
         if (formData['payment_mode'] === "1") { // Cash
-            if (!validateField(formData['issue_person'], 'issue_person')) {
-                isValid = false;
-            }
-
-            if (!validateField(formData['issue_relationship'], 'issue_relationship')) {
-                isValid = false;
-            }
             if (!validateField(formData['cash'], 'cash')) {
                 isValid = false;
             }
@@ -1321,12 +1322,6 @@ function isFormDataValid(formData) {
         }
 
         if (formData['payment_mode'] == "1") { // Cash
-            if (!validateField(formData['issue_person'], 'issue_person')) {
-                isValid = false;
-            }
-            if (!validateField(formData['issue_relationship'], 'issue_relationship')) {
-                isValid = false;
-            }
             if (!validateField(formData['cash'], 'cash')) {
                 isValid = false;
             }
@@ -1358,51 +1353,55 @@ function isAnyCheckboxChecked() {
 }
 
 function checkBalance() {
-    let cus_profile_id = $('#customer_profile_id').val();
-    $.ajax({
-        url: 'api/loan_issue_files/get_loan_balance.php',
-        type: 'POST',
-        data: { 'cus_profile_id': cus_profile_id },
-        dataType: 'json',
-        success: function (response) {
-            let rowCnt = parseInt(response['rowCnt']);
-            let balanceAmount = parseFloat(response['balance_amount']);
+    return new Promise((resolve, reject) => {
+        let cus_profile_id = $('#customer_profile_id').val();
+        $.ajax({
+            url: 'api/loan_issue_files/get_loan_balance.php',
+            type: 'POST',
+            data: { 'cus_profile_id': cus_profile_id },
+            dataType: 'json',
+            success: function (response) {
+                let rowCnt = parseInt(response['rowCnt']);
+                let balanceAmount = parseFloat(response['balance_amount']);
 
-            if (rowCnt > 0) {
-                $('#balance_net_cash').val(moneyFormatIndia(balanceAmount));
+                if (rowCnt > 0) {
+                    $('#balance_net_cash').val(moneyFormatIndia(balanceAmount));
 
-                if (balanceAmount > 0) {
-                    $('#interest_rate_calc').attr('readonly', true);
-                    $('#due_period_calc').attr('readonly', true);
-                    $('#doc_charge_calc').attr('readonly', true);
-                    $('#processing_fees_calc').attr('readonly', true);
-                    $('#due_startdate_calc').attr('readonly', true);
-                    $('#refresh_cal').hide();
-                } else if (balanceAmount === 0) {
-                    // Once balance is zero, disable all
-                    $('#interest_rate_calc').attr('readonly', true);
-                    $('#due_period_calc').attr('readonly', true);
-                    $('#doc_charge_calc').attr('readonly', true);
-                    $('#processing_fees_calc').attr('readonly', true);
-                    $('#issued_mode').attr('disabled', true);
-                    $('#due_startdate_calc').attr('disabled', true);
-                    $('#issue_person').attr('disabled', true);
-                    $('#submit_loan_issue').hide();
+                    if (balanceAmount > 0) {
+                        $('#interest_rate_calc').attr('readonly', true);
+                        $('#due_period_calc').attr('readonly', true);
+                        $('#doc_charge_calc').attr('readonly', true);
+                        $('#processing_fees_calc').attr('readonly', true);
+                        $('#due_startdate_calc').attr('readonly', true);
+                        $('#refresh_cal').hide();
+                    } else if (balanceAmount === 0) {
+                        $('#interest_rate_calc').attr('readonly', true);
+                        $('#due_period_calc').attr('readonly', true);
+                        $('#doc_charge_calc').attr('readonly', true);
+                        $('#processing_fees_calc').attr('readonly', true);
+                        $('#issued_mode').attr('disabled', true);
+                        $('#due_startdate_calc').attr('disabled', true);
+                        $('#issue_person').attr('disabled', true);
+                        $('#submit_loan_issue').hide();
+                    }
+                } else {
+                    let netcashamnt = parseFloat($('#net_cash_calc').val().replace(/,/g, ''));
+                    $('#balance_net_cash').val(moneyFormatIndia(netcashamnt));
+                    $('#interest_rate_calc').attr('readonly', false);
+                    $('#due_period_calc').attr('readonly', false);
+                    $('#doc_charge_calc').attr('readonly', false);
+                    $('#processing_fees_calc').attr('readonly', false);
+                    $('#due_startdate_calc').attr('readonly', false);
+                    $('#refresh_cal').show();
                 }
-            } else {
-                // No record in DB: use net cash as balance
-                let netcashamnt = parseFloat($('#net_cash_calc').val().replace(/,/g, ''));
-                $('#balance_net_cash').val(moneyFormatIndia(netcashamnt));
-                $('#interest_rate_calc').attr('readonly', false);
-                $('#due_period_calc').attr('readonly', false);
-                $('#doc_charge_calc').attr('readonly', false);
-                $('#processing_fees_calc').attr('readonly', false);
-                $('#due_startdate_calc').attr('readonly', false);
-                $('#refresh_cal').show();
-            }
-        }
+
+                resolve();
+            },
+            error: reject
+        });
     });
 }
+
 
 function calculateBalance() {
     // Get the settlement balance and remove commas, then parse it as a float
