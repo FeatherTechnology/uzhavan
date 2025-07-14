@@ -645,7 +645,7 @@ $(document).ready(function () {
         let native_address = $('#native_address').val();
         let occupation = $('#occupation').val();
         let occ_detail = $('#occ_detail').val();
-        let occ_income = $('#occ_income').val();
+        let occ_income = $('#occ_income').val().replace(/,/g, '');
         let occ_address = $('#occ_address').val();
         let area_confirm = $('#area_confirm').val();
         let area = $('#area').val();
@@ -656,11 +656,11 @@ $(document).ready(function () {
         let loan_count = $('#loan_count').val();
         let first_loan_date = $('#first_loan_date').val();
         let travel_with_company = $('#travel_with_company').val();
-        let monthly_income = $('#monthly_income').val();
-        let other_income = $('#other_income').val();
-        let support_income = $('#support_income').val();
-        let commitment = $('#commitment').val();
-        let monthly_due_capacity = $('#monthly_due_capacity').val();
+        let monthly_income = $('#monthly_income').val().replace(/,/g, '');
+        let other_income = $('#other_income').val().replace(/,/g, '');
+        let support_income = $('#support_income').val().replace(/,/g, '');
+        let commitment = $('#commitment').val().replace(/,/g, '');
+        let monthly_due_capacity = $('#monthly_due_capacity').val().replace(/,/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
         if (customer_profile_id === '') {
             swalError('Warning', 'Please Fill out personal Info!');
@@ -1611,17 +1611,17 @@ async function editCustmerProfile(id) {
         $('#occupation').val(data.occupation);
         $('#occ_address').val(data.occ_address);
         $('#occ_detail').val(data.occ_detail);
-        $('#occ_income').val(data.occ_income);
+        $('#occ_income').val(moneyFormatIndia(data.occ_income));
         $('#area_confirm').val(data.area_confirm);
         $('#line').val(data.line);
-        $('#cus_limit').val(data.cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(data.cus_limit));
         $('#about_cus').val(data.about_cus);
         $('#how_to_know').val(data.how_to_know);
-        $('#monthly_income').val(data.monthly_income);
-        $('#other_income').val(data.other_income);
-        $('#support_income').val(data.support_income);
-        $('#commitment').val(data.commitment);
-        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+        $('#monthly_income').val(moneyFormatIndia(data.monthly_income));
+        $('#other_income').val(moneyFormatIndia(data.other_income));
+        $('#support_income').val(moneyFormatIndia(data.support_income));
+        $('#commitment').val(moneyFormatIndia(data.commitment));
+        $('#monthly_due_capacity').val(moneyFormatIndia(data.monthly_due_capacity));
 
         // Handle WhatsApp number radio selection
         if (data.whatsapp_no === data.mobile1) {
@@ -1649,7 +1649,6 @@ async function editCustmerProfile(id) {
 
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {
-            console.log('sss');
             $('#checking_hide').show();
             $('.cus_status_div').show();
             $('#data_checking_div').show();

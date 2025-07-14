@@ -392,7 +392,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" placeholder="Enter Income" tabindex="26">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -618,7 +618,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit">Customer Limit</label>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" tabindex="42">
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" tabindex="42">
                                 </div>
                             </div>
                         </div>

@@ -60,7 +60,6 @@ $(document).ready(function () {
             'issue_person': $('#issue_person').val(),
             'issue_relationship': $('#issue_relationship').val(),
         }
-
         if (isFormDataValid(loanIssue)) {
             $.post('api/accounts_files/loan_issue_files/submit_accounts_loan_issue.php', loanIssue, function (response) {
                 if (response == '1') {
@@ -104,6 +103,7 @@ async function callLoanCaculationFunctions() {
         await personalInfo();
         await checkBalance();
         await getBankDetails();
+        await getBankName();
         paymentType(); // This is synchronous, so no need for await
     } catch (err) {
         console.error("Error in loan calculation sequence:", err);
@@ -162,7 +162,7 @@ function personalInfo() {
                 $('#payment_type').val(response[0].payment_type);
                 $('#payment_mode').val(response[0].payment_mode);
                 $('#issue_relationship').val(response[0].issue_relationship);
-
+                $('#bank_name_edit').val(response[0].bank_id);
                 let path = "uploads/loan_entry/cus_pic/";
                 $('#per_pic').val(response[0].pic);
                 $('#imgshow').attr('src', path + response[0].pic);
@@ -441,23 +441,35 @@ function paymentType() {
         }
     }
 }
-
+function getBankName() {
+    $.post('api/common_files/bank_name_list.php', function (response) {
+        let appendBankOption = "<option value=''>Select Bank Name</option>";
+        $.each(response, function (index, val) {
+            let selected = '';
+            let editGId = $('#bank_name_edit').val(); // Existing guarantor ID (if any)
+            if (val.id == editGId) {
+                selected = 'selected';
+            }
+            appendBankOption += "<option value='" + val.id + "' " + selected + ">" + val.bank_name + "</option>";
+        });
+        $('#bank_names').empty().append(appendBankOption);
+    }, 'json');
+}
 // Function to check if all values in an object are not empty
 function isFormDataValid(formData) {
     let isValid = true;
 
     // Reset border styles for all fields
     $('#chequeno, #chequeValue, #chequeRemark, #transaction_id, #transaction_value, #transaction_remark').css('border', '1px solid #cecece');
-
-    // Check if payment_type is "1" (Split Payment)
-    if (formData['payment_type'] === "1") {
-
-        // Validate specific fields based on payment_mode
+  // alidate specific fields based on payment_mode
         if (formData['payment_mode'] === "2") { // bank transfer
             if (!validateField(formData['transaction_id'], 'transaction_id')) {
                 isValid = false;
             }
             if (!validateField(formData['transaction_value'], 'transaction_value')) {
+                isValid = false;
+            }
+            if (!validateField(formData['bank_names'], 'bank_names')) {
                 isValid = false;
             }
         } else if (formData['payment_mode'] === "3") { // Cheque
@@ -467,34 +479,16 @@ function isFormDataValid(formData) {
             if (!validateField(formData['chequeValue'], 'chequeValue')) {
                 isValid = false;
             }
-        }
-
-    }
-    else if (formData['payment_type'] == "2") { // Single Payment
-
-        // Validate specific fields based on payment_mode
-        if (formData['payment_mode'] === "2") { // bank transfer
-            if (!validateField(formData['transaction_id'], 'transaction_id')) {
-                isValid = false;
-            }
-            if (!validateField(formData['transaction_value'], 'transaction_value')) {
-                isValid = false;
-            }
-        } else if (formData['payment_mode'] === "3") { // Cheque
-            if (!validateField(formData['chequeno'], 'chequeno')) {
-                isValid = false;
-            }
-            if (!validateField(formData['chequeValue'], 'chequeValue')) {
+            if (!validateField(formData['bank_names'], 'bank_names')) {
                 isValid = false;
             }
         }
-    }
 
     return isValid;
 }
 
 function refreshIssueInfo() {
-    resetFieldBorders(['chequeno', 'chequeValue', 'chequeRemark', 'transaction_id', 'transaction_value', 'transaction_remark']);
+    resetFieldBorders(['chequeno', 'chequeValue', 'chequeRemark', 'transaction_id', 'transaction_value', 'transaction_remark','bank_names']);
 }
 
 function resetFieldBorders(fields) {
