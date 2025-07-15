@@ -80,15 +80,16 @@ if ($qry->rowCount() > 0) {
         $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
         $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
-        if ($row['status'] >= '8') {
-            $response['info'] .=  " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
+        
+        if ($row['status'] >= '8' && $row['status'] != '13' && $row['status'] != '14') {
+            $response['info'] .= " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
         }
         if ($row['status'] == '10' || $row['status'] == '11') {
             $response['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
         }
         $response['info'] .=  "  </div> </div>";
 
-        if ($row['status'] < 7 || $row['status'] == 13 || $row['status'] == 14){ // Condition: Less than 7 and 13 and 14 
+        if ($row['status'] < 7 || $row['status'] == '13' || $row['status'] == '14') { // Condition: Less than 7 and 13 and 14 
             $response['charts'] = "<div class='dropdown'>
                 <button class='btn btn-outline-secondary' disabled>
                     <i class='fa'>&#xf107;</i>
