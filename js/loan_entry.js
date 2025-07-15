@@ -1969,7 +1969,26 @@ $(document).ready(function () {
             return;
         }
         clearCalcSchemeFields(profitType);
-        $('#profit_type_calc_scheme').show();
+        $('#due_startdate_calc').val('');
+        $('#maturity_date_calc').val('');
+        $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
+        let calc = $('#calc_val').val().trim();
+        let scheme = $('#scheme_val').val().trim();
+        if ((calc == '' || calc == null) && scheme != '' && profitType == '0') {
+            swalError('Warning', 'No Calculation is found.');
+            $(this).val('');
+            $('#profit_type_calc_scheme').hide();
+            return;
+        }
+
+        // Rule: Only calculation exists, but user chose scheme
+        if ((scheme == '' || scheme == null) && calc != '' && profitType == '1') {
+            swalError('Warning', 'No Scheme is found.');
+            $(this).val('');
+            $('#profit_type_calc_scheme').hide();
+
+            return;
+        }
         $('.calc_scheme_title').text((profitType == '0') ? 'Calculation' : 'Scheme');
         if (profitType == '0') {//Loan Calculation
             $('.calc').show();
@@ -1978,19 +1997,19 @@ $(document).ready(function () {
             getLoanCatDetails(id, 1);
             $('#scheme_due_method_calc').val('')
             $('#profit_method_calc').val('After Benefit');
+            $('#profit_type_calc_scheme').show();
         } else if (profitType == '1') { //Scheme
             $('#scheme_due_method_calc').val('').trigger('change');
             $('.calc').hide();
             $('.scheme').show();
             $('#due_type_calc').val('');
             $('#profit_method_calc').val('');
+            $('#profit_type_calc_scheme').show();
         } else {
             $('#profit_type_calc_scheme').hide();
         }
 
-        $('#due_startdate_calc').val('');
-        $('#maturity_date_calc').val('');
-        $('.int-diff').text('*'); $('.due-diff').text('*'); $('.doc-diff').text('*'); $('.proc-diff').text('*'); $('.refresh_loan_calc').val('');
+
     });
 
     $('#scheme_due_method_calc').change(function () {
@@ -2290,7 +2309,8 @@ function getLoanCatDetails(id, edittype) {
         } else if (response[0].due_type === 'interest') {
             $('#due_type_calc').val('Interest');
         }
-
+        $('#calc_val').val(response[0].interest_rate_min);
+        $('#scheme_val').val(response[0].scheme_name);
         // Retrieve customer and loan limits
         let cus_limit = parseInt($('#cus_limit').val().replace(/,/g, ''));
         let loan_limit = parseInt(response[0].loan_limit);
