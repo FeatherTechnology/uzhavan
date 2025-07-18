@@ -4,8 +4,8 @@ require '../../ajaxconfig.php';
 $user_id = $_SESSION['user_id'];
 $cus_id = $_POST['cus_id'];
 $loan_list_arr = array();
-$status = [3 =>'Move',4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Loan Issued',8 => 'Closed',9=>'Closed',10=>'NOC'];
-$sub_status = [''=>'',1=>'Consider',2=>'Reject'];
+$status = [3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Loan Issued', 8 => 'Closed', 9 => 'Closed', 10 => 'NOC'];
+$sub_status = ['' => '', 1 => 'Consider', 2 => 'Reject'];
 $qry = $pdo->query("SELECT lelc.cus_profile_id, lelc.cus_id, lelc.loan_id, lc.loan_category, lelc.loan_date,cs.closed_date,lelc.loan_amount, cs.status, cs.sub_status
 FROM loan_entry_loan_calculation lelc
 JOIN customer_profile cp ON cp.id = lelc.cus_profile_id
@@ -17,18 +17,19 @@ JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
 WHERE lelc.cus_id = '$cus_id' AND u.id ='$user_id' AND us.id ='$user_id' AND (cs.status = 8 || cs.status = 9) ORDER BY lelc.id DESC");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
+        $loanInfo['loan_amount'] = moneyFormatIndia($loanInfo['loan_amount']);
         $loanDate = new DateTime($loanInfo['loan_date']);
         $loanInfo['loan_date'] = $loanDate->format('d-m-Y');
         $closedDate = new DateTime($loanInfo['closed_date']);
         $loanInfo['closed_date'] = $closedDate->format('d-m-Y');
-        $loanInfo['charts'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button><div class='dropdown-content'><a href='#' class='due-chart' value='" . $loanInfo['cus_profile_id'] . "'>Due Chart</a><a href='#' class='penalty-chart' value='" . 
-        $loanInfo['cus_profile_id'] . "'>Penalty Chart</a><a href='#' class='fine-chart' value='" . $loanInfo['cus_profile_id'] . "'>Fine Chart</a></div></div>";
+        $loanInfo['charts'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button><div class='dropdown-content'><a href='#' class='due-chart' value='" . $loanInfo['cus_profile_id'] . "'>Due Chart</a><a href='#' class='penalty-chart' value='" .
+            $loanInfo['cus_profile_id'] . "'>Penalty Chart</a><a href='#' class='fine-chart' value='" . $loanInfo['cus_profile_id'] . "'>Fine Chart</a></div></div>";
 
         $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
         <div class='dropdown-content'>";
 
         if ($loanInfo['status'] == '8') {
-            
+
             $loanInfo['action'] .= "<a href='#' class='closed-view' value='" . $loanInfo['cus_profile_id'] . "'>Close</a>";
         }
 
@@ -40,3 +41,35 @@ if ($qry->rowCount() > 0) {
 }
 $pdo = null; //Close Connection.
 echo json_encode($loan_list_arr);
+
+function moneyFormatIndia($num1)
+{
+    if ($num1 < 0) {
+        $num = str_replace("-", "", $num1);
+    } else {
+        $num = $num1;
+    }
+    $explrestunits = "";
+    if (strlen($num) > 3) {
+        $lastthree = substr($num, strlen($num) - 3, strlen($num));
+        $restunits = substr($num, 0, strlen($num) - 3);
+        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
+        $expunit = str_split($restunits, 2);
+        for ($i = 0; $i < sizeof($expunit); $i++) {
+            if ($i == 0) {
+                $explrestunits .= (int)$expunit[$i] . ",";
+            } else {
+                $explrestunits .= $expunit[$i] . ",";
+            }
+        }
+        $thecash = $explrestunits . $lastthree;
+    } else {
+        $thecash = $num;
+    }
+
+    if ($num1 < 0 && $num1 != '') {
+        $thecash = "-" . $thecash;
+    }
+
+    return $thecash;
+}

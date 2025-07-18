@@ -1,3 +1,4 @@
+let loanidResponse = {};
 $(document).ready(function () {
     //Move Loan Entry  
     // Loan Entry Tab Change Radio buttons
@@ -21,10 +22,11 @@ $(document).ready(function () {
 
     $(document).on('click', '.edit-cus-update', function () {
         let id = $(this).attr('value');
+        let cus_id = $(this).data('cus-id');
         $('#customer_profile_id').val(id);
 
         swapTableAndCreation();
-        editCustmerProfile(id)
+        editCustmerProfile(id, cus_id)
     });
 
     $('input[name=update_type]').click(function () {
@@ -251,7 +253,7 @@ $(document).ready(function () {
     });
     $(document).on('click', '#add_kyc', function () {
         let customerID = $('#cus_id_upd').val().trim().replace(/\s/g, '');
-        getKycLoanId(customerID);
+        getLoanId('#kycloan_id');
         getKycTable();
         fetchProofList();
     });
@@ -438,7 +440,7 @@ $(document).ready(function () {
                 } else {
                     $('#kyc_relationship').val(response[0].fam_relationship);
                 }
-                await getKycLoanId(); // Fetch all loan ID options
+                await getLoanId('#kycloan_id'); // Fetch all loan ID options
                 $('#kycloan_id').val(response[0].cus_profile_id);
 
                 $('#proof').val(response[0].proof);
@@ -592,6 +594,26 @@ $(document).ready(function () {
         $('#age').val(age);
     });
 
+    $("#loan_id").change(function () {
+        const selectedOption = $(this).find("option:selected");
+        const guarantorName = selectedOption.data("guarantor");
+        const guPic = selectedOption.data("gupic");
+        const guPath = "uploads/loan_entry/gu_pic/";
+
+        $('#guarantor_name_edit').val(guarantorName);
+        // Call function to load and preselect guarantor name
+        getGuarantorName();
+        // Set image in <img id="gur_imgshow"> and filename in <input id="gur_pic">
+        if (guPic) {
+            $('#gur_pic').val(guPic);
+            $('#gur_imgshow').attr('src', guPath + guPic);
+        } else {
+            $('#gur_pic').val('');
+            $('#gu_pic').val('');
+            $('#gur_imgshow').attr('src', 'img/avatar.png');
+        }
+    });
+
     $('#guarantor_name').change(function () {
         var guarantorId = $(this).val();
         if (guarantorId) {
@@ -662,11 +684,22 @@ $(document).ready(function () {
         let commitment = $('#commitment').val().replace(/,/g, '');
         let monthly_due_capacity = $('#monthly_due_capacity').val().replace(/,/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
+        let loan_id = $('#loan_id').val();
+
         if (customer_profile_id === '') {
             swalError('Warning', 'Please Fill out personal Info!');
             return false;
         }
         let isValid = true;
+        if (loanidResponse === "true") {
+            let validationResults = [
+                validateField(loan_id, 'loan_id'),
+                validateField(guarantor_name, 'guarantor_name')
+            ];
+            if (!validationResults.every(result => result)) {
+                isValid = false;
+            }
+        }
         // Validate fields based on area_confirm value
         if (area_confirm == '1') {
             let validationResults = [
@@ -689,7 +722,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'guarantor_name', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity'];
+        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity'];
 
         //  var isValid = true;
         data.forEach(function (entry) {
@@ -744,11 +777,12 @@ $(document).ready(function () {
             entryDetail.append('commitment', commitment);
             entryDetail.append('support_income', support_income);
             entryDetail.append('monthly_due_capacity', monthly_due_capacity);
-            entryDetail.append('customer_profile_id', customer_profile_id)
+            entryDetail.append('customer_profile_id', customer_profile_id);
+            entryDetail.append('loan_id', loan_id);
 
             // AJAX call to submit data
             $.ajax({
-                url: 'api/loan_entry/submit_cus_profile.php',
+                url: 'api/update_customer_files/update_cus_profile.php',
                 type: 'POST',
                 data: entryDetail,
                 contentType: false,
@@ -1066,9 +1100,10 @@ function getGuarantorName() {
             appendGuarantorOption += "<option value='" + val.id + "' " + selected + ">" + val.fam_name + "</option>";
         });
         $('#guarantor_name').empty().append(appendGuarantorOption);
+        $('#guarantor_name').trigger('change');
     }, 'json');
 }
-function getKycLoanId() {
+function getLoanId(selector) {
     return new Promise((resolve, reject) => {
         let cus_id = $('#cus_id_upd').val();
 
@@ -1076,13 +1111,19 @@ function getKycLoanId() {
         $.post('api/update_customer_files/get_kyc_loan.php', { cus_id }, function (response) {
             let appendLoanIdOption = "<option value=''>Select Loan ID</option>";
 
-            // Loop through each returned record and build <option> tags
-            $.each(response, function (index, val) {
-                appendLoanIdOption += `<option value="${val.cus_profile_id}">${val.loan_id}</option>`;
-            });
+            if (response.length === 0) {
+                loanidResponse = "false"; // No loan IDs found
+            } else {
+                // Loop through each returned record and build <option> tags
+                $.each(response, function (index, val) {
+                    appendLoanIdOption += `<option value="${val.cus_profile_id}" data-guarantor="${val.guarantor_name}" data-gupic="${val.gu_pic}">${val.loan_id}</option>`;
+                });
 
-            // Update the #kycloan_id dropdown with the new options
-            $('#kycloan_id').empty().append(appendLoanIdOption);
+                loanidResponse = "true"; // Loan IDs found
+            }
+
+            // Update the selector with the new options
+            $(selector).empty().append(appendLoanIdOption);
 
             resolve(); // Resolve the promise after populating
         }, 'json')
@@ -1578,9 +1619,9 @@ function getLoanCount(cus_id) {
         },
     });
 }
-async function editCustmerProfile(id) {
+async function editCustmerProfile(id, cus_id) {
     try {
-        const response = await $.post('api/loan_entry/customer_profile_data.php', { id: id }, null, 'json');
+        const response = await $.post('api/update_customer_files/update_profile_data.php', { cus_id: cus_id }, null, 'json');
 
         if (!response || response.length === 0) {
             console.error("No customer data returned.");
@@ -1636,16 +1677,16 @@ async function editCustmerProfile(id) {
         dataCheckList(data.cus_id, data.cus_name, data.mobile1, data.aadhar_num);
         await getGuarantorName();
         await getAreaName();
-
+        await getLoanId('#loan_id')
         getFamilyInfoTable();
         fingerprintTable();
         getPropertyInfoTable();
         getBankInfoTable();
         getKycInfoTable();
         getFeedBackInfoTable();
-
+        $('#loan_id').val(id);
+        $('#loan_id').trigger('change');;
         $('#area').trigger('change');
-        $('#guarantor_name').trigger('change');
 
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {

@@ -13,7 +13,7 @@ try {
 
     $stmt2 = $pdo->prepare("DELETE FROM customer_profile WHERE cus_id = :cus_id AND id = :cusProfileId");
     $stmt2->execute(['cus_id' => $cus_id, 'cusProfileId' => $custProfileId]);
-
+    
     echo json_encode(['success' => true]);
 
 } catch (PDOException $e) {
