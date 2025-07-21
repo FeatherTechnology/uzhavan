@@ -651,6 +651,8 @@ function personalInfo() {
                 $('.scheme').hide();
                 $('.scheme_day').hide();
                 getLoanCatDetails(response[0].loan_category_id, 2);
+                $('#interest_rate_calc').prop('readonly', false);
+                $('#due_period_calc').prop('readonly', false);
             } else if (response[0].profit_type == '1') { // Scheme
                 dueMethodScheme(response[0].scheme_due_method, response[0].loan_category_id)
                 $('.calc').hide();
@@ -663,8 +665,9 @@ function personalInfo() {
                     $('.scheme_day').hide();
                     $('.scheme_day_calc').val('');
                 }
+                $('#interest_rate_calc').prop('readonly', true);
+                $('#due_period_calc').prop('readonly', true);
             }
-
             $('#bankInfo').hide();
             resolve(); // Resolve after everything is done
         }, 'json').fail(() => reject());
@@ -1387,8 +1390,6 @@ function checkBalance() {
                 } else {
                     let netcashamnt = parseFloat($('#net_cash_calc').val().replace(/,/g, ''));
                     $('#balance_net_cash').val(moneyFormatIndia(netcashamnt));
-                    $('#interest_rate_calc').attr('readonly', false);
-                    $('#due_period_calc').attr('readonly', false);
                     $('#doc_charge_calc').attr('readonly', false);
                     $('#processing_fees_calc').attr('readonly', false);
                     $('#due_startdate_calc').attr('readonly', false);

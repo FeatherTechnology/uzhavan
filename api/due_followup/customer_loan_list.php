@@ -19,38 +19,62 @@ $status = [
 //$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
-$cus_profile_id = isset($_POST['cus_profile_id']) ? $_POST['cus_profile_id'] : null;
 $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.sub_status FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id'");
+WHERE cs.cus_id = '$cus_id' AND cs.status = 7");
 if ($qry->rowCount() > 0) {
-    while ($updateDocInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
-        $loanDate = new DateTime($updateDocInfo['loan_date']);
-        $updateDocInfo['loan_date'] = $loanDate->format('d-m-Y');
-          $updateDocInfo['loan_amount'] = moneyFormatIndia($updateDocInfo['loan_amount']);
-        if (!empty($updateDocInfo['closed_date']) && $updateDocInfo['closed_date'] != '0000-00-00') {
-            $closedDate = new DateTime($updateDocInfo['closed_date']);
-            $updateDocInfo['closed_date'] = $closedDate->format('d-m-Y');        
-        }
-        $originalStatus = $updateDocInfo['c_sts']; // Convert numeric status to its string representation for display 
-        $updateDocInfo['c_sts'] = isset($status[$originalStatus]) ? $status[$originalStatus] : '';
-        // $updateDocInfo['c_sts'] = $status[$updateDocInfo['c_sts']];
-        $loanCustomerStatus = loanCustomerStatus($pdo, $updateDocInfo['cus_profile_id']);
-        $updateDocInfo['sub_status']  = $loanCustomerStatus;
-        $updateDocInfo['action'] = '<div class="dropdown">
+    while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
+        $loanDate = new DateTime($loanInfo['loan_date']);
+        $loanInfo['loan_date'] = $loanDate->format('d-m-Y');
+          $loanInfo['loan_amount'] = moneyFormatIndia($loanInfo['loan_amount']);
+      
+        $originalStatus = $loanInfo['c_sts']; // Convert numeric status to its string representation for display 
+        $loanInfo['c_sts'] = isset($status[$originalStatus]) ? $status[$originalStatus] : '';
+        // $loanInfo['c_sts'] = $status[$loanInfo['c_sts']];
+        $loanCustomerStatus = loanCustomerStatus($pdo, $loanInfo['cus_profile_id']);
+        $loanInfo['sub_status']  = $loanCustomerStatus;
+         $loanInfo['charts'] = "<div class='dropdown'>
+        <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
+        <div class='dropdown-content'>
+        <a href='#' class='due-chart' value='" . $loanInfo['cp_id'] . "'>Due Chart</a>
+        <a href='#' class='penalty-chart' value='" . $loanInfo['cp_id'] . "'>Penalty Chart</a>
+        <a href='#' class='fine-chart' value='" . $loanInfo['cp_id'] . "'>Fine Chart</a>
+        <a href='#' class='commitment-chart' value='" . $loanInfo['cp_id'] . "'>Commitment Chart</a>
+        </div>
+        </div>";
+        $loanInfo['action'] = '<div class="dropdown">
         <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
         <div class="dropdown-content">';
+        
         if ($originalStatus < 8) {
-            $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['cus_profile_id'] . "' data-id='" . $updateDocInfo['cus_id'] . "' title='update details'>Update</a>";
+            $loanInfo['action'] .= "<a href='#' class='doc-update' value='" . $loanInfo['cus_profile_id'] . "' data-id='" . $loanInfo['cus_id'] . "' title='update details'>Update</a>";
         }
-        $updateDocInfo['action'] .= "<a href='#' class='doc-print' value='" . $updateDocInfo['cus_profile_id'] . "' title='print'>Print</a>";
+        $loanInfo['action'] .= "<a href='#' class='doc-print' value='" . $loanInfo['cus_profile_id'] . "' title='print'>Print</a>";
 
 
-        $updateDocInfo['action'] .= "</div></div>";
+        $loanInfo['action'] .= "</div></div>";
 
-        $update_doc_list_arr[] = $updateDocInfo; // Append to the array
+
+        $loanInfo['info'] = "<div class='dropdown'>
+            <button class='btn btn-outline-secondary'>
+                <i class='fa'>&#xf107;</i>
+            </button>
+            <div class='dropdown-content'>";
+        $loanInfo['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
+        $loanInfo['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
+        $loanInfo['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
+        
+        if ($row['status'] >= '8' && $row['status'] != '13' && $row['status'] != '14') {
+            $loanInfo['info'] .= " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
+        }
+        if ($row['status'] == '10' || $row['status'] == '11') {
+            $loanInfo['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
+        }
+        $loanInfo['info'] .=  "  </div> </div>";
+
+        $update_doc_list_arr[] = $loanInfo; // Append to the array
     }
 }
 $pdo = null; //Close Connection.
