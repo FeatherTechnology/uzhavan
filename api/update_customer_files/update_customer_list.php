@@ -19,8 +19,8 @@ $subQuery = "SELECT MAX(cp.id) as max_id
              WHERE cs.status >= '7'
              GROUP BY cp.cus_id";
 
-$query = "SELECT cp.id, cp.aadhar_num, cp.cus_id, cp.cus_name, anc.areaname, lnc.linename, bc.branch_name,
-                 cp.mobile1, cs.id as cus_sts_id, cs.status as c_sts
+$query = "SELECT cp.id, cp.aadhar_num, cp.cus_id, cr.cus_name, anc.areaname, lnc.linename, bc.branch_name,
+                 cr.mobile1, cs.id as cus_sts_id, cs.status as c_sts
           FROM customer_profile cp
           LEFT JOIN customer_register cr ON cp.cus_id = cr.cus_id
           LEFT JOIN line_name_creation lnc ON cr.line = lnc.id

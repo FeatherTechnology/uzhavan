@@ -798,13 +798,6 @@ $(document).ready(function () {
                         }, 3000);
                     }
                     $('#customer_profile_id').val(response.last_id);
-                    $('#per_pic').val(response.pic);
-                    $('#cus_data').val(response.cus_data);
-                    if (response.cus_data == 'Existing') {
-                        $('.cus_status_div').show();
-                        $('#data_checking_div').show();
-                        $('#checking_hide').show();
-                    }
                 },
                 error: function () {
                     swalError('Error', 'Error occurred while processing your request.');
@@ -1685,7 +1678,7 @@ async function editCustmerProfile(id, cus_id) {
         getKycInfoTable();
         getFeedBackInfoTable();
         $('#loan_id').val(id);
-        $('#loan_id').trigger('change');;
+        $('#loan_id').trigger('change');
         $('#area').trigger('change');
 
         // Show/hide based on customer data
@@ -1709,15 +1702,6 @@ async function editCustmerProfile(id, cus_id) {
         let path = "uploads/loan_entry/cus_pic/";
         $('#per_pic').val(data.pic);
         $('#imgshow').attr('src', path + data.pic);
-
-        // Set guarantor picture or fallback
-        let guPath = "uploads/loan_entry/gu_pic/";
-        if (data.gu_pic) {
-            $('#gur_pic').val(data.gu_pic);
-            $('#gur_imgshow').attr('src', guPath + data.gu_pic);
-        } else {
-            $('#gur_imgshow').attr('src', 'img/avatar.png');
-        }
 
         // Disable editing
         $('.personal_info_disble').attr("disabled", true);

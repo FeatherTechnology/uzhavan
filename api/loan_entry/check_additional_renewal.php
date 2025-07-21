@@ -4,7 +4,7 @@ require '../../ajaxconfig.php';
 $cus_id = $_POST['cus_id'];
 
 $result = '';
-$qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status = 7 AND status <= 8 ");
+$qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status IN (7, 8) ");
 if ($qry->rowCount() >0) {
     $result = "Additional"; //Additional
 }else{
