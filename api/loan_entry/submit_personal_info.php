@@ -101,7 +101,11 @@ try {
         $last_id = $pdo->lastInsertId();
         $qry = $pdo->query("INSERT INTO `customer_status`( `cus_id`, `cus_profile_id`, `status`, `insert_login_id`, `created_on`) VALUES ('$cus_id', '$last_id', '0', '$user_id',CURRENT_TIMESTAMP() )");
     }
+    $checkAadharqry = $pdo->query("SELECT cus_id FROM customer_register WHERE aadhar_num = '$aadhar_num'");
+    if ($checkAadharqry->rowCount() == 0) {
 
+        $qry1 = $pdo->query("INSERT INTO `customer_register`(`cus_profile_id`,`cus_id`,`aadhar_num`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `whatsapp_no`,`pic`, `cus_data`, `cus_status`, `insert_login_id`, `created_on` ) VALUES ('$last_id','$cus_id','$aadhar_num','$cus_name','$gender','$dob','$age','$mobile1','$mobile2','$whatsapp_no','$picture','$cus_data','$cus_status','$user_id',CURRENT_TIMESTAMP())");
+    }
     $result = array('result' => $result, 'last_id' => $last_id, 'cus_data' => $cus_data, 'cus_status' => $cus_status, 'pic' => $picture);
     $pdo->commit();
 } catch (Exception $e) {

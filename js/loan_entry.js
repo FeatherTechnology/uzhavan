@@ -1864,46 +1864,46 @@ async function existingCustmerProfile(aadhar_num) {
             var img = $('#gur_imgshow');
             img.attr('src', 'img/avatar.png');
         } else {
-            $('#auto_gen_cus_id').val(response[0].cus_id);
-            $('#area_edit').val(response[0].area);
-            $('#aadhar_nums').val(response[0].aadhar_num);
-            $('#cus_name').val(response[0].cus_name);
-            $('#gender').val(response[0].gender);
-            $('#dob').val(response[0].dob);
-            $('#age').val(response[0].age);
-            $('#mobile2').val(response[0].mobile2);
-            $('#whatsapp_no').val(response[0].whatsapp_no);
-            $('#mobile1').val(response[0].mobile1);
-            $('#guarantor_name_edit').val(response[0].guarantor_name);
+            $('#auto_gen_cus_id').val(response.cus_id);
+            $('#area_edit').val(response.area);
+            $('#aadhar_nums').val(response.aadhar_num);
+            $('#cus_name').val(response.cus_name);
+            $('#gender').val(response.gender);
+            $('#dob').val(response.dob);
+            $('#age').val(response.age);
+            $('#mobile2').val(response.mobile2);
+            $('#whatsapp_no').val(response.whatsapp_no);
+            $('#mobile1').val(response.mobile1);
+            $('#guarantor_name_edit').val(response.guarantor_name);
             $('#cus_data').val('Existing');
-            $('#cus_status').val(response[0].cus_status);
-            $('#res_type').val(response[0].res_type);
-            $('#res_detail').val(response[0].res_detail);
-            $('#res_address').val(response[0].res_address);
-            $('#native_address').val(response[0].native_address);
-            $('#occupation').val(response[0].occupation);
-            $('#occ_address').val(response[0].occ_address);
-            $('#occ_detail').val(response[0].occ_detail);
-            $('#occ_income').val(moneyFormatIndia(response[0].occ_income));
-            $('#area_confirm').val(response[0].area_confirm);
-            $('#line').val(response[0].line);
-            $('#cus_limit').val(moneyFormatIndia(response[0].cus_limit));
-            $('#about_cus').val(response[0].about_cus);
-            $('#how_to_know').val(response[0].how_to_know);
-            $('#monthly_income').val(moneyFormatIndia(response[0].monthly_income));
-            $('#other_income').val(moneyFormatIndia(response[0].other_income));
-            $('#support_income').val(moneyFormatIndia(response[0].support_income));
-            $('#commitment').val(moneyFormatIndia(response[0].commitment));
-            $('#monthly_due_capacity').val(moneyFormatIndia(response[0].monthly_due_capacity));
-            if (response[0].whatsapp_no === response[0].mobile1) {
+            $('#cus_status').val(response.cus_status);
+            $('#res_type').val(response.res_type);
+            $('#res_detail').val(response.res_detail);
+            $('#res_address').val(response.res_address);
+            $('#native_address').val(response.native_address);
+            $('#occupation').val(response.occupation);
+            $('#occ_address').val(response.occ_address);
+            $('#occ_detail').val(response.occ_detail);
+            $('#occ_income').val(moneyFormatIndia(response.occ_income));
+            $('#area_confirm').val(response.area_confirm);
+            $('#line').val(response.line);
+            $('#cus_limit').val(moneyFormatIndia(response.cus_limit));
+            $('#about_cus').val(response.about_cus);
+            $('#how_to_know').val(response.how_to_know);
+            $('#monthly_income').val(moneyFormatIndia(response.monthly_income));
+            $('#other_income').val(moneyFormatIndia(response.other_income));
+            $('#support_income').val(moneyFormatIndia(response.support_income));
+            $('#commitment').val(moneyFormatIndia(response.commitment));
+            $('#monthly_due_capacity').val(moneyFormatIndia(response.monthly_due_capacity));
+            if (response.whatsapp_no === response.mobile1) {
                 $('#mobile1_radio').prop('checked', true);
                 $('#selected_mobile_radio').val('mobile1');
-            } else if (response[0].whatsapp_no === response[0].mobile2) {
+            } else if (response.whatsapp_no === response.mobile2) {
                 $('#mobile2_radio').prop('checked', true);
                 $('#selected_mobile_radio').val('mobile2');
             }
-            // autoGenCusId(response[0].cus_id);
-            dataCheckList(response[0].cus_id, response[0].cus_name, response[0].mobile1, response[0].aadhar_num)
+            // autoGenCusId(response.cus_id);
+            dataCheckList(response.cus_id, response.cus_name, response.mobile1, response.aadhar_num)
             await getGuarantorName();
             await getAreaName();
             getFamilyInfoTable()
@@ -1914,13 +1914,13 @@ async function existingCustmerProfile(aadhar_num) {
             getPropertyInfoTable();
             $('.cus_status_div').show();
             let path = "uploads/loan_entry/cus_pic/";
-            $('#per_pic').val(response[0].pic);
+            $('#per_pic').val(response.pic);
             var img = $('#imgshow');
-            img.attr('src', path + response[0].pic);
+            img.attr('src', path + response.pic);
             let paths = "uploads/loan_entry/gu_pic/";
-            $('#gur_pic').val(response[0].gu_pic);
+            $('#gur_pic').val(response.gu_pic);
             var img = $('#gur_imgshow');
-            img.attr('src', paths + response[0].gu_pic);
+            img.attr('src', paths + response.gu_pic);
 
 
         }

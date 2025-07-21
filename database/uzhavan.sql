@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2025 at 02:01 PM
+-- Generation Time: Jul 21, 2025 at 06:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,6 +60,13 @@ CREATE TABLE `agent_creation` (
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `agent_creation`
+--
+
+INSERT INTO `agent_creation` (`id`, `agent_code`, `agent_name`, `mobile1`, `mobile2`, `area`, `occupation`, `insert_login_id`, `update_login_id`, `created_date`, `updated_date`) VALUES
+(1, 'AG-101', 'suba', '7675675675', '', 'JJ', 'Teacher', '1', NULL, '2025-07-10 12:08:03', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -77,6 +84,14 @@ CREATE TABLE `area_creation` (
   `update_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `area_creation`
+--
+
+INSERT INTO `area_creation` (`id`, `branch_id`, `line_id`, `status`, `insert_login_id`, `update_login_id`, `created_on`, `update_on`) VALUES
+(1, 2, 1, 1, 1, 1, '2025-07-10 10:52:50', '2025-07-10'),
+(2, 2, 2, 1, 1, NULL, '2025-07-10 10:54:08', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -88,6 +103,16 @@ CREATE TABLE `area_creation_area_name` (
   `area_creation_id` int(25) NOT NULL,
   `area_id` int(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `area_creation_area_name`
+--
+
+INSERT INTO `area_creation_area_name` (`id`, `area_creation_id`, `area_id`) VALUES
+(1, 1, 2),
+(2, 1, 1),
+(3, 1, 3),
+(4, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -105,6 +130,16 @@ CREATE TABLE `area_name_creation` (
   `created_on` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `area_name_creation`
+--
+
+INSERT INTO `area_name_creation` (`id`, `areaname`, `branch_id`, `status`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'kaveri', 2, 1, 1, NULL, '2025-07-10 10:52:14', NULL),
+(2, 'Ganga', 2, 1, 1, NULL, '2025-07-10 10:52:25', NULL),
+(3, 'yamuna', 2, 1, 1, NULL, '2025-07-10 10:52:40', NULL),
+(4, 'krishna', 2, 1, 1, NULL, '2025-07-10 10:53:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -152,6 +187,14 @@ CREATE TABLE `bank_creation` (
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `bank_creation`
+--
+
+INSERT INTO `bank_creation` (`id`, `bank_name`, `bank_short_name`, `account_number`, `ifsc_code`, `branch_name`, `qr_code`, `gpay`, `under_branch`, `status`, `insert_login_id`, `update_login_id`, `delete_login_id`, `created_date`, `updated_date`) VALUES
+(1, 'State Bank of India', 'SBI', '67867867867867868', 'asdf', 'Villianur', '', '', '2', '1', '1', NULL, NULL, '2025-07-10 10:55:28', NULL),
+(2, 'Union Bank Of India', 'UBI', '6786787686786788', '678678', 'Villianur', '', '', '2,3', '0', '1', '1', NULL, '2025-07-10 10:57:48', '2025-07-10');
+
 -- --------------------------------------------------------
 
 --
@@ -174,6 +217,17 @@ CREATE TABLE `bank_info` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bank_info`
+--
+
+INSERT INTO `bank_info` (`id`, `cus_id`, `aadhar_num`, `cus_profile_id`, `bank_name`, `branch_name`, `acc_holder_name`, `acc_number`, `ifsc_code`, `issue_status`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-102', NULL, '2', 'SBI', 'Villianur', 'Priya', '56756756756', '57567567', 2, 1, NULL, '2025-07-10', NULL),
+(2, 'F-101', NULL, '1', 'SBI', 'Villianur', 'ravi', '4645645', 'asdf', 2, 1, NULL, '2025-07-10', NULL),
+(3, 'F-104', NULL, '11', 'SBI', 'Villianur', 'JINna', '567575', '567567', 2, 1, NULL, '2025-07-14', NULL),
+(4, 'F-108', NULL, '23', 'SBI', 'Villianur', 'JINna', '3454545345', '34534', 0, 1, NULL, '2025-07-19', NULL),
+(5, 'F-107', NULL, '24', 'UBI', 'Villianur', 'kiru', '12312312313', 'udfs', 2, 1, NULL, '2025-07-19', NULL);
 
 -- --------------------------------------------------------
 
@@ -202,6 +256,14 @@ CREATE TABLE `branch_creation` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `branch_creation`
+--
+
+INSERT INTO `branch_creation` (`id`, `company_name`, `branch_code`, `branch_name`, `address`, `state`, `district`, `taluk`, `place`, `pincode`, `email_id`, `mobile_number`, `whatsapp`, `landline_code`, `landline`, `insert_login_id`, `update_login_id`, `created_date`, `updated_date`) VALUES
+(2, 'Feather Technology', 'F-101', 'Villianur', '', 1, 1, 1, 'Cheyyar', '605110', '', '7676867867', '', '78678', '67867867', 1, 1, '2025-07-10 10:48:21', '2025-07-10'),
+(3, 'Feather Technology', 'F-102', 'chetpet', '', 1, 2, 7, 'Cheyyar', '609122', '', '', '', '', '', 1, NULL, '2025-07-10 10:55:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -254,6 +316,15 @@ CREATE TABLE `cheque_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cheque_info`
+--
+
+INSERT INTO `cheque_info` (`id`, `cus_id`, `cus_profile_id`, `holder_type`, `holder_name`, `holder_id`, `relationship`, `bank_name`, `cheque_cnt`, `upload`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 3, 'Vidhya', '1', 'Brother', 'SBI', 1, NULL, 1, NULL, '2025-07-10', NULL),
+(2, 'F-102', 2, 2, 'Kannan', '3', 'Father', 'asdf', 1, NULL, 1, 1, '2025-07-11', '2025-07-11'),
+(3, 'F-106', 27, 2, 'ammu', '12', 'Sister', 'asdf', 1, NULL, 1, NULL, '2025-07-19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -277,6 +348,15 @@ CREATE TABLE `cheque_no_list` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cheque_no_list`
+--
+
+INSERT INTO `cheque_no_list` (`id`, `cus_id`, `cus_profile_id`, `cheque_info_id`, `cheque_no`, `used_status`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 1, '456', 0, 0, NULL, NULL, NULL, 1, NULL, '2025-07-10', NULL),
+(3, 'F-102', 2, 2, '33', 0, 1, '2025-07-11', '4', 'Spouse', 1, 1, '2025-07-11', '2025-07-11'),
+(4, 'F-106', 27, 3, '1', 0, 0, NULL, NULL, NULL, 1, NULL, '2025-07-19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -290,6 +370,13 @@ CREATE TABLE `cheque_upd` (
   `cheque_info_id` int(11) DEFAULT NULL,
   `uploads` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `cheque_upd`
+--
+
+INSERT INTO `cheque_upd` (`id`, `cus_id`, `cus_profile_id`, `cheque_info_id`, `uploads`) VALUES
+(1, 'F-102', 2, 2, '6870b6360af29.webp');
 
 -- --------------------------------------------------------
 
@@ -341,6 +428,20 @@ CREATE TABLE `collection` (
   `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+--
+-- Dumping data for table `collection`
+--
+
+INSERT INTO `collection` (`id`, `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `collect_sts`, `insert_login_id`, `update_login_id`, `delete_login_id`, `created_date`, `updated_date`) VALUES
+(1, 'COL-101', 1, 'F-101', 'Vijay', '2', '1', '1', '1', 'Present', 'Current', '22000', '0', '22000', '2200', '0', '2200', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-10 13:15:26', '2200', '', '', '', '', '2200', '', '', '', '0', 0, '1', NULL, NULL, '2025-07-10 13:15:26', '2025-07-10 13:15:26'),
+(2, 'COL-102', 2, 'F-102', 'Priya', '2', '3', '1', '1', 'Present', 'Current', '24000', '0', '24000', '2400', '0', '2400', '0', '0', '5', '1', '', '567567', '2025-07-10', '2025-07-10 13:38:46', '2000', '', '', '', '', '2000', '22000', '', '', '22000', 0, '1', NULL, NULL, '2025-07-10 13:38:46', '2025-07-10 13:38:46'),
+(3, 'COL-103', 6, 'F-102', 'Priya', '2', '3', '1', '1', 'Present', 'Current', '33000', '0', '33000', '3300', '0', '3300', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-14 10:49:26', '3000', '', '', '', '', '3000', '30000', '', '', '30000', 0, '1', NULL, NULL, '2025-07-14 10:49:26', '2025-07-14 10:49:26'),
+(4, 'COL-104', 10, 'F-102', 'Priya', '2', '3', '1', '1', 'Present', 'Current', '33000', '0', '33000', '3300', '0', '3300', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-14 10:53:59', '3000', '', '', '', '', '3000', '30000', '', '', '30000', 0, '1', NULL, NULL, '2025-07-14 10:53:59', '2025-07-14 10:53:59'),
+(5, 'COL-105', 20, 'F-106', 'kholi', '2', '2', '1', '1', 'Present', 'Current', '22000', '0', '22000', '2200', '0', '2200', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-18 14:59:15', '2000', '', '', '', '', '2000', '20000', '', '', '20000', 0, '1', NULL, NULL, '2025-07-18 14:59:15', '2025-07-18 14:59:15'),
+(6, 'COL-106', 21, 'F-106', 'kholi', '2', '2', '1', '3', 'Present', 'Current', '48000', '0', '48000', '4800', '0', '4800', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-18 15:09:31', '4000', '', '', '', '', '4000', '44000', '', '', '44000', 0, '1', NULL, NULL, '2025-07-18 15:09:31', '2025-07-18 15:09:31'),
+(7, 'COL-107', 22, 'F-107', 'Lakshmi', '2', '1', '1', '1', 'Present', 'Current', '22000', '0', '22000', '2200', '0', '2200', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-19 17:21:39', '2200', '', '', '', '', '2200', '', '', '', '0', 0, '1', NULL, NULL, '2025-07-19 17:21:39', '2025-07-19 17:21:39'),
+(8, 'COL-108', 22, 'F-107', 'Lakshmi', '2', '1', '1', '1', 'Present', 'Current', '22000', '2200', '19800', '2200', '0', '0', '0', '0', '1', '', '', '', '0000-00-00', '2025-07-19 17:24:19', '800', '', '', '', '', '800', '19000', '', '', '19000', 0, '1', NULL, NULL, '2025-07-19 17:24:19', '2025-07-19 17:24:19');
+
 -- --------------------------------------------------------
 
 --
@@ -363,6 +464,47 @@ CREATE TABLE `collection_charges` (
   `created_date` datetime DEFAULT NULL COMMENT 'Create Time',
   `updated_date` datetime DEFAULT current_timestamp() COMMENT 'Update Time'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `commitment`
+--
+
+CREATE TABLE `commitment` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` varchar(255) DEFAULT NULL,
+  `cus_id` varchar(255) NOT NULL,
+  `follow_up_date` date DEFAULT NULL,
+  `follow_type` varchar(10) DEFAULT NULL,
+  `follow_status` varchar(55) DEFAULT NULL,
+  `follow_person_name` varchar(255) DEFAULT NULL,
+  `person_name` varchar(50) NOT NULL,
+  `relationship` varchar(255) DEFAULT NULL,
+  `commitment_date` date DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `user_type` varchar(100) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `hint` varchar(255) DEFAULT NULL,
+  `insert_login_id` varchar(55) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `commitment`
+--
+
+INSERT INTO `commitment` (`id`, `cus_profile_id`, `cus_id`, `follow_up_date`, `follow_type`, `follow_status`, `follow_person_name`, `person_name`, `relationship`, `commitment_date`, `remark`, `user_type`, `user_name`, `hint`, `insert_login_id`, `created_date`, `updated_date`) VALUES
+(1, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'AAA', 'Staff', 'Super Admin', 'AAA', '1', '2025-07-19 15:59:44', '2025-07-19 15:59:44'),
+(2, '11', 'S-105', '2025-07-19', '2', '2', '', '', '', '0000-00-00', 'ASD', 'Staff', 'Super Admin', 'AWE', '1', '2025-07-19 16:00:08', '2025-07-19 16:00:08'),
+(3, '10', 'S-104', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'AS', 'Staff', 'Super Admin', 'SA', '1', '2025-07-19 16:15:50', '2025-07-19 16:15:50'),
+(4, '42', 'S-104', '2025-07-19', '1', '1', '3', '4', 'Father', '2025-07-26', 'AWE', 'Staff', 'Super Admin', 'EWA', '1', '2025-07-19 16:16:35', '2025-07-19 16:16:35'),
+(5, '42', 'S-104', '2025-07-19', '2', '2', '', '', '', '0000-00-00', 'dd', 'Staff', 'Super Admin', 'dd', '1', '2025-07-19 16:17:09', '2025-07-19 16:17:09'),
+(6, '10', 'S-104', '2025-07-19', '2', '1', '2', 'kanitha', 'Father', '2025-07-19', 'ddd', 'Staff', 'Super Admin', 'qw', '1', '2025-07-19 16:17:46', '2025-07-19 16:17:46'),
+(7, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'ww', 'Staff', 'Super Admin', 'ww', '1', '2025-07-19 17:14:54', '2025-07-19 17:14:54'),
+(8, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'ww', 'Staff', 'Super Admin', 'ww', '1', '2025-07-19 17:16:13', '2025-07-19 17:16:13'),
+(9, '11', 'S-105', '2025-07-19', '1', '1', '1', 'kaviya', 'Customer', '2025-07-19', 'tt', 'Staff', 'Super Admin', 'tt', '1', '2025-07-19 17:17:00', '2025-07-19 17:17:00');
 
 -- --------------------------------------------------------
 
@@ -391,6 +533,13 @@ CREATE TABLE `company_creation` (
   `created_date` datetime DEFAULT current_timestamp(),
   `updated_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `company_creation`
+--
+
+INSERT INTO `company_creation` (`id`, `company_name`, `address`, `state`, `district`, `taluk`, `place`, `pincode`, `website`, `mailid`, `mobile`, `whatsapp`, `landline_code`, `landline`, `status`, `insert_user_id`, `update_user_id`, `created_date`, `updated_date`) VALUES
+(1, 'Feather Technology', 'Bussy Street', 2, 39, 313, 'villianur', '605110', 'feather.com', 'feather@gmail.com', '7896786786', '', '', '', 1, 1, 1, '2025-07-10 10:10:36', '2025-07-10');
 
 -- --------------------------------------------------------
 
@@ -468,6 +617,92 @@ CREATE TABLE `customer_profile` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `customer_profile`
+--
+
+INSERT INTO `customer_profile` (`id`, `cus_id`, `aadhar_num`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `whatsapp_no`, `pic`, `guarantor_name`, `gu_pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `how_to_know`, `loan_count`, `first_loan_date`, `travel_with_company`, `monthly_income`, `other_income`, `support_income`, `commitment`, `monthly_due_capacity`, `remark`, `payment_mode_status`, `payment_type`, `payment_mode`, `bank_id`, `issue_person`, `issue_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', '454545454545', 'Vijay', '1', '', '', '7897898978', '', '', '686f5ad5a8a73.png', '2', '686f5ad5ae7cf.png', 'New', '', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '200000', 'Good', '1', '', '0000-00-00', '', '12000', '2000', '3000', '2000', '2000', NULL, 2, 1, 2, 1, 'Vidhya', 'Brother', 1, 1, '2025-07-10 11:42:48', '2025-07-10'),
+(2, 'F-102', '456456456456', 'Priya', '2', '2003-05-03', '22', '6786786786', '', '', '686f6203a1905.png', '3', '', 'New', '', '2', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 3, '1', '2000000', '', '4', '', '0000-00-00', '', '120000', '2000', '3000', '4000', '50000', NULL, 2, 2, 3, 1, 'Kannan', 'Father', 1, 1, '2025-07-10 12:11:08', '2025-07-10'),
+(3, 'F-101', '454545454545', 'Vijay', '1', '', '', '7897898978', '', '', '686f5ad5a8a73.png', '2', '686f5ad5ae7cf.png', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '200000', 'Good', '1', '1', '0000-00-00', '0 Years, 0 Months', '12000', '2000', '3000', '2000', '2000', NULL, 2, 2, 3, 1, 'Vidhya', 'Brother', 1, 1, '2025-07-10 14:37:49', '2025-07-10'),
+(4, 'F-103', '656790890987', 'Gandhi', '1', '', '', '6786867867', '', '', '686f85622697d.png', '5', '', 'New', '', '', '', '', '', 'Teacher', 'ssv school', '87000', 'Puducherry', '2', 3, '1', '60000', '', '1', '', '0000-00-00', '', '20000', '12000', '30000', '43000', '50000', 'dfg', 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-10 14:45:30', '2025-07-10'),
+(5, 'F-103', '656790890987', 'Gandhi', '1', '', '', '6786867867', '', '', '686f85622697d.png', '5', '', 'Existing', 'Renewal', '', '', '', '', 'Teacher', 'ssv school', '87000', 'Puducherry', '2', 3, '1', '60000', '', '1', '1', '0000-00-00', '', '20000', '12000', '30000', '43000', '50000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-10 17:08:27', '2025-07-10'),
+(6, 'F-102', '456456456456', 'Priya', '2', '2003-05-03', '22', '6786786786', '', '', '686f6203a1905.png', '3', '', 'Existing', 'Renewal', '2', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 3, '1', '2000000', '', '4', '1', '0000-00-00', '0 Years, 0 Months', '120000', '2000', '3000', '4000', '50000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-11 14:59:32', '2025-07-11'),
+(7, 'F-103', '656790890987', 'Gandhi', '1', '', '', '6786867867', '', '', '686f85622697d.png', '5', '', 'Existing', 'Renewal', '', '', '', '', 'Teacher', 'ssv school', '87000', 'Puducherry', '2', 3, '1', '60000', 'good', '1', '2', '0000-00-00', '0 Years, 0 Months', '20000', '12000', '30000', '43000', '50000', 'proper', 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-11 17:46:11', '2025-07-11'),
+(9, 'F-103', '656790890987', 'Gandhi', '1', '', '', '6786867867', '', '', '686f85622697d.png', '5', '', 'Existing', 'Renewal', '', '', '', '', 'Teacher', 'ssv school', '87000', 'Puducherry', '2', 3, '1', '60000', 'good', '1', '2', '0000-00-00', '0 Years, 0 Months', '20000', '12000', '30000', '43000', '50000', 'ggggg', 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-14 10:04:45', '2025-07-14'),
+(10, 'F-102', '456456456456', 'Priya', '2', '2003-05-03', '22', '6786786786', '', '', '686f6203a1905.png', '3', '', 'Existing', 'Renewal', '2', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 3, '1', '500000', '', '4', '3', '0000-00-00', '0 Years, 0 Months', '120000', '2000', '3000', '4000', '50000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-14 10:51:12', '2025-07-14'),
+(11, 'F-104', '553545353453', 'Nandha', '1', '', '', '6786786786', '', '', '6874ae16a6ca6.webp', '6', '', 'New', '', '2', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 2, '1', '120000', 'sdsdff', '2', '', '0000-00-00', '', '12000', '2000', '30000', '40000', '50000', NULL, 2, 1, 2, 1, 'Nandha', 'Customer', 1, 1, '2025-07-14 12:42:18', '2025-07-14'),
+(13, 'F-103', '656790890987', 'Gandhi', '1', '', '', '6786867867', '', '', '686f85622697d.png', '5', '', 'Existing', 'Renewal', '', '', '', '', 'Teacher', 'ssv school', '87000', 'Puducherry', '2', 3, '1', '60000', 'good', '1', '2', '0000-00-00', '0 Years, 0 Months', '20000', '12000', '30000', '43000', '50000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-14 14:54:25', '2025-07-14'),
+(14, 'F-105', '546546456456', 'Karthika', '2', '', '', '8675675675', '', '8675675675', '687633b2a8ca6.jpg', '8', '', 'New', '', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 2, '1', '56767567', '', '2', '', '0000-00-00', '', '20000', '68999', '67568', '67867', '4654', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-15 16:24:42', '2025-07-16'),
+(15, 'F-101', '454545454545', 'Vijay', '1', '', '', '7897898978', '', '', '', '1', '686f5ad5ae7cf.png', '', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '200000', 'Good', '1', '2', '0000-00-00', '0 Years, 0 Months', '12000', '2000', '3000', '2000', '2000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-15 16:26:43', '2025-07-16'),
+(16, 'F-105', '546546456456', 'Karthika', '2', '', '', '8675675675', '', '8675675675', '687633b2a8ca6.jpg', '7', '68777a6fedbef.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 2, '1', '56767567', '', '2', '1', '0000-00-00', '0 Years, 0 Months', '20000', '68999', '67568', '67867', '4654', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-16 15:35:51', '2025-07-16'),
+(20, 'F-106', '123412341234', 'kholi', '1', '', '', '7878978978', '', '', '', '9', '', '', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '', 'fsd', '5', '1', '0000-00-00', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '3400', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-18 11:53:55', '2025-07-18'),
+(21, 'F-106', '123412341234', 'kholi', '1', '', '', '7878978978', '', '', '', '9', '', '', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'fsd', '5', '', '0000-00-00', '', '567567', '23423', '345345', '45345', '34000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-18 12:08:25', '2025-07-18'),
+(22, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', '10', '687a2a8d6ea65.webp', 'New', '', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '', '0000-00-00', '', '12000', '45000', '120000', '3000', '2000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-18 16:34:16', '2025-07-19'),
+(23, 'F-108', '128989898999', 'Dhivya', '1', '', '', '6767868678', '', '', '687b32b613764.webp', '11', '', 'New', '', '3', 'dfgd', 'Address', 'TamilNadu', '', '', '', '', '1', 1, '1', '500000', '', '4', '', '0000-00-00', '', '23000', '12000', '78000', '786786', '787878', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 11:21:32', '2025-07-19'),
+(24, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', '10', '', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '2', '2025-07-18', '0 Years, 0 Months', '12000', '45000', '120000', '3000', '2000', NULL, 2, 1, 2, 1, 'Lakshmi', 'Customer', 1, 1, '2025-07-19 12:00:06', '2025-07-19'),
+(25, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', '9', '687b95699adfb.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 12:01:06', '2025-07-21'),
+(27, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', '12', '687b4ddb856d2.webp', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 13:19:37', '2025-07-21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_register`
+--
+
+CREATE TABLE `customer_register` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` int(100) DEFAULT NULL,
+  `cus_id` varchar(250) DEFAULT NULL,
+  `aadhar_num` varchar(100) NOT NULL,
+  `cus_name` varchar(100) NOT NULL,
+  `gender` varchar(50) NOT NULL,
+  `dob` varchar(50) DEFAULT NULL,
+  `age` varchar(100) DEFAULT NULL,
+  `mobile1` varchar(100) NOT NULL,
+  `mobile2` varchar(100) DEFAULT NULL,
+  `whatsapp_no` varchar(50) DEFAULT NULL,
+  `pic` varchar(100) NOT NULL,
+  `cus_data` varchar(100) DEFAULT NULL,
+  `cus_status` varchar(100) DEFAULT NULL,
+  `res_type` varchar(100) DEFAULT NULL,
+  `res_detail` varchar(100) DEFAULT NULL,
+  `res_address` varchar(100) DEFAULT NULL,
+  `native_address` varchar(100) DEFAULT NULL,
+  `occupation` varchar(100) DEFAULT NULL,
+  `occ_detail` varchar(100) DEFAULT NULL,
+  `occ_income` varchar(100) DEFAULT NULL,
+  `occ_address` varchar(100) DEFAULT NULL,
+  `area_confirm` varchar(100) DEFAULT NULL,
+  `area` int(11) DEFAULT NULL,
+  `line` varchar(100) DEFAULT NULL,
+  `cus_limit` varchar(100) DEFAULT NULL,
+  `about_cus` varchar(100) DEFAULT NULL,
+  `how_to_know` varchar(11) DEFAULT NULL,
+  `loan_count` varchar(11) DEFAULT NULL,
+  `first_loan_date` date DEFAULT NULL,
+  `travel_with_company` varchar(100) DEFAULT NULL,
+  `monthly_income` varchar(100) DEFAULT NULL,
+  `other_income` varchar(100) DEFAULT NULL,
+  `support_income` varchar(100) DEFAULT NULL,
+  `commitment` varchar(100) DEFAULT NULL,
+  `monthly_due_capacity` varchar(100) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `insert_login_id` int(11) NOT NULL,
+  `update_login_id` int(11) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customer_register`
+--
+
+INSERT INTO `customer_register` (`id`, `cus_profile_id`, `cus_id`, `aadhar_num`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `whatsapp_no`, `pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `how_to_know`, `loan_count`, `first_loan_date`, `travel_with_company`, `monthly_income`, `other_income`, `support_income`, `commitment`, `monthly_due_capacity`, `remark`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 20, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, 1, '2025-07-18 11:53:55', '2025-07-21'),
+(2, 22, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '2', '2025-07-18', '0 Years, 0 Months', '12000', '45000', '120000', '3000', '2000', NULL, 1, 1, '2025-07-18 16:34:16', '2025-07-19'),
+(3, 23, 'F-108', '128989898999', 'Dhivya', '1', '', '', '6767868678', '', '', '687b32b613764.webp', 'New', '', '3', 'dfgd', 'Address', 'TamilNadu', '', '', '', '', '1', 1, '1', '500000', '', '4', '', '0000-00-00', '', '23000', '12000', '78000', '786786', '787878', NULL, 1, 1, '2025-07-19 11:21:32', '2025-07-19');
+
 -- --------------------------------------------------------
 
 --
@@ -490,6 +725,33 @@ CREATE TABLE `customer_status` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `customer_status`
+--
+
+INSERT INTO `customer_status` (`id`, `cus_id`, `cus_profile_id`, `loan_calculation_id`, `coll_status`, `status`, `sub_status`, `closed_date`, `remark`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 1, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(2, 'F-102', 2, 2, 'Closed', 11, 1, '2025-07-10', '', 1, 1, '2025-07-10', '2025-07-11'),
+(3, 'F-101', 3, 3, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(4, 'F-103', 4, 4, NULL, 13, NULL, NULL, NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(5, 'F-103', 5, 5, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(6, 'F-102', 6, 6, 'Closed', 8, NULL, NULL, '', 1, 1, '2025-07-11', '2025-07-14'),
+(7, 'F-103', 7, 7, NULL, 6, NULL, NULL, NULL, 1, 1, '2025-07-11', '2025-07-11'),
+(9, 'F-103', 9, 8, NULL, 5, NULL, NULL, NULL, 1, 1, '2025-07-14', '2025-07-14'),
+(10, 'F-102', 10, 9, 'Closed', 9, 1, '2025-07-14', '', 1, 1, '2025-07-14', '2025-07-14'),
+(11, 'F-104', 11, 10, NULL, 4, NULL, NULL, NULL, 1, 1, '2025-07-14', '2025-07-14'),
+(13, 'F-103', 13, 11, NULL, 2, NULL, NULL, NULL, 1, 1, '2025-07-14', '2025-07-15'),
+(14, 'F-105', 14, 12, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-15', '2025-07-16'),
+(15, 'F-101', 15, 13, NULL, 4, NULL, NULL, NULL, 1, 1, '2025-07-15', '2025-07-15'),
+(16, 'F-105', 16, 14, NULL, 3, NULL, NULL, NULL, 1, 1, '2025-07-16', '2025-07-16'),
+(20, 'F-106', 20, 15, 'Closed', 8, NULL, NULL, NULL, 1, 1, '2025-07-18', '2025-07-18'),
+(21, 'F-106', 21, 16, 'Closed', 9, 1, '2025-07-19', 'sdf', 1, 1, '2025-07-18', '2025-07-19'),
+(22, 'F-107', 22, 17, 'Closed', 8, NULL, NULL, NULL, 1, 1, '2025-07-18', '2025-07-19'),
+(23, 'F-108', 23, 19, NULL, 4, NULL, NULL, NULL, 1, 1, '2025-07-19', '2025-07-19'),
+(24, 'F-107', 24, 20, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-19', '2025-07-19'),
+(25, 'F-106', 25, 18, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-19', '2025-07-19'),
+(27, 'F-106', 27, 21, 'Current', 7, NULL, NULL, NULL, 1, 1, '2025-07-19', '2025-07-19');
+
 -- --------------------------------------------------------
 
 --
@@ -509,6 +771,16 @@ CREATE TABLE `cus_feedback` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `cus_feedback`
+--
+
+INSERT INTO `cus_feedback` (`id`, `cus_id`, `cus_profile_id`, `feedback_label`, `feedback`, `cus_remark`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 'label', 5, '', 1, NULL, '2025-07-10', NULL),
+(2, 'F-102', 2, 'customer', 3, 'good', 1, 1, '2025-07-10', '2025-07-10'),
+(3, 'F-103', 4, 'fghfg', 5, 'f', 1, NULL, '2025-07-10', NULL),
+(4, 'F-106', 25, 'zxgfg', 5, 'dfgdf', 1, NULL, '2025-07-19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -523,6 +795,13 @@ CREATE TABLE `designation` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `designation`
+--
+
+INSERT INTO `designation` (`id`, `designation`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Collection Agent', 1, NULL, '2025-05-08', NULL);
 
 -- --------------------------------------------------------
 
@@ -608,6 +887,16 @@ CREATE TABLE `document_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `document_info`
+--
+
+INSERT INTO `document_info` (`id`, `cus_id`, `cus_profile_id`, `doc_name`, `doc_type`, `holder_name`, `relationship`, `upload`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 'Aadhar Card', 1, 0, 'Customer', '', 0, NULL, NULL, NULL, 1, NULL, '2025-07-10', NULL),
+(2, 'F-102', 2, 'Pan', 2, 3, 'Father', '', 1, '2025-07-11', 'Priya', 'Customer', 1, 1, '2025-07-10', '2025-07-11'),
+(3, 'F-102', 2, 'Aadhar', 1, 3, 'Father', '6870951d71ccf.webp', 1, '2025-07-11', 'Kannan', 'Father', 1, 1, '2025-07-11', '2025-07-11'),
+(4, 'F-107', 24, 'kkk', 1, 0, 'Customer', '687b872eb52c4.jpg', 0, NULL, NULL, NULL, 1, NULL, '2025-07-19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -648,6 +937,13 @@ CREATE TABLE `endorsement_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `endorsement_info`
+--
+
+INSERT INTO `endorsement_info` (`id`, `cus_id`, `cus_profile_id`, `owner_name`, `relationship`, `vehicle_details`, `endorsement_name`, `key_original`, `rc_original`, `upload`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 2, 'Father', 'bike', 'asdas', 'YES', 'YES', '', 0, NULL, NULL, NULL, 1, NULL, '2025-07-10', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -657,6 +953,7 @@ CREATE TABLE `endorsement_info` (
 CREATE TABLE `existing_customer` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
+  `cus_profile_id` int(11) NOT NULL,
   `cus_name` varchar(100) NOT NULL,
   `area` varchar(100) NOT NULL,
   `mobile1` varchar(100) NOT NULL,
@@ -668,6 +965,13 @@ CREATE TABLE `existing_customer` (
   `insert_login_id` int(11) NOT NULL,
   `created_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `existing_customer`
+--
+
+INSERT INTO `existing_customer` (`id`, `cus_id`, `cus_profile_id`, `cus_name`, `area`, `mobile1`, `linename`, `branch_name`, `c_sts`, `c_substs`, `existing_detail`, `insert_login_id`, `created_on`) VALUES
+(1, 'F-102', 6, 'Priya', 'yamuna', '6786786786', 'linename', 'Villianur', '9', '1', 'Later', 1, '2025-07-14 10:50:00');
 
 -- --------------------------------------------------------
 
@@ -716,6 +1020,24 @@ CREATE TABLE `family_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `family_info`
+--
+
+INSERT INTO `family_info` (`id`, `cus_id`, `fam_name`, `fam_relationship`, `remarks`, `fam_age`, `fam_live`, `fam_occupation`, `fam_aadhar`, `fam_mobile`, `other_details`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 'Vidhya', 'Brother', '', '', '1', '', '567676787687', '7878778768', NULL, 1, NULL, '2025-07-10', NULL),
+(2, 'F-101', 'Aakash', 'Father', '', '', '1', '', '435345345345', '6756756756', NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(3, 'F-102', 'Kannan', 'Father', '', '', '1', '', '567567657567', '7675676767', NULL, 1, NULL, '2025-07-10', NULL),
+(4, 'F-102', 'muthu', 'Spouse', '', '', '1', '', '566756756756', '6786786787', NULL, 1, NULL, '2025-07-10', NULL),
+(5, 'F-103', 'Abirami', 'Father', '', '', '1', '', '678678686786', '8678678678', NULL, 1, NULL, '2025-07-10', NULL),
+(6, 'F-104', 'Keerthi', 'Mother', '', '', '1', '', '567567567567', '7675675756', NULL, 1, NULL, '2025-07-14', NULL),
+(7, 'F-105', 'Aakash', 'Son', '', '', '1', '', '547654645645', '7656456456', NULL, 1, NULL, '2025-07-15', NULL),
+(8, 'F-105', 'Priya', 'Sister', '', '', '1', '', '756756756756', '6786786868', NULL, 1, NULL, '2025-07-16', NULL),
+(9, 'F-106', 'Aakash', 'Father', '', '', '1', '', '890890900890', '7567567567', NULL, 1, NULL, '2025-07-18', NULL),
+(10, 'F-107', 'Devi', 'Mother', '', '', '1', '', '678786878687', '7898989898', NULL, 1, NULL, '2025-07-18', NULL),
+(11, 'F-108', 'Nadhini', 'Mother', '', '', '1', '', '645645645646', '7645645645', NULL, 1, NULL, '2025-07-19', NULL),
+(12, 'F-106', 'ammu', 'Sister', '', '', '1', '', '786786786786', '9789789789', NULL, 1, 1, '2025-07-19', '2025-07-19');
+
 -- --------------------------------------------------------
 
 --
@@ -734,6 +1056,14 @@ CREATE TABLE `fingerprints` (
   `created_date` datetime DEFAULT NULL,
   `updated_date` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `fingerprints`
+--
+
+INSERT INTO `fingerprints` (`id`, `adhar_num`, `name`, `hand`, `ansi_template`, `bitmap_data`, `insert_user_id`, `update_user_id`, `created_date`, `updated_date`) VALUES
+(1, 'F-101', 'Vijay', '1', 'Rk1SACAyMAAAwgA1AA0AAAE8AWIAxQDFAQAAACgbgLEA3JsAQK8A75QAQNIArqMAgJ4BFIIAQFoAlQoAQL8BL4YAQF0AZwsAgOUBNIsAgHkARAEAQMQAxp4AgK0Am1YAgG4A5gcAQI4BFYYAQPoAr6AAgDsA6BkAQLgAUqwAQP8BIJEAQKsAN7IAgKsApakAQJUA9pYAgGwA9wgAQN4BCZEAgFEBCHcAQPMAe6UAgDAAkhAAQIEASVwAQPMBTpEAAAA=', NULL, '1', NULL, '2025-07-10 11:54:21', '2025-07-10 11:54:21'),
+(2, 'F-102', 'Priya', '1', 'Rk1SACAyMAABWAA1AA0AAAE8AWIAxQDFAQAAACg0QLAAxCIAQKkAuiwAQLQA4SAAQMQAsHgAgKAAo4sAgNsAuoEAQLYA/SMAQKsBBTIAQLcBChsAgOcAnIcAQP8A0IQAQL0BIIEAQM0BGh4AgGAAm30AQLMBLCcAQIcBLoEAgNkBNRkAQK0AGWUAgLIA0hkAQLUAtCMAQKoArygAQJIAvI4AgLQA8iMAQNEAq30AQN4A6XoAgKEBBjkAgJsAin8AQHAArYMAQJABFowAQQEArYsAQO0Ah48AQIkAdXoAgKcBLDUAQNcBLRkAgM0AVqAAQL0A0HUAQKcA3DcAQK0A4yoAgKUA6jUAQIUAxIsAgIAA2o4AgLwAkYAAQLYAhoAAgJ0BDJAAQNEBC3UAQLMAd5QAgMIBGR0AgMcAcJgAQGwBETMAgK4AYgkAQLcAWGwAgGcAXHUAAAA=', NULL, '1', NULL, '2025-07-10 12:19:46', '2025-07-10 12:19:46');
 
 -- --------------------------------------------------------
 
@@ -758,6 +1088,15 @@ CREATE TABLE `gold_info` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `gold_info`
+--
+
+INSERT INTO `gold_info` (`id`, `cus_id`, `cus_profile_id`, `gold_type`, `purity`, `weight`, `value`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 'Chain', '100', '2', '2000', 0, NULL, NULL, NULL, 1, NULL, '2025-07-10', NULL),
+(2, 'F-102', 2, 'Chain', '92', '22', '45000', 1, '2025-07-11', 'Kannan', 'Father', 1, 1, '2025-07-11', '2025-07-11'),
+(3, 'F-108', 23, 'Gold', '22', '23423', '23423432', 0, NULL, NULL, NULL, 1, NULL, '2025-07-19', NULL);
 
 -- --------------------------------------------------------
 
@@ -802,6 +1141,35 @@ CREATE TABLE `kyc_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `kyc_info`
+--
+
+INSERT INTO `kyc_info` (`id`, `cus_id`, `cus_profile_id`, `proof_of`, `fam_mem`, `proof`, `proof_detail`, `upload`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', '1', '1', NULL, 1, 'qw', '', 1, NULL, '2025-07-10', NULL),
+(2, 'F-101', '1', '2', 1, 1, '1', '', 1, NULL, '2025-07-10', NULL),
+(3, 'F-102', '2', '2', 3, 1, '1', '', 1, NULL, '2025-07-10', NULL),
+(4, 'F-101', '3', '2', 2, 1, '2', '', 1, NULL, '2025-07-10', NULL),
+(5, 'F-103', '4', '2', 5, 1, '1', '', 1, NULL, '2025-07-10', NULL),
+(6, 'F-103', '5', '1', NULL, 1, '1', '', 1, NULL, '2025-07-10', NULL),
+(7, 'F-102', '6', '2', 3, 1, '4', '', 1, NULL, '2025-07-11', NULL),
+(8, 'F-103', '7', '2', 5, 1, '12', '', 1, NULL, '2025-07-11', NULL),
+(9, 'F-103', '9', '2', 5, 1, '2', '', 1, NULL, '2025-07-14', NULL),
+(10, 'F-102', '10', '1', NULL, 1, '1', '', 1, NULL, '2025-07-14', NULL),
+(11, 'F-104', '11', '2', 6, 1, '1', '', 1, NULL, '2025-07-14', NULL),
+(12, 'F-103', '13', '2', 5, 1, '2', '', 1, NULL, '2025-07-14', NULL),
+(13, 'F-105', '14', '1', NULL, 1, '4', '', 1, NULL, '2025-07-15', NULL),
+(14, 'F-101', '15', '2', 1, 1, '2', '', 1, NULL, '2025-07-15', NULL),
+(15, 'F-105', '16', '1', NULL, 1, '3', '', 1, NULL, '2025-07-16', NULL),
+(16, 'F-105', '17', '1', NULL, 1, '1', '', 1, NULL, '2025-07-16', NULL),
+(17, 'F-106', '20', '2', 9, 1, '1', '', 1, NULL, '2025-07-18', NULL),
+(18, 'F-106', '21', '1', NULL, 1, '1', '', 1, NULL, '2025-07-18', NULL),
+(19, 'F-107', '22', '1', NULL, 1, '1', '', 1, NULL, '2025-07-18', NULL),
+(20, 'F-108', '23', '1', NULL, 1, '1', '', 1, NULL, '2025-07-19', NULL),
+(21, 'F-107', '24', '1', NULL, 1, '1', '', 1, NULL, '2025-07-19', NULL),
+(22, 'F-106', '25', '2', 9, 1, '1', '', 1, NULL, '2025-07-19', NULL),
+(23, 'F-106', '27', '2', 9, 1, '1', '', 1, NULL, '2025-07-19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -819,6 +1187,14 @@ CREATE TABLE `line_name_creation` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `line_name_creation`
+--
+
+INSERT INTO `line_name_creation` (`id`, `linename`, `branch_id`, `status`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'L1', 2, 1, 1, NULL, '2025-07-10 10:51:47', NULL),
+(2, 'l2', 2, 1, 1, NULL, '2025-07-10 10:53:34', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -833,6 +1209,15 @@ CREATE TABLE `loan_category` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loan_category`
+--
+
+INSERT INTO `loan_category` (`id`, `loan_category`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Home', 1, NULL, '2025-07-10', NULL),
+(2, 'Personal', 1, NULL, '2025-07-15', NULL),
+(3, 'Land', 1, NULL, '2025-07-15', NULL);
 
 -- --------------------------------------------------------
 
@@ -861,6 +1246,15 @@ CREATE TABLE `loan_category_creation` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loan_category_creation`
+--
+
+INSERT INTO `loan_category_creation` (`id`, `loan_category`, `loan_limit`, `due_method`, `due_type`, `interest_rate_min`, `interest_rate_max`, `due_period_min`, `due_period_max`, `doc_charge_min`, `doc_charge_max`, `processing_fee_min`, `processing_fee_max`, `overdue_penalty`, `scheme_name`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 1, '200000', 'Monthly', 'EMI', '1', '2', '2', '10', '2', '3', '2', '3', '2', '1', 1, 1, '2025-07-10', '2025-07-10'),
+(2, 2, '300000', 'Monthly', 'EMI', '1', '5', '1', '10', '1', '2', '1', '4', '2', '', 1, NULL, '2025-07-15', NULL),
+(3, 3, '700000', 'Monthly', 'EMI', '', '', '', '', '', '', '', '', '', '1', 1, NULL, '2025-07-15', NULL);
 
 -- --------------------------------------------------------
 
@@ -908,6 +1302,33 @@ CREATE TABLE `loan_entry_loan_calculation` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `loan_entry_loan_calculation`
+--
+
+INSERT INTO `loan_entry_loan_calculation` (`id`, `cus_profile_id`, `cus_id`, `loan_id`, `loan_category`, `category_info`, `loan_amount`, `profit_type`, `due_method`, `due_type`, `profit_method`, `scheme_due_method`, `scheme_day`, `scheme_name`, `interest_rate`, `due_period`, `doc_charge`, `processing_fees`, `loan_amnt`, `principal_amnt`, `interest_amnt`, `total_amnt`, `due_amnt`, `doc_charge_calculate`, `processing_fees_calculate`, `net_cash`, `loan_date`, `due_startdate`, `maturity_date`, `referred`, `agent_id`, `agent_name`, `cus_status`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 1, 'F-101', 'LID-101', '1', 'sdf', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 3, 2, 20000, 20000, 2000, 22000, 2200, 600, 400, 19000, '2025-07-10', '2025-07-10', '2026-04-10', 1, '', '', 0, 1, 1, '2025-07-10', '2025-07-10'),
+(2, 2, 'F-102', 'LID-102', '1', '', 20000, 1, '', '', 'After Benefit', '2', '2', '1', 2, 10, 2, 1, 20000, 20000, 4000, 24000, 2400, 5, 200, 19798, '2025-07-10', '2025-07-10', '2025-09-09', 0, '1', 'AG-101', 0, 1, 1, '2025-07-10', '2025-07-10'),
+(3, 3, 'F-101', 'LID-103', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 30000, 30000, 3000, 33000, 3300, 600, 600, 28800, '2025-07-10', '2025-07-11', '2026-04-11', 1, '', '', 0, 1, 1, '2025-07-10', '2025-07-10'),
+(4, 4, 'F-103', 'LID-104', '1', '', 50000, 1, '', '', 'After Benefit', '2', '1', '1', 2, 10, 2, 1, 50000, 50000, 10000, 60000, 6000, 5, 500, 49498, '2025-07-10', '2025-07-10', '2025-09-08', 1, '', '', 0, 1, NULL, '2025-07-10', NULL),
+(5, 5, 'F-103', 'LID-105', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 9, 2, 3, 30000, 30000, 2715, 32715, 3635, 600, 900, 28500, '2025-07-10', '2025-07-11', '2026-04-11', 1, '', '', 0, 1, 1, '2025-07-10', '2025-07-10'),
+(6, 6, 'F-102', 'LID-106', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 30000, 30000, 3000, 33000, 3300, 600, 600, 28800, '2025-07-11', '2025-07-11', '2026-04-11', 0, '1', 'AG-101', 0, 1, 1, '2025-07-11', '2025-07-14'),
+(7, 7, 'F-103', 'LID-107', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 30000, 30000, 3000, 33000, 3300, 600, 600, 28800, '2025-07-11', '2025-07-11', '2026-04-11', 0, '1', 'AG-101', 0, 1, NULL, '2025-07-11', NULL),
+(8, 9, 'F-103', 'LID-108', '1', '', 50000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 2, 2, 2, 50000, 50000, 1000, 51000, 25500, 1000, 1000, 48000, '2025-07-14', '2025-07-14', '2025-08-14', 0, '1', 'AG-101', 0, 1, NULL, '2025-07-14', NULL),
+(9, 10, 'F-102', 'LID-109', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 30000, 30000, 3000, 33000, 3300, 600, 600, 28800, '2025-07-14', '2025-07-14', '2026-04-14', 0, '1', 'AG-101', 0, 1, 1, '2025-07-14', '2025-07-14'),
+(10, 11, 'F-104', 'LID-110', '1', '', 40000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 7, 2, 2, 40000, 40000, 2805, 42805, 6115, 800, 800, 38400, '2025-07-14', '2025-07-14', '2026-01-14', 1, '', '', 0, 1, 1, '2025-07-14', '2025-07-14'),
+(11, 13, 'F-103', 'LID-111', '3', '', 20000, 1, '', '', 'After Benefit', '2', '2', '1', 2, 10, 2, 1, 20000, 20000, 4000, 24000, 2400, 5, 200, 19798, '2025-07-15', '2025-07-15', '2025-09-16', 1, '', '', 0, 1, NULL, '2025-07-15', NULL),
+(12, 14, 'F-105', 'LID-112', '1', '', 50000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 2, 2, 2, 50000, 50000, 1000, 51000, 25500, 1000, 1, 48000, '2025-07-15', '2025-07-15', '2025-08-15', 1, '', '', 0, 1, 1, '2025-07-15', '2025-07-16'),
+(13, 15, 'F-101', 'LID-113', '2', '', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 1, 1, 20000, 20000, 2000, 22000, 2200, 200, 200, 19600, '2025-07-15', '2025-07-15', '2026-04-15', 1, '', '', 0, 1, NULL, '2025-07-15', NULL),
+(14, 16, 'F-105', 'LID-114', '1', '', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 20000, 20000, 2000, 22000, 2200, 400, 400, 19200, '2025-07-16', '2025-07-16', '2026-04-16', 1, '', '', 0, 1, NULL, '2025-07-16', NULL),
+(15, 20, 'F-106', 'LID-115', '1', '', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 20000, 20000, 2000, 22000, 2200, 400, 400, 19200, '2025-07-18', '2025-07-18', '2026-04-18', 1, '', '', 0, 1, 1, '2025-07-18', '2025-07-18'),
+(16, 21, 'F-106', 'LID-116', '3', '', 40000, 1, '', '', 'After Benefit', '2', '3', '1', 2, 10, 2, 2, 40000, 40000, 8000, 48000, 4800, 5, 800, 39198, '2025-07-18', '2025-07-18', '2025-09-17', 1, '', '', 0, 1, 1, '2025-07-18', '2025-07-18'),
+(17, 22, 'F-107', 'LID-117', '1', '', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 20000, 20000, 2000, 22000, 2200, 400, 400, 19200, '2025-07-18', '2025-07-18', '2026-04-18', 1, '', '', 0, 1, 1, '2025-07-18', '2025-07-19'),
+(18, 25, 'F-106', 'LID-118', '1', '', 40000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 40000, 40000, 4000, 44000, 4400, 800, 800, 38400, '2025-07-19', '2025-07-19', '2026-04-19', 1, '', '', 0, 1, 1, '2025-07-19', '2025-07-19'),
+(19, 23, 'F-108', 'LID-119', '1', 'tr', 20000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 20000, 20000, 2000, 22000, 2200, 400, 400, 19200, '2025-07-19', '2025-07-19', '2026-04-19', 0, '1', 'AG-101', 0, 1, 1, '2025-07-19', '2025-07-19'),
+(20, 24, 'F-107', 'LID-120', '2', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 2, 10, 1, 1, 30000, 30000, 6000, 36000, 3600, 300, 300, 29400, '2025-07-19', '2025-07-19', '2026-04-19', 1, '', '', 0, 1, 1, '2025-07-19', '2025-07-19'),
+(21, 27, 'F-106', 'LID-121', '1', '', 30000, 0, 'Monthly', 'EMI', 'After Benefit', '', '', '', 1, 10, 2, 2, 30000, 30000, 3000, 33000, 3300, 600, 600, 28800, '2025-07-19', '2025-07-19', '2026-04-19', 1, '', '', 0, 1, 1, '2025-07-19', '2025-07-19');
+
 -- --------------------------------------------------------
 
 --
@@ -940,6 +1361,34 @@ CREATE TABLE `loan_issue` (
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `loan_issue`
+--
+
+INSERT INTO `loan_issue` (`id`, `cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`, `net_bal_cash`, `payment_type`, `payment_mode`, `bank_name`, `cash`, `cheque_val`, `transaction_val`, `transaction_id`, `cheque_no`, `cheque_remark`, `tran_remark`, `balance_amount`, `issue_date`, `issue_person`, `relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 20000, 19000, '19000', 1, '1', '', '3000', NULL, NULL, NULL, NULL, NULL, NULL, '16000', '2025-07-10', 'F-101', 'Customer', 1, NULL, '2025-07-10 12:24:40', NULL),
+(2, 'F-101', 1, 20000, 19000, '16000', 1, '2', '', NULL, '', '16000', '456456456', '', '', 'sdf', '0', '2025-07-10', 'Vidhya', 'Brother', 1, NULL, '2025-07-10 13:14:10', NULL),
+(3, 'F-102', 2, 20000, 19798, '19798', 1, '1', '', '5000', NULL, NULL, NULL, NULL, NULL, NULL, '14798', '2025-07-10', 'Priya', 'Customer', 1, NULL, '2025-07-10 13:35:43', NULL),
+(4, 'F-102', 2, 20000, 19798, '14798', 2, '3', '', NULL, '14798', '', '', '456456', 'goods', '', '0', '2025-07-10', 'Kannan', 'Father', 1, NULL, '2025-07-10 13:36:51', NULL),
+(5, 'F-103', 5, 30000, 28500, '28500', 1, '1', '', '2500', NULL, NULL, NULL, NULL, NULL, NULL, '26000', '2025-07-10', 'Gandhi', 'Customer', 1, NULL, '2025-07-10 17:11:42', NULL),
+(6, 'F-103', 5, 30000, 28500, '26000', 2, '1', '', '26000', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-10', 'Gandhi', 'Customer', 1, NULL, '2025-07-10 17:12:31', NULL),
+(7, 'F-101', 3, 30000, 28800, '28800', 1, '1', '', '2800', NULL, NULL, NULL, NULL, NULL, NULL, '26000', '2025-07-10', 'Vijay', 'Customer', 1, NULL, '2025-07-10 17:47:07', NULL),
+(8, 'F-101', 3, 30000, 28800, '26000', 1, '2', '', NULL, '', '2000', '786778', '', '', '678678', '24000', '2025-07-10', 'Vijay', 'Customer', 1, NULL, '2025-07-10 17:48:48', NULL),
+(9, 'F-101', 3, 30000, 28800, '24000', 2, '3', '', NULL, '24000', '', '', '54645', '6546', '', '0', '2025-07-10', 'Vidhya', 'Brother', 1, NULL, '2025-07-10 17:50:15', NULL),
+(10, 'F-102', 6, 30000, 28800, '28800', 2, '1', '', '28800', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-14', 'Priya', 'Customer', 1, NULL, '2025-07-14 10:48:52', NULL),
+(11, 'F-102', 10, 30000, 28800, '28800', 2, '1', '', '28800', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-14', 'Priya', 'Customer', 1, NULL, '2025-07-14 10:53:34', NULL),
+(12, 'F-104', 11, 40000, 38400, '38400', 1, '2', '', NULL, '', '1000', '46456456', '', '', 'xcvcb', '37400', '2025-07-14', 'Keerthi', 'Mother', 1, NULL, '2025-07-14 15:04:25', NULL),
+(13, 'F-104', 11, 40000, 38400, '37400', 1, '2', '1', NULL, '', '2000', '6456546456', '', '', '', '35400', '2025-07-14', 'Nandha', 'Customer', 1, NULL, '2025-07-14 15:57:55', NULL),
+(14, 'F-104', 11, 40000, 38400, '35400', 1, '2', '1', NULL, '', '10000', '67576567575757', '', '', '', '25400', '2025-07-14', 'Nandha', 'Customer', 1, NULL, '2025-07-14 16:36:43', NULL),
+(15, 'F-105', 14, 50000, 48000, '48000', 2, '1', '', '48000', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-16', 'Karthika', 'Customer', 1, NULL, '2025-07-16 15:35:17', NULL),
+(16, 'F-106', 20, 20000, 19200, '19200', 2, '1', '', '19200', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-18', 'kholi', 'Customer', 1, NULL, '2025-07-18 12:17:25', NULL),
+(17, 'F-106', 21, 40000, 39198, '39198', 2, '1', '', '39598', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-18', 'Aakash', 'Father', 1, NULL, '2025-07-18 15:09:05', NULL),
+(18, 'F-107', 22, 20000, 19200, '19200', 2, '1', '', '19200', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-19', 'Lakshmi', 'Customer', 1, NULL, '2025-07-19 11:23:51', NULL),
+(19, 'F-106', 25, 40000, 38400, '38400', 2, '1', '', '38400', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-19', 'virat kholi', 'Customer', 1, NULL, '2025-07-19 13:09:33', NULL),
+(20, 'F-107', 24, 30000, 29400, '29400', 1, '2', '1', NULL, '', '4000', '45645', '', '', '', '25400', '2025-07-19', 'Lakshmi', 'Customer', 1, NULL, '2025-07-19 16:27:25', NULL),
+(21, 'F-107', 24, 30000, 29400, '25400', 1, '2', '1', NULL, '', '25400', '67567567', '', '', '', '0', '2025-07-19', 'Lakshmi', 'Customer', 1, NULL, '2025-07-19 18:19:30', NULL),
+(22, 'F-106', 27, 30000, 28800, '28800', 2, '1', '', '28800', NULL, NULL, NULL, NULL, NULL, NULL, '0', '2025-07-19', 'virat kholi', 'Customer', 1, NULL, '2025-07-19 18:24:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -1004,6 +1453,14 @@ CREATE TABLE `mortgage_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `mortgage_info`
+--
+
+INSERT INTO `mortgage_info` (`id`, `cus_id`, `cus_profile_id`, `property_holder_name`, `relationship`, `property_details`, `mortgage_name`, `designation`, `mortgage_number`, `reg_office`, `mortgage_value`, `upload`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', 1, 1, 'Brother', 'dfgdf', 'land', 'dfgfdg', '56756767', '756', '56000', '686f5f4b465b7.png', 0, NULL, NULL, NULL, 1, 1, '2025-07-10', '2025-07-10'),
+(2, 'F-102', 2, 0, 'Customer', 'sdfsd', 'Land', 'sdf', '23234', '3434', '20000', '6870baf97d28f.webp', 1, '2025-07-11', 'Kannan', 'Father', 1, 1, '2025-07-11', '2025-07-11');
+
 -- --------------------------------------------------------
 
 --
@@ -1014,6 +1471,7 @@ CREATE TABLE `noc` (
   `id` int(11) NOT NULL,
   `cus_profile_id` int(11) NOT NULL,
   `cus_id` varchar(100) NOT NULL,
+  `signed_list` int(11) NOT NULL,
   `cheque_list` int(11) NOT NULL DEFAULT 0,
   `mortgage_list` int(11) NOT NULL DEFAULT 0,
   `endorsement_list` int(11) NOT NULL DEFAULT 0,
@@ -1025,6 +1483,13 @@ CREATE TABLE `noc` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `noc`
+--
+
+INSERT INTO `noc` (`id`, `cus_profile_id`, `cus_id`, `signed_list`, `cheque_list`, `mortgage_list`, `endorsement_list`, `document_list`, `gold_info`, `noc_status`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 2, 'F-102', 2, 2, 2, 2, 2, 2, 2, 1, 1, '2025-07-11', '2025-07-11');
 
 -- --------------------------------------------------------
 
@@ -1040,6 +1505,17 @@ CREATE TABLE `noc_ref` (
   `noc_relationship` varchar(150) NOT NULL,
   `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `noc_ref`
+--
+
+INSERT INTO `noc_ref` (`id`, `noc_id`, `date_of_noc`, `noc_member`, `noc_relationship`, `created_on`) VALUES
+(1, 1, '2025-07-11', '4', 'Spouse', '2025-07-11'),
+(2, 1, '2025-07-11', 'Priya', 'Customer', '2025-07-11'),
+(3, 1, '2025-07-11', 'Kannan', 'Father', '2025-07-11'),
+(4, 1, '2025-07-11', 'Kannan', 'Father', '2025-07-11'),
+(5, 1, '2025-07-11', 'Kannan', 'Father', '2025-07-11');
 
 -- --------------------------------------------------------
 
@@ -1109,6 +1585,13 @@ CREATE TABLE `proof_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `proof_info`
+--
+
+INSERT INTO `proof_info` (`id`, `addProof_name`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Aadhar', 1, NULL, '2025-07-10', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1129,6 +1612,15 @@ CREATE TABLE `property_info` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `property_info`
+--
+
+INSERT INTO `property_info` (`id`, `cus_id`, `aadhar_num`, `cus_profile_id`, `property`, `property_detail`, `property_holder`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'F-101', NULL, '1', 'Land', '400*500', 0, 1, 1, '2025-07-10', '2025-07-10'),
+(2, 'F-102', NULL, '2', 'Land', 'sdfs', 0, 1, NULL, '2025-07-10', NULL),
+(3, 'F-103', NULL, '4', 'Land', 'hj', 5, 1, NULL, '2025-07-10', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1138,6 +1630,7 @@ CREATE TABLE `property_info` (
 CREATE TABLE `repromotion_customer` (
   `id` int(11) NOT NULL,
   `cus_id` varchar(100) DEFAULT NULL,
+  `cus_profile_id` int(11) NOT NULL,
   `cus_name` varchar(100) DEFAULT NULL,
   `mobile1` varchar(11) DEFAULT NULL,
   `area` varchar(50) DEFAULT NULL,
@@ -1148,6 +1641,14 @@ CREATE TABLE `repromotion_customer` (
   `insert_login_id` int(11) NOT NULL,
   `created_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `repromotion_customer`
+--
+
+INSERT INTO `repromotion_customer` (`id`, `cus_id`, `cus_profile_id`, `cus_name`, `mobile1`, `area`, `linename`, `branch_name`, `c_sts`, `repromotion_detail`, `insert_login_id`, `created_on`) VALUES
+(2, 'F-103', 7, 'Gandhi', '6786867867', 'yamuna', 'linename', 'Villianur', 6, 'Needed', 1, '2025-07-14'),
+(3, 'F-103', 9, 'Gandhi', '6786867867', 'yamuna', 'linename', 'Villianur', 5, 'To Follow', 1, '2025-07-14');
 
 -- --------------------------------------------------------
 
@@ -1163,6 +1664,13 @@ CREATE TABLE `role` (
   `created_on` date DEFAULT NULL,
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id`, `role`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'Staff', 1, NULL, '2025-05-08', NULL);
 
 -- --------------------------------------------------------
 
@@ -1190,6 +1698,13 @@ CREATE TABLE `scheme` (
   `updated_on` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `scheme`
+--
+
+INSERT INTO `scheme` (`id`, `scheme_name`, `due_method`, `profit_method`, `interest_rate_percent`, `due_period_percent`, `overdue_penalty_percent`, `doc_charge_type`, `doc_charge_min`, `doc_charge_max`, `processing_fee_type`, `processing_fee_min`, `processing_fee_max`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
+(1, 'weekly', '2', 'After Benefit', '2', '10', '2', 'rupee', '2', '100', 'percent', '1', '10', 1, NULL, '2025-07-10', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -1204,16 +1719,62 @@ CREATE TABLE `signed_doc_info` (
   `signType_relationship` varchar(255) DEFAULT NULL,
   `doc_Count` varchar(255) DEFAULT NULL,
   `cus_profile_id` varchar(150) DEFAULT NULL,
-  `noc_given` varchar(10) NOT NULL DEFAULT '0',
-  `noc_date` varchar(150) DEFAULT NULL,
-  `noc_person` varchar(150) DEFAULT NULL,
-  `noc_name` varchar(150) DEFAULT NULL,
-  `used_status` varchar(10) NOT NULL DEFAULT '0',
+  `noc_status` varchar(10) NOT NULL DEFAULT '0',
+  `date_of_noc` varchar(150) DEFAULT NULL,
+  `noc_member` varchar(150) DEFAULT NULL,
+  `noc_relationship` varchar(150) DEFAULT NULL,
   `insert_login_id` varchar(100) DEFAULT NULL,
   `update_login_id` varchar(100) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `updated_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `signed_doc_info`
+--
+
+INSERT INTO `signed_doc_info` (`id`, `cus_id`, `doc_name`, `sign_type`, `signType_relationship`, `doc_Count`, `cus_profile_id`, `noc_status`, `date_of_noc`, `noc_member`, `noc_relationship`, `insert_login_id`, `update_login_id`, `created_date`, `updated_date`) VALUES
+(1, 'F-101', '0', '3', '1', '1', '1', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-10 11:47:20'),
+(2, 'F-101', '0', '0', '', '2', '1', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-10 11:47:27'),
+(3, 'F-102', '0', '0', '', '1', '2', '1', '2025-07-11', 'Kannan', 'Father', NULL, '1', NULL, '2025-07-11 14:57:39'),
+(4, 'F-102', '0', '2', '4', '2', '2', '1', '2025-07-11', '4', 'Spouse', NULL, '1', NULL, '2025-07-11 14:49:33'),
+(5, 'F-101', '0', '0', '', '1222', '3', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-10 14:39:09'),
+(9, 'F-103', '0', '0', '', '1', '5', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-11 11:59:03'),
+(14, 'F-102', '0', '1', '3', '1', '6', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-11 15:34:14'),
+(16, 'F-102', '0', '3', '3', '3', '6', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-11 15:37:37'),
+(17, 'F-102', '0', '1', '3', '1', '6', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-11 15:37:44'),
+(18, 'F-106', '0', '0', '', '1', '20', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-18 12:15:56'),
+(19, 'F-108', '0', '1', '11', '1', '23', '0', NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-19 16:05:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `signed_upload`
+--
+
+CREATE TABLE `signed_upload` (
+  `id` int(11) NOT NULL,
+  `cus_id` varchar(100) DEFAULT NULL,
+  `cus_profile_id` int(11) DEFAULT NULL,
+  `signed_info_id` int(50) DEFAULT NULL,
+  `uploads` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `signed_upload`
+--
+
+INSERT INTO `signed_upload` (`id`, `cus_id`, `cus_profile_id`, `signed_info_id`, `uploads`) VALUES
+(10, 'F-103', 5, 9, '6870af2f8486f.jpg'),
+(15, 'F-102', 2, 0, '6870b5ea9aa5f.jpg'),
+(16, 'F-102', 2, 0, '6870b5ea9c3a9.webp'),
+(17, 'F-102', 2, 4, '6870b6cf39e18.webp'),
+(20, 'F-102', 6, 14, '6870e19e54cba.webp'),
+(21, 'F-102', 6, 14, '6870e19e5666f.jpg'),
+(22, 'F-102', 6, 14, '6870e1e7357b3.jpg'),
+(24, 'F-102', 6, 16, '6870e269b1741.webp'),
+(25, 'F-102', 6, 16, '6870e269b33b9.jpg'),
+(26, 'F-102', 6, 17, '6870e27a36139.webp');
 
 -- --------------------------------------------------------
 
@@ -1659,8 +2220,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1,2', '1,2', '1,2,5', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,26', '1', '1', '2024-06-13', '2025-07-09'),
-(10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '1', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
+(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '2,3', '1,3,2', '1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,26', '1', '1', '2024-06-13', '2025-07-15'),
+(10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1765,6 +2326,13 @@ ALTER TABLE `collection_charges`
   ADD KEY `cusprofileid` (`cus_profile_id`);
 
 --
+-- Indexes for table `commitment`
+--
+ALTER TABLE `commitment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_commitment` (`cus_profile_id`,`cus_id`,`commitment_date`) USING BTREE;
+
+--
 -- Indexes for table `company_creation`
 --
 ALTER TABLE `company_creation`
@@ -1783,6 +2351,12 @@ ALTER TABLE `customer_data`
 -- Indexes for table `customer_profile`
 --
 ALTER TABLE `customer_profile`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_register`
+--
+ALTER TABLE `customer_register`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1979,6 +2553,12 @@ ALTER TABLE `signed_doc_info`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `signed_upload`
+--
+ALTER TABLE `signed_upload`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `states`
 --
 ALTER TABLE `states`
@@ -2021,25 +2601,25 @@ ALTER TABLE `accounts_collect_entry`
 -- AUTO_INCREMENT for table `agent_creation`
 --
 ALTER TABLE `agent_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `area_creation`
 --
 ALTER TABLE `area_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `area_creation_area_name`
 --
 ALTER TABLE `area_creation_area_name`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `area_name_creation`
 --
 ALTER TABLE `area_name_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `bank_clearance`
@@ -2051,19 +2631,19 @@ ALTER TABLE `bank_clearance`
 -- AUTO_INCREMENT for table `bank_creation`
 --
 ALTER TABLE `bank_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bank_info`
 --
 ALTER TABLE `bank_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `branch_creation`
 --
 ALTER TABLE `branch_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cash_tally_modes`
@@ -2075,25 +2655,25 @@ ALTER TABLE `cash_tally_modes`
 -- AUTO_INCREMENT for table `cheque_info`
 --
 ALTER TABLE `cheque_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cheque_no_list`
 --
 ALTER TABLE `cheque_no_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cheque_upd`
 --
 ALTER TABLE `cheque_upd`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `collection`
 --
 ALTER TABLE `collection`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `collection_charges`
@@ -2102,10 +2682,16 @@ ALTER TABLE `collection_charges`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
 
 --
+-- AUTO_INCREMENT for table `commitment`
+--
+ALTER TABLE `commitment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
 -- AUTO_INCREMENT for table `company_creation`
 --
 ALTER TABLE `company_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer_data`
@@ -2117,25 +2703,31 @@ ALTER TABLE `customer_data`
 -- AUTO_INCREMENT for table `customer_profile`
 --
 ALTER TABLE `customer_profile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT for table `customer_register`
+--
+ALTER TABLE `customer_register`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `customer_status`
 --
 ALTER TABLE `customer_status`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `cus_feedback`
 --
 ALTER TABLE `cus_feedback`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `designation`
 --
 ALTER TABLE `designation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `districts`
@@ -2147,7 +2739,7 @@ ALTER TABLE `districts`
 -- AUTO_INCREMENT for table `document_info`
 --
 ALTER TABLE `document_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `document_need`
@@ -2159,13 +2751,13 @@ ALTER TABLE `document_need`
 -- AUTO_INCREMENT for table `endorsement_info`
 --
 ALTER TABLE `endorsement_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `existing_customer`
 --
 ALTER TABLE `existing_customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -2177,19 +2769,19 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `family_info`
 --
 ALTER TABLE `family_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `fingerprints`
 --
 ALTER TABLE `fingerprints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key', AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `gold_info`
 --
 ALTER TABLE `gold_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `guarantor_info`
@@ -2201,37 +2793,37 @@ ALTER TABLE `guarantor_info`
 -- AUTO_INCREMENT for table `kyc_info`
 --
 ALTER TABLE `kyc_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `line_name_creation`
 --
 ALTER TABLE `line_name_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `loan_category`
 --
 ALTER TABLE `loan_category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `loan_category_creation`
 --
 ALTER TABLE `loan_category_creation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `loan_entry_loan_calculation`
 --
 ALTER TABLE `loan_entry_loan_calculation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `loan_issue`
 --
 ALTER TABLE `loan_issue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `menu_list`
@@ -2243,19 +2835,19 @@ ALTER TABLE `menu_list`
 -- AUTO_INCREMENT for table `mortgage_info`
 --
 ALTER TABLE `mortgage_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `noc`
 --
 ALTER TABLE `noc`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `noc_ref`
 --
 ALTER TABLE `noc_ref`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `other_transaction`
@@ -2273,37 +2865,43 @@ ALTER TABLE `other_trans_name`
 -- AUTO_INCREMENT for table `proof_info`
 --
 ALTER TABLE `proof_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `property_info`
 --
 ALTER TABLE `property_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `repromotion_customer`
 --
 ALTER TABLE `repromotion_customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `scheme`
 --
 ALTER TABLE `scheme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `signed_doc_info`
 --
 ALTER TABLE `signed_doc_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `signed_upload`
+--
+ALTER TABLE `signed_upload`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `states`
