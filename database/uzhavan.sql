@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 21, 2025 at 06:07 AM
+-- Generation Time: Jul 21, 2025 at 06:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -468,6 +468,47 @@ CREATE TABLE `collection_charges` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `commitment`
+--
+
+CREATE TABLE `commitment` (
+  `id` int(11) NOT NULL,
+  `cus_profile_id` varchar(255) DEFAULT NULL,
+  `cus_id` varchar(255) NOT NULL,
+  `follow_up_date` date DEFAULT NULL,
+  `follow_type` varchar(10) DEFAULT NULL,
+  `follow_status` varchar(55) DEFAULT NULL,
+  `follow_person_name` varchar(255) DEFAULT NULL,
+  `person_name` varchar(50) NOT NULL,
+  `relationship` varchar(255) DEFAULT NULL,
+  `commitment_date` date DEFAULT NULL,
+  `remark` varchar(100) NOT NULL,
+  `user_type` varchar(100) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `hint` varchar(255) DEFAULT NULL,
+  `insert_login_id` varchar(55) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `updated_date` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `commitment`
+--
+
+INSERT INTO `commitment` (`id`, `cus_profile_id`, `cus_id`, `follow_up_date`, `follow_type`, `follow_status`, `follow_person_name`, `person_name`, `relationship`, `commitment_date`, `remark`, `user_type`, `user_name`, `hint`, `insert_login_id`, `created_date`, `updated_date`) VALUES
+(1, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'AAA', 'Staff', 'Super Admin', 'AAA', '1', '2025-07-19 15:59:44', '2025-07-19 15:59:44'),
+(2, '11', 'S-105', '2025-07-19', '2', '2', '', '', '', '0000-00-00', 'ASD', 'Staff', 'Super Admin', 'AWE', '1', '2025-07-19 16:00:08', '2025-07-19 16:00:08'),
+(3, '10', 'S-104', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'AS', 'Staff', 'Super Admin', 'SA', '1', '2025-07-19 16:15:50', '2025-07-19 16:15:50'),
+(4, '42', 'S-104', '2025-07-19', '1', '1', '3', '4', 'Father', '2025-07-26', 'AWE', 'Staff', 'Super Admin', 'EWA', '1', '2025-07-19 16:16:35', '2025-07-19 16:16:35'),
+(5, '42', 'S-104', '2025-07-19', '2', '2', '', '', '', '0000-00-00', 'dd', 'Staff', 'Super Admin', 'dd', '1', '2025-07-19 16:17:09', '2025-07-19 16:17:09'),
+(6, '10', 'S-104', '2025-07-19', '2', '1', '2', 'kanitha', 'Father', '2025-07-19', 'ddd', 'Staff', 'Super Admin', 'qw', '1', '2025-07-19 16:17:46', '2025-07-19 16:17:46'),
+(7, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'ww', 'Staff', 'Super Admin', 'ww', '1', '2025-07-19 17:14:54', '2025-07-19 17:14:54'),
+(8, '11', 'S-105', '2025-07-19', '1', '2', '', '', '', '0000-00-00', 'ww', 'Staff', 'Super Admin', 'ww', '1', '2025-07-19 17:16:13', '2025-07-19 17:16:13'),
+(9, '11', 'S-105', '2025-07-19', '1', '1', '1', 'kaviya', 'Customer', '2025-07-19', 'tt', 'Staff', 'Super Admin', 'tt', '1', '2025-07-19 17:17:00', '2025-07-19 17:17:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `company_creation`
 --
 
@@ -600,8 +641,8 @@ INSERT INTO `customer_profile` (`id`, `cus_id`, `aadhar_num`, `cus_name`, `gende
 (22, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', '10', '687a2a8d6ea65.webp', 'New', '', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '', '0000-00-00', '', '12000', '45000', '120000', '3000', '2000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-18 16:34:16', '2025-07-19'),
 (23, 'F-108', '128989898999', 'Dhivya', '1', '', '', '6767868678', '', '', '687b32b613764.webp', '11', '', 'New', '', '3', 'dfgd', 'Address', 'TamilNadu', '', '', '', '', '1', 1, '1', '500000', '', '4', '', '0000-00-00', '', '23000', '12000', '78000', '786786', '787878', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 11:21:32', '2025-07-19'),
 (24, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', '10', '', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '2', '2025-07-18', '0 Years, 0 Months', '12000', '45000', '120000', '3000', '2000', NULL, 2, 1, 2, 1, 'Lakshmi', 'Customer', 1, 1, '2025-07-19 12:00:06', '2025-07-19'),
-(25, 'F-106', '123412341234', 'virat kholi', '1', '', '', '7878978978', '', '', '687b3c03ce2b8.jpg', '9', '687b95699adfb.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '3', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 12:01:06', '2025-07-19'),
-(27, 'F-106', '123412341234', 'virat kholi', '1', '', '', '7878978978', '', '', '687b3c03ce2b8.jpg', '12', '687b4ddb856d2.webp', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '3', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 13:19:37', '2025-07-19');
+(25, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', '9', '687b95699adfb.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 12:01:06', '2025-07-21'),
+(27, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', '12', '687b4ddb856d2.webp', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, NULL, NULL, NULL, NULL, NULL, 1, 1, '2025-07-19 13:19:37', '2025-07-21');
 
 -- --------------------------------------------------------
 
@@ -658,7 +699,7 @@ CREATE TABLE `customer_register` (
 --
 
 INSERT INTO `customer_register` (`id`, `cus_profile_id`, `cus_id`, `aadhar_num`, `cus_name`, `gender`, `dob`, `age`, `mobile1`, `mobile2`, `whatsapp_no`, `pic`, `cus_data`, `cus_status`, `res_type`, `res_detail`, `res_address`, `native_address`, `occupation`, `occ_detail`, `occ_income`, `occ_address`, `area_confirm`, `area`, `line`, `cus_limit`, `about_cus`, `how_to_know`, `loan_count`, `first_loan_date`, `travel_with_company`, `monthly_income`, `other_income`, `support_income`, `commitment`, `monthly_due_capacity`, `remark`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 20, 'F-106', '123412341234', 'virat kholi', '1', '', '', '7878978978', '', '', '687b3c03ce2b8.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '3', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, 1, '2025-07-18 11:53:55', '2025-07-19'),
+(1, 20, 'F-106', '123412341234', 'virat kholi', '1', '', '', '6556756756', '', '', '687b3c03ce2b8.jpg', 'Existing', 'Additional', '1', 'Residential Details', 'Address', 'TamilNadu', '', '', '', '', '1', 2, '1', '670000', 'Good', '5', '4', '2025-07-18', '0 Years, 0 Months', '567567', '23423', '345345', '45345', '343000', NULL, 1, 1, '2025-07-18 11:53:55', '2025-07-21'),
 (2, 22, 'F-107', '656790890989', 'Lakshmi', '2', '', '', '9675675675', '', '', '687a2a8d6e751.webp', 'Existing', 'Additional', '1', 'Residential Details', 'Puducherry', 'TamilNadu', '', '', '', '', '1', 1, '1', '340000', 'good', '1', '2', '2025-07-18', '0 Years, 0 Months', '12000', '45000', '120000', '3000', '2000', NULL, 1, 1, '2025-07-18 16:34:16', '2025-07-19'),
 (3, 23, 'F-108', '128989898999', 'Dhivya', '1', '', '', '6767868678', '', '', '687b32b613764.webp', 'New', '', '3', 'dfgd', 'Address', 'TamilNadu', '', '', '', '', '1', 1, '1', '500000', '', '4', '', '0000-00-00', '', '23000', '12000', '78000', '786786', '787878', NULL, 1, 1, '2025-07-19 11:21:32', '2025-07-19');
 
@@ -2285,6 +2326,13 @@ ALTER TABLE `collection_charges`
   ADD KEY `cusprofileid` (`cus_profile_id`);
 
 --
+-- Indexes for table `commitment`
+--
+ALTER TABLE `commitment`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_commitment` (`cus_profile_id`,`cus_id`,`commitment_date`) USING BTREE;
+
+--
 -- Indexes for table `company_creation`
 --
 ALTER TABLE `company_creation`
@@ -2632,6 +2680,12 @@ ALTER TABLE `collection`
 --
 ALTER TABLE `collection_charges`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Primary Key';
+
+--
+-- AUTO_INCREMENT for table `commitment`
+--
+ALTER TABLE `commitment`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `company_creation`
