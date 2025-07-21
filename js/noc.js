@@ -47,22 +47,123 @@ $(document).ready(function () {
     });
 
     $('#noc_member').change(function () {
-        let id = $(this).val();
-        let cus_name = $('#cus_name').val();
-        if (id != '' && id != cus_name) {
-            getRelationship(id);
-        } else if (id == cus_name) {
+
+        let id = $('#noc_member :selected').attr('data-val');
+        if (id != '' && id != 'Customer') {
+            getRelationship(id, '#noc_relation');
+        } else if (id == 'Customer') {
             $('#noc_relation').val('Customer');
         } else {
             $('#noc_relation').val('');
         }
 
-        setTimeout(() => {
-            setValuesInTables();
-        }, 1000);
+        let adhaar_cus = $('#noc_member').val();
+
+        $.ajax({
+            url: 'api/loan_issue_files/get_finger_print.php',
+            type: 'POST',
+            data: { "adhaar_cus": adhaar_cus, },
+            dataType: 'json',
+            cache: false,
+            success: function (result) {
+
+                $("#compare_finger").val(result['fpTemplate']);
+                if (result['hand'] == '1') {
+                    $('.scanBtn').removeAttr('disabled');
+                    var hand = "Put Your Left Thumb"
+                } else if (result['hand'] == '2') {
+                    $('.scanBtn').removeAttr('disabled');
+                    var hand = "Put Your Right Thumb"
+                } else {
+                    var hand = "Finger Print Not Registered";
+                    $('.scanBtn').attr('disabled', true);
+                }
+                $("#hand_type").text(hand).attr('class', 'text-danger');
+
+            }
+        });
+
+        setValuesInTables();
+
     });
 
-    $(document).on('change', '.noc_signed_info_chkbx, .noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx', function () {
+    $('.scanBtn').click(function () {
+        var issue_person = $('#noc_member').val();
+
+        if (issue_person != '') {
+
+            $(this).attr('disabled', true);
+            showOverlay();//loader start
+
+            setTimeout(() => { //Set Timeout, because loadin animation will be intrupped by this capture event
+                var quality = 60; //(1 to 100) (recommended minimum 55)
+                var timeout = 10; // seconds (minimum=10(recommended), maximum=60, unlimited=0)
+                var res = CaptureFinger(quality, timeout);
+                if (res.httpStaus) {
+                    if (res.data.ErrorCode == "0") {
+                        $('#ack_fingerprint').val(res.data.AnsiTemplate); // Take ansi template that is the unique id which is passed by sensor
+                    }//Error codes and alerts below
+                    else if (res.data.ErrorCode == -1307) {
+                        alert('Connect Your Device');
+                        $(this).removeAttr('disabled');
+                    } else if (res.data.ErrorCode == -1140 || res.data.ErrorCode == 700) {
+                        alert('Timeout');
+                        $(this).removeAttr('disabled');
+                    } else if (res.data.ErrorCode == 720) {
+                        alert('Reconnect Device');
+                        $(this).removeAttr('disabled');
+                    } else if (res.data.ErrorCode == 730) {
+                        alert('Capture Finger Again');
+                        $(this).removeAttr('disabled');
+                    } else {
+                        alert('Error Code:' + res.data.ErrorCode);
+                        $(this).removeAttr('disabled');
+                    }
+                }
+                else {
+                    alert(res.err);
+                }
+
+                //Verify the finger is matched with member name
+                var compare_finger = $('#compare_finger').val()
+                var ack_fingerprint = $('#ack_fingerprint').val()
+                var res = VerifyFinger(compare_finger, ack_fingerprint)
+                if (res.httpStaus) {
+                    if (res.data.Status) {
+                        Swal.fire({
+                            title: 'Fingerprint Matching',
+                            icon: 'success',
+                            showConfirmButton: true,
+                            confirmButtonColor: '#009688'
+                        });
+                        $('#fingerValidation').val('1');
+                        $("#hand_type").text('Done').attr('class', 'text-success');
+                    } else {
+                        if (res.data.ErrorCode != "0") {
+                            alert(res.data.ErrorDescription);
+                        }
+                        else {
+                            Swal.fire({
+                                title: 'Fingerprint Not Matching',
+                                icon: 'error',
+                                showConfirmButton: true,
+                                confirmButtonColor: '#009688'
+                            });
+                            $(this).removeAttr('disabled');
+                        }
+                    }
+                } else {
+                    alert(res.err)
+                }
+
+                hideOverlay();//loader stop
+
+            }, 700) //Timeout End
+
+        }
+    });
+
+    $(document).on('click', '.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx', function () {
         setValuesInTables();
         removeValuesInTables();
 
@@ -132,10 +233,6 @@ $(document).ready(function () {
         let cpid = $('#cp_id').val();
         let cus_id = $('#cus_id').val();
 
-        // if (date_of_noc =='' || noc_member =='' || noc_relation ==''){
-        //     swalError('Warning', 'kindly fill the mandatory fields.');
-        //     return;
-        // }
         var data = ['date_of_noc', 'noc_member', 'noc_relation']
 
         var isValid = true;
@@ -199,6 +296,7 @@ function getPersonalInfo(cus_id) {
         $('#cus_line').val(response[0].linename);
         $('#cus_mobile').val(response[0].mobile1);
         $('#aadhar_num').val(response[0].aadhar_num);
+        getFamilyMember(response[0].cus_name);
         let path = "uploads/loan_entry/cus_pic/";
         if (response[0].pic) {
             $('#per_pic').val(response[0].pic);
@@ -246,7 +344,6 @@ async function callAllFunctions(cp_id) {
     $('.endorsement-div').hide();
     $('.gold-div').hide();
     await Promise.all([
-        getSignedDocList(cp_id),
         getChequeList(cp_id),
         getMortgageList(cp_id),
         getEndorsementList(cp_id),
@@ -261,9 +358,6 @@ async function callAllFunctions(cp_id) {
 
     // Clear the NOC relation field
     $('#noc_relation').val('');
-
-    // Wait for getFamilyMember to complete
-    await getFamilyMember();
 
     // Set the submitted disabled state
     setSubmittedDisabled();
@@ -351,24 +445,22 @@ function getGoldList(cp_id) {
         setdtable('#noc_gold_list_table');
     }, 'json');
 }
-function getFamilyMember() {
+function getFamilyMember(cus_name) {
     let cus_id = $('#cus_id').val();
-    let cus_name = $('#cus_name').val();
     return $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
-        appendOption += "<option value=''>Select Member Name</option>";
-        appendOption += "<option value='" + cus_name + "'>" + cus_name + "</option>";
+        appendOption += "<option value='' data-val=''>Select Member Name</option>";
+        appendOption += "<option value='" + cus_id + "' data-val='Customer'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
-            appendOption += "<option value='" + val.id + "'>" + val.fam_name + "</option>";
+            appendOption += "<option value='" + val.fam_aadhar + "' data-val='" + val.id + "'>" + val.fam_name + "</option>";
         });
         $('#noc_member').empty().append(appendOption);
     }, 'json');
 }
 
-function getRelationship(id) {
+function getRelationship(id, selector) {
     $.post('api/loan_entry/family_creation_data.php', { id }, function (response) {
-        let relationship = response[0].fam_relationship;
-        $('#noc_relation').val(relationship);
+        $(selector).val(response[0].fam_relationship);
     }, 'json');
 }
 
@@ -428,13 +520,6 @@ function setValuesInTables() {
         }
     });
 
-    // if (!checked) {
-    //     swalError('Warning', 'Kindly check Atleast one checkbox');
-    //     $('#noc_member').val('');
-    //     $('#noc_relation').val('');
-
-    //     return;
-    // }
 }
 
 function removeValuesInTables() {

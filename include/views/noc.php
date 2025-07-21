@@ -1,3 +1,4 @@
+<?php include("fingerprint_link.php"); ?>
 <div class="row gutters">
     <div class="col-12">
         <!----------------------------- CARD START NOC TABLE------------------------------>
@@ -303,11 +304,31 @@
                                         <input type="text" class="form-control" id="noc_relation" name="noc_relation" tabindex="3" readonly>
                                     </div>
                                 </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+
+                                        <label for="noc_relation">Acknowledgement</label>
+
+                                        <!--Already Store in Finger Print Table... when select fam name above the finger print will be shown here to compare. -->
+                                        <input type="hidden" class="form-control" id="compare_finger" name="compare_finger">
+
+                                        <!-- finger print value from Device when scanning.-->
+                                        <input type="hidden" class="form-control" id="ack_fingerprint" name="ack_fingerprint">
+
+                                        <!-- set val as 1 when finger Print Matching becuz to use for finger print validation if submit click.-->
+                                        <input type="hidden" class="form-control" id="fingerValidation" name="fingerValidation">
+
+                                        <button type="button" class='btn btn-success scanBtn' style='background-color: #7CA5B8; margin-bottom: -80px; margin-left: -115px;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='57'><i class="material-icons" id="icon-flipped"> &#xe90d; </i>&nbsp;Scan</button>
+
+                                        <span class="text-danger" id="hand_type" style="position: relative;top: 40px; margin-left: 10px;"> </span>
+                                    </div>
+                                </div>
                                 <div class="col-12 mt-3 text-right">
                                     <button name="submit_noc" id="submit_noc" class="btn btn-primary" tabindex="4"><span class="icon-check"></span>&nbsp;Submit</button>
                                 </div>
                             </div>
                         </div>
+                        <br>
                     </div>
                 </div>
             </div>
