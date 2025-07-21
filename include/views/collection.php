@@ -485,6 +485,44 @@
 </div>
 <!-- /////////////////////////////////////////////////////////////////// Fine Chart Modal END ////////////////////////////////////////////////////////////////////// -->
 
+<!--------------------------------------------------------------------- Commitment Chart Modal Start ------------------------------------------------------------------>
+
+<div class="modal fade" id="commitment_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Commitment Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-x-cls">
+                <table class="table custom-table" id="commitment_chart_table">
+                    <thead>
+                        <th>S No.</th>
+                        <th>Date</th>
+                        <th>Follow Type</th>
+                        <th>Followup Status </th>
+                        <th>Person Type</th>
+                        <th>Person Name</th>
+                        <th>Relationship</th>
+                        <th>Remark</th>
+                        <th>Commitment Date</th>
+                        <th>User Type</th>
+                        <th>User Name</th>
+                        <th>Hint</th>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------- Commitment Chart Modal end ------------------------------------------------------------------>
+
 <!-- /////////////////////////////////////////////////////////////////// Fine Add Modal START ////////////////////////////////////////////////////////////// -->
 <div class="modal fade" id="fine_form_modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -543,3 +581,114 @@
     </div>
 </div>
 <!-- /////////////////////////////////////////////////////////////////// Fine Add Modal END ////////////////////////////////////////////////////////////////////// -->
+
+<!------------------------------------------------------------------- New Commitment Modal Start ------------------------------------------------------------------------->
+
+<div class="modal fade" id="add_commitment_info_modal" tabindex="1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Commitment Info</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="2" aria-label="Close" onclick="closeCommitmentModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="commitment_form">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="disabledInput">Follow Up Date</label>
+                                    <input type="text" class="form-control" name="follow_up_date" id="follow_up_date" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="follow_type">Follow Type</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="follow_type" name="follow_type">
+                                        <option value=""> Select Follow Type</option>
+                                        <option value="1">Direct</option>
+                                        <option value="2">Mobile</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="follow_status">Follow Up status</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="follow_status" name="follow_status">
+                                        <option value=""> Select Follow Up status</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 person-div" style="display:none">
+                                <div class="form-group">
+                                    <label for="follow_person_name">Follow Person Name</label><span class="text-danger">*</span>
+                                    <select class="form-control" name="follow_person_name" id="follow_person_name" tabindex="2">
+                                        <option value="">Select Follow Person Name</option>
+                                        <option value="1">Customer</option>
+                                        <option value="2">Guarantor</option>
+                                        <option value="3">Family Member</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 person-div" id="fam_div" style="display:none">
+                                <div class="form-group">
+                                    <label for="person_name">Person Name</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="person_name" name="person_name" tabindex='26' readonly placeholder="Person Name">
+                                    <select name="person_name1" id="person_name1" class='form-control' tabindex="1" style="display: none;"></select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 person-div" style="display:none">
+                                <div class="form-group">
+                                    <label for="relationship">Relationship</label>
+                                    <input type="text" class="form-control" name="relationship" id="relationship" tabindex="5" placeholder="Relationship" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 person-div" style="display:none">
+                                <div class="form-group">
+                                    <label for="commitment_date">Commitment Date</label><span class="text-danger">*</span>
+                                    <input type="date" class="form-control" id="commitment_date" name="commitment_date" tabindex='26'>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="remark">Remark</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remark">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="user_type">User Type</label>
+                                    <input class="form-control" name="user_type" id="user_type" placeholder="Enter user Type" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="user_name">User Name</label>
+                                    <input class="form-control" name="user_name" id="user_name" placeholder="Enter User Name" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="hint">Hint</label><span class="text-danger">*</span>
+                                    <input class="form-control" name="hint" id="hint" placeholder="Enter Hint">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <button name="submit_commitment" id="submit_commitment" class="btn btn-primary" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary closeModal" data-dismiss="modal" onclick="closeCommitmentModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------------------------- Bank Info Modal End -------------------------------------------------------------------------->

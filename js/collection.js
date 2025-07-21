@@ -63,30 +63,29 @@ $(document).ready(function () {
         }
     });
 
+    {
+        // Get today's date
+        var today = new Date();
+
+        // Extract day, month, and year
+        var day = String(today.getDate()).padStart(2, '0');
+        var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
+        var year = today.getFullYear();
+
+        // Construct the date in dd-mm-yyyy format
+        var formattedDate = day + '-' + month + '-' + year;
+
+        // Set loan date
+        $('#collection_date').val(formattedDate);
+        $('#follow_up_date').val(formattedDate);
+    }
+
     $(document).on('click', '.pay-due', function () {
         let cp_id = $(this).attr('value');
         $('.colls-cntnr').hide();
         $('#back_to_coll_list').hide();
         $('.coll_details').show();
         $('#back_to_loan_list').show();
-        // setCurrentDate('#collection_date'); //To set collection date.
-
-        {
-            // Get today's date
-            var today = new Date();
-
-            // Extract day, month, and year
-            var day = String(today.getDate()).padStart(2, '0');
-            var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
-            var year = today.getFullYear();
-
-            // Construct the date in dd-mm-yyyy format
-            var formattedDate = day + '-' + month + '-' + year;
-
-            // Set loan date
-            $('#collection_date').val(formattedDate);
-        }
-
 
         //To get the loan category ID to store when collection form submitted
         $.ajax({
@@ -274,6 +273,142 @@ $(document).ready(function () {
 
     });
 
+    {
+        // Get today's date
+        var today = new Date().toISOString().split("T")[0];
+
+        // Set the minimum date in the date input to today
+        $("#commitment_date").attr("min", today);
+    }
+
+    $("#follow_type").change(function () {
+        let type = $(this).val();
+        let append;
+        if (type == 1) {
+            //direct
+            append = `<option value="">Select Follow Up Status</option><option value='1'>Commitment</option><option value='2'>Unavailable</option>`;
+            $(".person-div").hide();
+            $(".person-div").find(':input').val('');
+        } else if (type == 2) {
+            //mobile
+            append = `<option value="">Select Follow Up Status</option> <option value='1'>Commitment</option> <option value='2'>RNR</option> <option value='3'>Not Reachable</option> <option value='4'>Switch Off</option> <option value='5'>Not in Use</option> <option value='6'>Blocked</option>`;
+            $(".person-div").hide();
+            $(".person-div").find(':input').val('');
+        } else {
+            append = `<option value="">Select Follow Up Status</option>`;
+            $(".person-div").hide();
+            $(".person-div").find(':input').val('');
+        }
+        $("#follow_status").empty().append(append);
+    });
+
+    $("#follow_status").change(function () {
+        let follow_status = $(this).val();
+        if (follow_status == 1) {
+            //commitment
+            $(".person-div").show();
+        } else {
+            $(".person-div").hide();
+        }
+    });
+
+    $(document).on('click', '.commitment-form', function () {
+        var cp_id = $(this).attr('value');
+        $("#cp_id").val(cp_id);
+        $('#add_commitment_info_modal').modal('show');
+        getUserInfo();
+    });
+
+    $('#follow_person_name').change(function () {
+        let follow_person_name = $(this).val();
+        emptyholderFields();
+        if (follow_person_name == '1' || follow_person_name == '2') {
+            $("#person_name").show();
+            $("#person_name1").hide();
+            $("#person_name1").empty();
+            let cus_profile_id = $('#cp_id').val();
+            getNameRelationship(cus_profile_id, follow_person_name);
+        } else if (follow_person_name == '3') {
+            $("#person_name1").show(); //select box
+            $("#person_name").hide();
+            $("#person_name").empty();
+            getFamilyMember('Select Family Member', '#person_name1');
+        }
+    });
+
+    $('#person_name1').change(function () {
+        let famMemId = $(this).val();
+        if (famMemId != '') {
+            getNameRelationship(famMemId, '3');
+        }
+    });
+
+    $('#submit_commitment').click(function (event) {
+        event.preventDefault();
+
+        let commitmentInfo = {
+            'cp_id': $('#cp_id').val(),
+            'cus_id': $('#cus_id').val(),
+            'follow_up_date': $('#follow_up_date').val(),
+            'follow_type': $('#follow_type').val(),
+            'follow_status': $('#follow_status').val(),
+            'follow_person_name': $('#follow_person_name').val(),
+            'person_name': $('#person_name').val(),
+            'person_name1': $('#person_name1').val(),
+            'relationship': $('#relationship').val(),
+            'commitment_date': $('#commitment_date').val(),
+            'remark': $('#remark').val(),
+            'user_type': $('#user_type').val(),
+            'user_name': $('#user_name').val(),
+            'hint': $('#hint').val(),
+        };
+
+        var data = ['follow_type', 'follow_status', 'remark', 'hint'];
+        var isValid = true;
+
+        // Basic required fields validation
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+
+        // Additional conditional validation
+        let followType = $('#follow_type').val();
+        let followStatus = $('#follow_status').val();
+        let followPerson = $('#follow_person_name').val();
+
+        if ((followType === '1' || followType === '2') && followStatus === '1') {
+            if ($('#follow_person_name').val() === '') {
+                validateField('', 'follow_person_name');
+                isValid = false;
+            }
+
+            if ($('#commitment_date').val() === '') {
+                validateField('', 'commitment_date');
+                isValid = false;
+            }
+
+            if (followPerson === '3' && $('#person_name1').val() === '') {
+                validateField('', 'person_name1');
+                isValid = false;
+            }
+        }
+
+        if (isValid) {
+            $.post('api/collection_files/submit_commitment_info.php', commitmentInfo, function (response) {
+                if (response == '1') {
+                    swalSuccess('Success', 'Commitment Info Added Successfully');
+                    $(".closeModal").trigger("click");
+                } else {
+                    swalError('Alert', 'Failed');
+                }
+            });
+        }
+    });
+
+
     $(document).on('click', '#back_to_loan_list', function () {
         let cusid = $('#cus_id').val();
         OnLoadFunctions(cusid);
@@ -403,10 +538,12 @@ $(document).ready(function () {
         fineChartList(cp_id) //To Show Fine Chart List
     });
 
-    // $(document).on('click','.coll-charge', function(){
-    //     var cp_id = $(this).attr('value');
-    //     resetcollCharges(cp_id);  //Fine
-    // }); 
+    $(document).on('click', '.commitment-chart', function () {
+        var cp_id = $(this).attr('value');
+        commitmentChartList(cp_id) //To Show commitment Chart List
+        $('#commitment_model').modal('show');
+    });
+
     $('#collection_mode').on('change', function () {
         resetValidation();
     });
@@ -785,7 +922,34 @@ function closeChartsModal() {
     $('#due_chart_model').modal('hide');
     $('#penalty_model').modal('hide');
     $('#fine_model').modal('hide');
+    $('#commitment_model').modal('hide');
 }
+
+function closeCommitmentModal() {
+    $('#add_commitment_info_modal').modal('hide');
+    $(".person-div").hide();
+    $('#commitment_form select').each(function () {
+        $(this).val($(this).find('option:first').val());
+    });
+    $('#commitment_form input').each(function () {
+        const excludeIds = ['follow_up_date', 'user_type', 'user_name'];
+        if (!excludeIds.includes($(this).attr('id'))) {
+            $(this).val('');
+        }
+    });
+    $('#commitment_form input').css('border', '1px solid #cecece');
+    $('#commitment_form select').css('border', '1px solid #cecece');
+}
+
+function getUserInfo() {
+    $.post('api/collection_files/user_info.php', function (response) {
+        if (response) {
+            $('#user_name').val(response.user_name);
+            $('#user_type').val(response.role_name);
+        }
+    }, 'json');
+}
+
 
 function closeFineChartModal() {
     $('#fine_form_modal').modal('hide');
@@ -809,6 +973,50 @@ function getFineFormTable(cp_id) {
         $('#fine_purpose').css('border', '1px solid #cecece');
         $('#fine_Amnt').css('border', '1px solid #cecece');
     }, 'json');
+}
+
+function getNameRelationship(id, type) {
+    $.post('api/loan_issue_files/get_cus_fam_members.php', { id, type }, function (response) {
+        if (type == '1') {
+            $('#person_name').val(response[0].cus_name);
+            $('#relationship').val('Customer');
+        } else {
+            $('#person_name').val(response[0].fam_name);
+            $('#person_name').attr('data-id', response[0].id);
+            $('#relationship').val(response[0].fam_relationship);
+        }
+    }, 'json');
+}
+
+function getFamilyMember(optn, selector) {
+    return new Promise((resolve, reject) => {
+        const cus_id = $('#cus_id').val();
+        const follow_person_name = $('#follow_person_name').val(); // Get current holder type
+        $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {
+
+            let appendOption = `<option value=''>${optn}</option>`; // Default option
+
+            // Loop through response to build options
+            $.each(response, function (index, val) {
+                if (val.type === 'Customer' && follow_person_name !== '3') {
+                    appendOption += `<option value='0'>${val.name}</option>`;
+                } else if (val.type === 'Family') {
+                    appendOption += `<option value='${val.id}'>${val.name}</option>`;
+                }
+            });
+
+            $(selector).empty().append(appendOption); // Populate the select box
+            resolve();
+        }, 'json').fail((jqXHR, textStatus, errorThrown) => {
+            reject(`Request failed: ${textStatus}`);
+        });
+    });
+}
+
+function emptyholderFields() {
+    $('#person_name1').val('');
+    $('#person_name').val('');
+    $('#relationship').val('');
 }
 
 //Due Chart List
@@ -858,3 +1066,28 @@ function fineChartList(cp_id) {
         }
     });//Ajax End.
 }
+
+function commitmentChartList(cp_id) {
+    $.post('api/collection_files/get_commitment_chart_list.php', { cp_id }, function (response) {
+
+        let commitmentColumns = [
+            "sno",
+            "follow_up_date",
+            "follow_type",
+            "follow_status",
+            "follow_person_name",
+            "person_name",
+            "relationship",
+            "remark",
+            "commitment_date",
+            "user_type",
+            "user_name",
+            "hint"
+        ];
+
+        appendDataToTable('#commitment_chart_table', response, commitmentColumns);
+        setdtable('#commitment_chart_table');
+
+    }, 'json');
+}
+
