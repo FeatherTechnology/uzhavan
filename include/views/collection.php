@@ -511,6 +511,7 @@
                         <th>User Type</th>
                         <th>User Name</th>
                         <th>Hint</th>
+                        <th>Communication Status</th>
                     </thead>
                 </table>
             </div>

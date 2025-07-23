@@ -23,10 +23,10 @@ $remark = $_POST['remark'];
 $user_type = $_POST['user_type'];
 $user_name = $_POST['user_name'];
 $hint = $_POST['hint'];
-
+$comm_err = isset($_POST['comm_err']) ? $_POST['comm_err'] : '';
 $response = 0;
 
-$qry = $pdo->query("INSERT INTO `commitment`(`cus_profile_id`, `cus_id`, `follow_up_date`, `follow_type`, `follow_status`, `follow_person_name`, `person_name`, `relationship`, `commitment_date`, `remark`, `hint`, `user_type`, `user_name`, `insert_login_id`, `created_date`) VALUES ('$cp_id', '$cus_id', '$follow_up_date', '$follow_type', '$follow_status', '$follow_person_name', '$person_name','$relationship', '$commitment_date', '$remark', '$hint', '$user_type', '$user_name', '$user_id',now())");
+$qry = $pdo->query("INSERT INTO `commitment`(`cus_profile_id`, `cus_id`, `follow_up_date`, `follow_type`, `follow_status`, `follow_person_name`, `person_name`, `relationship`, `commitment_date`, `remark`, `hint`,`comm_err`, `user_type`, `user_name`, `insert_login_id`, `created_date`) VALUES ('$cp_id', '$cus_id', '$follow_up_date', '$follow_type', '$follow_status', '$follow_person_name', '$person_name','$relationship', '$commitment_date', '$remark', '$hint', '$comm_err','$user_type', '$user_name', '$user_id',now())");
 
 if ($qry) {
     $response = 1;

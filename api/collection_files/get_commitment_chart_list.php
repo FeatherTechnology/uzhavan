@@ -3,6 +3,7 @@ require "../../ajaxconfig.php";
 
 $commitment_chart_arr = [];
 $follow_type_arr = [1 => 'Direct', 2 => 'Mobile'];
+$comm_status = [1 => 'Error', 2 => 'Legal'];
 $follow_person_name_arr = [1 => 'Customer', 2 => 'Guarantor', 3 => 'Family Member'];
 
 if (isset($_POST['cp_id'])) {
@@ -35,6 +36,7 @@ if (isset($_POST['cp_id'])) {
         $row['sno'] = $sno++;
         $row['follow_type'] = $follow_type_arr[$row['follow_type']] ?? '';
         $row['follow_status'] = $follow_status_arr[$row['follow_status']] ?? '';
+        $row['comm_err'] = $comm_status[$row['comm_err']] ?? '';
         $row['follow_person_name'] = $follow_person_name_arr[$row['follow_person_name']] ?? '';
 
         // Only show family name if person type is Family Member (3)

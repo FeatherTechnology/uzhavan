@@ -45,7 +45,7 @@ $column = array(
     'cm.commitment_date'
 );
 
-$query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linename, bc.branch_name, cp.mobile1,cs.last_paid_date,cs.coll_status,cs.current_month_paid,cm.comm_err
+$query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linename, bc.branch_name, cp.mobile1,cs.last_paid_date,cs.coll_status,cs.current_month_paid, cm.comm_err,cm.hint,cm.commitment_date
      FROM customer_profile cp 
      LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
      LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
@@ -189,7 +189,7 @@ foreach ($result as $row) {
 // Helper to count all data
 function count_all_data($pdo)
 {
-    $query = "SELECT COUNT(*) FROM customer_profile";
+    $query = "SELECT COUNT(*) FROM customer_status where status = 7";
     $statement = $pdo->prepare($query);
     $statement->execute();
     return $statement->fetchColumn();
