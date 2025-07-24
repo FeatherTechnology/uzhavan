@@ -163,7 +163,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).on('click', '.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx', function () {
+    $(document).on('click', '.noc_signed_info_chkbx,.noc_cheque_chkbx, .noc_mortgage_chkbx, .noc_endorsement_chkbx, .noc_doc_info_chkbx, .noc_gold_chkbx', function () {
         setValuesInTables();
         removeValuesInTables();
 
@@ -339,11 +339,13 @@ function getNOCLoanList(cus_id) {
 async function callAllFunctions(cp_id) {
     // Run all the functions concurrently
     $('.cheque-div').hide();
+    $('.signed-div').hide();
     $('.doc_div').hide();
     $('.mortgage-div').hide();
     $('.endorsement-div').hide();
     $('.gold-div').hide();
     await Promise.all([
+        getSignedDocList(cp_id),
         getChequeList(cp_id),
         getMortgageList(cp_id),
         getEndorsementList(cp_id),

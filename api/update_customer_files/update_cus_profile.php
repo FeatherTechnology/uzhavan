@@ -69,7 +69,12 @@ $monthly_due_capacity = $_POST['monthly_due_capacity'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
 $loan_id = isset($_POST['loan_id']) ? $_POST['loan_id'] : '';
-$converted_date = DateTime::createFromFormat('d-m-Y', $first_loan_date)->format('Y-m-d');
+$date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
+if ($date) {
+    $converted_date = $date->format('Y-m-d');
+} else {
+    $converted_date = '';
+}
 
 if ($customer_profile_id != '') {
 

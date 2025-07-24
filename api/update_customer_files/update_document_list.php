@@ -42,7 +42,7 @@ if ($qry->rowCount() > 0) {
         $updateDocInfo['action'] = '<div class="dropdown">
         <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
         <div class="dropdown-content">';
-        if ($originalStatus <= 10) {
+        if ($originalStatus < 8) {
             $updateDocInfo['action'] .= "<a href='#' class='doc-update' value='" . $updateDocInfo['cus_profile_id'] . "' data-id='" . $updateDocInfo['cus_id'] . "' title='update details'>Update</a>";
         }
         $updateDocInfo['action'] .= "<a href='#' class='doc-print' value='" . $updateDocInfo['cus_profile_id'] . "' title='print'>Print</a>";

@@ -68,7 +68,12 @@ $commitment = $_POST['commitment'];
 $monthly_due_capacity = $_POST['monthly_due_capacity'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
-$converted_date = DateTime::createFromFormat('d-m-Y', $first_loan_date)->format('Y-m-d');
+$date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
+if ($date) {
+    $converted_date = $date->format('Y-m-d');
+} else {
+    $converted_date = '';
+}
 
 if ($customer_profile_id != '') {
     $qry = $pdo->query("SELECT pic, gu_pic FROM `customer_profile` WHERE id='$customer_profile_id'");

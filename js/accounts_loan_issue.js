@@ -45,8 +45,11 @@ $(document).ready(function () {
             'loan_amnt': $('#loan_amount_calc').val().replace(/,/g, ''),
             'net_cash_calc': $('#net_cash_calc').val().replace(/,/g, ''),
             'bal_net_cash': $('#balance_net_cash').val().replace(/,/g, ''),
+            'due_amnt_calc': $('#due_amnt_calc').val().replace(/,/g, ''),
+            'total_amnt_calc': $('#total_amnt_calc').val().replace(/,/g, ''),
             'payment_type': $('#payment_type').val(),
             'payment_mode': $('#payment_mode').val(),
+            'due_startdate': $('#due_startdate_calc').val(),
             'bank_names': $('#bank_names').val(),
             'cash': $('#cash').val(),
             'chequeno': $('#chequeno').val(),
@@ -461,34 +464,34 @@ function isFormDataValid(formData) {
 
     // Reset border styles for all fields
     $('#chequeno, #chequeValue, #chequeRemark, #transaction_id, #transaction_value, #transaction_remark').css('border', '1px solid #cecece');
-  // alidate specific fields based on payment_mode
-        if (formData['payment_mode'] === "2") { // bank transfer
-            if (!validateField(formData['transaction_id'], 'transaction_id')) {
-                isValid = false;
-            }
-            if (!validateField(formData['transaction_value'], 'transaction_value')) {
-                isValid = false;
-            }
-            if (!validateField(formData['bank_names'], 'bank_names')) {
-                isValid = false;
-            }
-        } else if (formData['payment_mode'] === "3") { // Cheque
-            if (!validateField(formData['chequeno'], 'chequeno')) {
-                isValid = false;
-            }
-            if (!validateField(formData['chequeValue'], 'chequeValue')) {
-                isValid = false;
-            }
-            if (!validateField(formData['bank_names'], 'bank_names')) {
-                isValid = false;
-            }
+    // alidate specific fields based on payment_mode
+    if (formData['payment_mode'] === "2") { // bank transfer
+        if (!validateField(formData['transaction_id'], 'transaction_id')) {
+            isValid = false;
         }
+        if (!validateField(formData['transaction_value'], 'transaction_value')) {
+            isValid = false;
+        }
+        if (!validateField(formData['bank_names'], 'bank_names')) {
+            isValid = false;
+        }
+    } else if (formData['payment_mode'] === "3") { // Cheque
+        if (!validateField(formData['chequeno'], 'chequeno')) {
+            isValid = false;
+        }
+        if (!validateField(formData['chequeValue'], 'chequeValue')) {
+            isValid = false;
+        }
+        if (!validateField(formData['bank_names'], 'bank_names')) {
+            isValid = false;
+        }
+    }
 
     return isValid;
 }
 
 function refreshIssueInfo() {
-    resetFieldBorders(['chequeno', 'chequeValue', 'chequeRemark', 'transaction_id', 'transaction_value', 'transaction_remark','bank_names']);
+    resetFieldBorders(['chequeno', 'chequeValue', 'chequeRemark', 'transaction_id', 'transaction_value', 'transaction_remark', 'bank_names']);
 }
 
 function resetFieldBorders(fields) {

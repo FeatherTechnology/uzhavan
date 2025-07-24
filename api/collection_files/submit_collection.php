@@ -36,7 +36,7 @@ $collection_mode = $_POST['collection_mode'];
 $bank_id = $_POST['bank_id'];
 $cheque_no = $_POST['cheque_no'];
 $trans_id = $_POST['trans_id'];
-$trans_date = ($_POST['trans_date'] !='') ? $_POST['trans_date'] : '0000-00-00';
+$trans_date = ($_POST['trans_date'] != '') ? $_POST['trans_date'] : '0000-00-00';
 try {
 
     // Begin transaction
@@ -55,65 +55,86 @@ try {
         $collection_id = $myStr . "-101";
     }
 
-$qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','".$collection_date.' '.date('H:i:s')."','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
+    $qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','" . $collection_date . ' ' . date('H:i:s') . "','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
+    $cur_day = date('j'); // Day of the month without leading zeros
 
-// $qry = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_status',`updated_on`='current_timestamp' WHERE cus_profile_id='$cp_id' ");
-
-if ($qry) {
-    $coll_id = $collection_id;
-    $result = '1';
-} else {
-    $result = '2';
-}
-
-if (($penalty_track != '' AND $penalty_track >0) or ($penalty_waiver != '' AND $penalty_waiver >0)) {
-    $qry1 = $pdo->query("INSERT INTO `penalty_charges`(`cus_profile_id`, `paid_date`, `paid_amnt`, `waiver_amnt`, `created_date`) VALUES ('$cp_id','$collection_date','$penalty_track','$penalty_waiver', current_timestamp) ");
-}
-
-if ($coll_charge_track != '' or $coll_charge_waiver != '') {
-    $qry2 = $pdo->query("INSERT INTO `collection_charges`(`cus_profile_id`, `paid_date`, `paid_amnt`, `waiver_amnt`) VALUES ('$cp_id','$collection_date','$coll_charge_track','$coll_charge_waiver')");
-}
-
-if($cheque_no != ''){
-    $qry = $pdo->query("UPDATE `cheque_no_list` SET `used_status`='1' WHERE `id`=$cheque_no "); //If cheque has been used change status to 1
-}
-
-$check = intval($due_amt_track) + intval($pre_close_waiver) - intval($bal_amt);
-
-if (($princ_amt_track != '' or $int_amt_track != '') and ($due_amt_track == '' or $due_amt_track == 0 or $due_amt_track == null)) {
-    // if this condition is true then it will be the interest based loan. coz thats where we able to give princ/int amt track and not able to give due amt track
-    //if yes then $check variable should check with principal amt
-    $check = intVal($princ_amt_track) + intVal($pre_close_waiver) - intval($bal_amt);
-}
-
-$penalty_check = intval($penalty_track) + intval($penalty_waiver) - intval($penalty);
-$coll_charge_check = intval($coll_charge_track) + intval($coll_charge_waiver) - intval($coll_charge);
-
-if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
-    $closedQry = $pdo->query("UPDATE `customer_status` SET `coll_status`='Closed', `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
-    if ($closedQry) {
-        $result = '3';
+    if ($cur_day >= 1 && $cur_day <= 10) {
+        $lpd = '1';
+    } elseif ($cur_day >= 11 && $cur_day <= 15) {
+        $lpd = '2';
+    } elseif ($cur_day >= 16 && $cur_day <= 20) {
+        $lpd = '3';
+    } elseif ($cur_day >= 21 && $cur_day <= 25) {
+        $lpd = '4';
+    } elseif ($cur_day >= 26 && $cur_day <= 31) {
+        $lpd = '5';
+    } else {
+        $lpd = '0';
     }
-}
+    $collected_amnt = intval($due_amt_track) + intval($pre_close_waiver);
+    $payable_amount = intval($payable_amt) - $collected_amnt;
+    $payable_amnts = ($payable_amount > 0) ? $payable_amount : 0;
 
-// $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cp_id' ");
-// $row = $qry->fetch_assoc();
-// $customer_name = $row['cus_name'];
-// $cus_mobile1 = $row['mobile1'];
+    $bal_amount = intval($bal_amt) - $collected_amnt;
+    $bal_amnts = ($bal_amount > 0) ? $bal_amount : 0;
+    //Current_month_paid = YES/1, if either partial amount or full amount of payable paid in collection. 
+    $query = $pdo->query("UPDATE `customer_status` SET `payable_amnt` = '$payable_amnts', `bal_amnt`='$bal_amnts', `last_paid_date`= '$lpd', `current_month_paid`='1', `update_login_id`='$user_id',`updated_on`=now() WHERE cus_profile_id='$cp_id' ");
 
-// $message = "";
-// $templateid	= ''; //FROM DLT PORTAL.
-// // Account details
-// $apiKey = '';
-// // Message details
-// $sender = '';
-// // Prepare data for POST request
-// $data = 'access_token='.$apiKey.'&to='.$cus_mobile1.'&message='.$message.'&service=T&sender='.$sender.'&template_id='.$templateid;
-// // Send the GET request with cURL
-// $url = 'https://sms.messagewall.in/api/v2/sms/send?'.$data; 
-// $response = file_get_contents($url);  
-// // Process your response here
-// return $response; 
+    if ($qry) {
+        $coll_id = $collection_id;
+        $result = '1';
+    } else {
+        $result = '2';
+    }
+
+    if (($penalty_track != '' and $penalty_track > 0) or ($penalty_waiver != '' and $penalty_waiver > 0)) {
+        $qry1 = $pdo->query("INSERT INTO `penalty_charges`(`cus_profile_id`, `paid_date`, `paid_amnt`, `waiver_amnt`, `created_date`) VALUES ('$cp_id','$collection_date','$penalty_track','$penalty_waiver', current_timestamp) ");
+    }
+
+    if ($coll_charge_track != '' or $coll_charge_waiver != '') {
+        $qry2 = $pdo->query("INSERT INTO `collection_charges`(`cus_profile_id`, `paid_date`, `paid_amnt`, `waiver_amnt`) VALUES ('$cp_id','$collection_date','$coll_charge_track','$coll_charge_waiver')");
+    }
+
+    if ($cheque_no != '') {
+        $qry = $pdo->query("UPDATE `cheque_no_list` SET `used_status`='1' WHERE `id`=$cheque_no "); //If cheque has been used change status to 1
+    }
+
+    $check = intval($due_amt_track) + intval($pre_close_waiver) - intval($bal_amt);
+
+    if (($princ_amt_track != '' or $int_amt_track != '') and ($due_amt_track == '' or $due_amt_track == 0 or $due_amt_track == null)) {
+        // if this condition is true then it will be the interest based loan. coz thats where we able to give princ/int amt track and not able to give due amt track
+        //if yes then $check variable should check with principal amt
+        $check = intVal($princ_amt_track) + intVal($pre_close_waiver) - intval($bal_amt);
+    }
+
+    $penalty_check = intval($penalty_track) + intval($penalty_waiver) - intval($penalty);
+    $coll_charge_check = intval($coll_charge_track) + intval($coll_charge_waiver) - intval($coll_charge);
+
+    if ($check == 0 && $penalty_check == 0 && $coll_charge_check == 0) {
+        $closedQry = $pdo->query("UPDATE `customer_status` SET `coll_status`='Closed', `status`='8',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cp_id' "); //balance is zero change the customer status as 8, moved to closed.
+        if ($closedQry) {
+            $result = '3';
+        }
+    }
+
+    // $qry = $pdo->query("SELECT cus_name, mobile1 FROM `customer_profile` WHERE `id` = '$cp_id' ");
+    // $row = $qry->fetch_assoc();
+    // $customer_name = $row['cus_name'];
+    // $cus_mobile1 = $row['mobile1'];
+
+    // $message = "";
+    // $templateid	= ''; //FROM DLT PORTAL.
+    // // Account details
+    // $apiKey = '';
+    // // Message details
+    // $sender = '';
+    // // Prepare data for POST request
+    // $data = 'access_token='.$apiKey.'&to='.$cus_mobile1.'&message='.$message.'&service=T&sender='.$sender.'&template_id='.$templateid;
+    // // Send the GET request with cURL
+    // $url = 'https://sms.messagewall.in/api/v2/sms/send?'.$data; 
+    // $response = file_get_contents($url);  
+    // // Process your response here
+    // return $response; 
     $pdo->commit(); //  Commit
 } catch (Exception $e) {
     $pdo->rollBack(); //  Rollback on error

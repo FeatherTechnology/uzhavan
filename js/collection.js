@@ -1082,7 +1082,8 @@ function commitmentChartList(cp_id) {
             "commitment_date",
             "user_type",
             "user_name",
-            "hint"
+            "hint",
+            "comm_err"
         ];
 
         appendDataToTable('#commitment_chart_table', response, commitmentColumns);
