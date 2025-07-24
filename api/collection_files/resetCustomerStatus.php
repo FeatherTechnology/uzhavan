@@ -7,10 +7,10 @@ if (isset($_POST['cus_id'])) {
 
 $cp_arr = array();
 if (isset($cus_id)) {
-$qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  ORDER BY li.cus_profile_id DESC ");
-while ($row = $qry->fetch()) {
-    $cp_arr[] = $row['cp_id'];
-}
+    $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  and li.balance_amount = 0 ORDER BY li.cus_profile_id DESC ");
+    while ($row = $qry->fetch()) {
+        $cp_arr[] = $row['cp_id'];
+    }
 }
 
 if (isset($_POST['cpID'])) {
@@ -35,9 +35,9 @@ $response = array(); //Final array to return
 $cp_id = 0;
 $i = 0;
 foreach ($cp_arr as $cp_id) {
-        
-        $response['cp_id'][$i] = $cp_id;
-        $result = $pdo->query("SELECT * FROM `loan_entry_loan_calculation` WHERE cus_profile_id = $cp_id ");
+
+    $response['cp_id'][$i] = $cp_id;
+    $result = $pdo->query("SELECT * FROM `loan_entry_loan_calculation` WHERE cus_profile_id = $cp_id ");
     if ($result->rowCount() > 0) {
         $row = $result->fetch();
         $loan_arr = $row;
@@ -126,7 +126,7 @@ foreach ($cp_arr as $cp_id) {
     } else {
         $response['coll_charge'] = 0;
     }
-    
+
     $response['payable_as_req'][$i] = $response['payable'];
     $response['pending_as_req'][$i] = $response['pending'];
 
@@ -180,7 +180,6 @@ function calculateOthers($loan_arr, $response, $pdo, $cp_id)
         $interval = new DateInterval('P1M'); // Create a one month interval
 
         $count = 0;
-
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
             //To raise penalty in seperate table
             $penalty_raised_date  = $start_date_obj->format('Y-m');
@@ -197,7 +196,6 @@ function calculateOthers($loan_arr, $response, $pdo, $cp_id)
             $start_date_obj->add($interval);
             $count++; //Count represents how many months are exceeded
         }
-
         $response['count_of_month'] = $count;
         //To check over due, if current date is greater than maturity minth, then i will be OD
         if ($current_date_obj > $end_date_obj) {
@@ -312,7 +310,7 @@ function calculateOthers($loan_arr, $response, $pdo, $cp_id)
             $response['penalty'] = 0;
             //If still current month is not ended, then payable will be due amt
             $response['payable'] =  $response['due_amt'] - $response['total_paid'] - $response['pre_closure'];
-            
+
 
             if ($loan_arr['loan_type'] == 'interest') { //for first month payable will be zero in interest loan
                 $response['payable'] =  0;
@@ -333,21 +331,23 @@ function calculateOthers($loan_arr, $response, $pdo, $cp_id)
         $count = 0;
         // $qry = $pdo->query("DELETE FROM penalty_charges where req_id = '$cp_id' and (penalty_date != '' or penalty_date != NULL ) ");
         while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
+            $next_week = (clone $start_date_obj)->add($interval);
             //To raise penalty in seperate table
-            $penalty_raised_date  = $start_date_obj->format('Y-m-d');
-            // If due month exceeded
-            if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
-            } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
+            if ($next_week <= $current_date_obj) {
+                $penalty_raised_date  = $start_date_obj->format('Y-m-d');
+                // If due month exceeded
+                if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
+                    $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
+                } else {
+                    $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
+                }
+                $row = $result->fetch();
+                $penalty_per = $row['overdue']; //get penalty percentage to insert
+
+                $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
+                $count++; //Count represents how many months are exceeded
             }
-            $row = $result->fetch();
-            $penalty_per = $row['overdue']; //get penalty percentage to insert
-
-            $penalty = number_format(($response['due_amt'] * $penalty_per) / 100);
-
             $start_date_obj->add($interval);
-            $count++; //Count represents how many months are exceeded
         }
         $response['count_of_month'] = $count;
         //To check over due, if current date is greater than maturity minth, then i will be OD
@@ -468,7 +468,7 @@ function calculateOthers($loan_arr, $response, $pdo, $cp_id)
             $count++; //Count represents how many months are exceeded
         }
         $response['count_of_month'] = $count;
-        
+
         //To check over due, if current date is greater than maturity minth, then i will be OD
         if ($current_date_obj > $end_date_obj) {
             $response['od'] = true;
@@ -656,7 +656,6 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data)
             // Get the number of days from the interval
             $numberOfDays = $date_diff->days;
             $response = ceil($amtperDay * $numberOfDays);
-
         }
     }
     return $response;
@@ -665,32 +664,27 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data)
 function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
 {
 
-    if($response){
+    if ($response) {
         for ($i = 0; $i < count($response['pending_customer']); $i++) {
-    
+
             // $query = $pdo->query("SELECT cs.status AS cus_status FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7 ");
             // $row = $query->fetch();
             $curdate = date('Y-m-d');
-    
+
             if (date('Y-m-d', strtotime($loan_arr['due_startdate'])) > date('Y-m-d', strtotime($curdate))) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
                 $response['follow_cus_sts'] = 'Current';
             } else {
                 if ($response['pending_customer'][$i] == true && $response['od_customer'][$i] == false) { //using i as 1 so subract it with 1
-              
+
                     $response['follow_cus_sts'] = 'Pending';
-                    
                 } else if ($response['od_customer'][$i] == true && $response['due_nil_customer'][$i] == false) {
                     $response['follow_cus_sts'] = 'OD';
-                
-                    
                 } elseif ($response['due_nil_customer'][$i] == true) {
-            
+
                     $response['follow_cus_sts'] = 'Due Nil';
-                    
                 } elseif ($response['pending_customer'][$i] == false) {
-                   
+
                     $response['follow_cus_sts'] = 'Current';
-                    
                 }
             }
         }

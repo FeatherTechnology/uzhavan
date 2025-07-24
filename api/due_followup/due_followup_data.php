@@ -15,13 +15,13 @@ if (isset($_POST['params']['comm_date'])) {
     $comm_date = $_POST['params']['comm_date']; // Get the comm_date from the form
 
     if ($comm_date == '2') { //Before Date
-        $qry_cndtn = "AND cm.commitment_date < '$current_date' AND (cm.commitment_date IS NOT NULL OR cm.commitment_date != '0000-00-00') ";
+        $qry_cndtn = "AND cm.commitment_date < '$current_date' AND (cm.commitment_date IS NOT NULL AND  cm.commitment_date != '0000-00-00') ";
     } elseif ($comm_date == '3') { //Today
         $qry_cndtn = "AND cm.commitment_date = '$current_date' ";
     } elseif ($comm_date == '4') { //After Date
-        $qry_cndtn = "AND cm.commitment_date > '$current_date' AND (cm.commitment_date IS NOT NULL OR cm.commitment_date != '0000-00-00') ";
+        $qry_cndtn = "AND cm.commitment_date > '$current_date' AND (cm.commitment_date IS NOT NULL AND  cm.commitment_date != '0000-00-00') ";
     } elseif ($comm_date == '5') { //To Follow Date
-        $qry_cndtn = "AND cm.commitment_date IS NULL ";
+        $qry_cndtn = "AND cm.commitment_date IS NULL OR  cm.commitment_date = '0000-00-00' ";
     } else {
         $qry_cndtn = "";
     }
@@ -54,14 +54,19 @@ $query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linen
      LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
     JOIN users u ON FIND_IN_SET(cp.line, u.line) 
-    LEFT JOIN( SELECT cus_id, MAX(commitment_date) AS commitment_date,  SUBSTRING_INDEX( GROUP_CONCAT( comm_err ORDER BY  commitment_date
-            DESC ),  ',', 1 ) AS comm_err, SUBSTRING_INDEX( GROUP_CONCAT(hint ORDER BY commitment_date  DESC ),  ',',  1 ) AS hint
-    FROM
-        commitment
-    GROUP BY
-        cus_id) cm ON cp.cus_id = cm.cus_id
+   LEFT JOIN (
+    SELECT c1.*
+    FROM commitment c1
+    INNER JOIN (
+        SELECT cus_id, MAX(commitment_date) AS max_date
+        FROM commitment 
+        GROUP BY cus_id
+    ) c2 ON c1.cus_id = c2.cus_id AND c1.commitment_date = c2.max_date
+) cm ON cp.cus_id = cm.cus_id
+
 WHERE
     cs.payable_amnt > 0 AND cs.status = 7 AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  ";
+    
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
@@ -76,6 +81,8 @@ if (isset($_POST['search'])) {
 }
 
 $query .= "GROUP BY cp.cus_id";
+
+
 if (isset($_POST['order'])) {
     $query .= " ORDER BY " . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'];
 } else {
@@ -86,6 +93,8 @@ $query1 = '';
 if (isset($_POST['length']) && $_POST['length'] != -1) {
     $query1 = ' LIMIT ' . intval($_POST['start']) . ', ' . intval($_POST['length']);
 }
+
+
 $statement = $pdo->prepare($query);
 
 $statement->execute();

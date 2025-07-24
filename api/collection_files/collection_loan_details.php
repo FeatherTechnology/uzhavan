@@ -294,7 +294,7 @@ function calculateOthers($loan_arr, $response, $pdo)
             //If still current month is not ended, then penalty will be 0
             $response['penalty'] = 0;
             //If still current month is not ended, then payable will be due amt
-     
+
 
             // Perform the calculation
             $response['payable'] = $response['due_amt'] - $response['total_paid'] - $response['pre_closure'];
@@ -310,16 +310,13 @@ function calculateOthers($loan_arr, $response, $pdo)
     } else
     if ($loan_arr['scheme_due_method'] == '2') {
 
-        //If Due method is Weekly, Calculate penalty by checking the month has ended or not
         $current_date = date('Y-m-d');
 
         $start_date_obj = DateTime::createFromFormat('Y-m-d', $due_start_from);
         $end_date_obj = DateTime::createFromFormat('Y-m-d', $maturity_month);
         $current_date_obj = DateTime::createFromFormat('Y-m-d', $current_date);
+        $interval = new DateInterval('P1W'); // 1 Week
 
-        $interval = new DateInterval('P1W'); // Create a one Week interval
-
-        //condition start
         $count = 0;
         $loandate_tillnow = 0;
         $countForPenalty = 0;
@@ -333,33 +330,49 @@ function calculateOthers($loan_arr, $response, $pdo)
             $loandate_tillnow += 1;
             $toPaytilldate = intval($loandate_tillnow) * intval($dueCharge);
         }
+        // Loop through each week for penalty calculation
+        while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) {
+            $next_week = (clone $start_date_obj)->add($interval);
+            if ($next_week <= $current_date_obj) {
 
-        while ($start_date_obj < $end_date_obj && $start_date_obj < $current_date_obj) { // To find loan date count till now from start date.
+                $penalty_checking_date  = $start_date_obj->format('Y-m-d');
 
-            $penalty_checking_date  = $start_date_obj->format('Y-m-d'); // This format is for query.. month , year function accept only if (Y-m-d).
-            $start_date_obj->add($interval);
+                $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' AND ((WEEK(coll_date) = WEEK('$penalty_checking_date') AND YEAR(coll_date) = YEAR('$penalty_checking_date')) OR 
+                (WEEK(trans_date) = WEEK('$penalty_checking_date') AND YEAR(trans_date) = YEAR('$penalty_checking_date'))
+            )
+        ");
+                $collectioncount = $checkcollection->rowCount();
 
-            $checkcollection = $pdo->query("SELECT * FROM `collection` WHERE `cus_profile_id` = '$cp_id' && ((WEEK(coll_date)= WEEK('$penalty_checking_date') || WEEK(trans_date)= WEEK('$penalty_checking_date')) && (YEAR(coll_date)= YEAR('$penalty_checking_date') || YEAR(trans_date)= YEAR('$penalty_checking_date')))");
-            $collectioncount = $checkcollection->rowCount(); // Checking whether the collection are inserted on date or not by using penalty_raised_date.
-
-            if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
-                $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
-            } else {
-                $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM `scheme` WHERE `id` = '" . $loan_arr['scheme_name'] . "' ");
-            }
-            $row = $result->fetch();
-            $penalty_per = $row['overdue']; //get penalty percentage to insert
-            $count++; //Count represents how many months are exceeded
-
-            if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
-                $checkPenalty = $pdo->query("SELECT * from penalty_charges where penalty_date = '$penalty_checking_date' and cus_profile_id = '$cp_id' ");
-                if ($checkPenalty->rowCount() == 0) {
-                    $penalty = round((($response['due_amt'] * $penalty_per) / 100) + $penalty);
-                    $qry = $pdo->query("INSERT into penalty_charges (`cus_profile_id`,`penalty_date`, `penalty`, `created_date`) values ('$cp_id','$penalty_checking_date','$penalty',current_timestamp)");
+                // Get penalty rate
+                if (empty($loan_arr['scheme_name'])) {
+                    $result = $pdo->query("SELECT overdue_penalty as overdue FROM loan_category_creation WHERE id = '" . $loan_arr['loan_category'] . "'");
+                } else {
+                    $result = $pdo->query("SELECT overdue_penalty_percent as overdue FROM scheme WHERE id = '" . $loan_arr['scheme_name'] . "'");
                 }
-                $countForPenalty++;
+
+                $row = $result->fetch();
+                $penalty_per = $row['overdue'];
+
+                $count++; // week count
+
+                // Check conditions to insert penalty
+                if ($totalPaidAmt < $toPaytilldate && $collectioncount == 0) {
+                    $checkPenalty = $pdo->query("SELECT * FROM penalty_charges WHERE penalty_date = '$penalty_checking_date' AND cus_profile_id = '$cp_id'");
+
+                    if ($checkPenalty->rowCount() == 0) {
+                        $penaltyAmount = round(($response['due_amt'] * $penalty_per) / 100);
+                        $penalty += $penaltyAmount;
+
+                        $pdo->query("INSERT INTO penalty_charges (`cus_profile_id`, `penalty_date`, `penalty`, `created_date`) 
+                             VALUES ('$cp_id', '$penalty_checking_date', '$penaltyAmount', CURRENT_TIMESTAMP)");
+                    }
+
+                    $countForPenalty++;
+                }
             }
+            $start_date_obj->add($interval);
         }
+
         //condition END
 
         if ($count > 0) {

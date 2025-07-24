@@ -24,6 +24,11 @@ $(document).ready(function () {
         $('#back_btn').hide();
         $('.loan_list_div').hide();
         $('.due_list_div').show();
+        getSubStsMapping(); //Call Customer status dropdown.
+        let cusSts = $("#sub_status_mapping").val();
+        if (cusSts != '') {
+            OnLoadFunctions(cusSts, '');
+        }
     });
 
     //////////////////////////////Chart Start///////////////////////////////////////////////////////////////////////////
@@ -84,7 +89,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.fine-chart', function () {
-       $('#fine_model').modal('show');
+        $('#fine_model').modal('show');
         var cp_id = $(this).attr('value');
         fineChartList(cp_id) //To Show Fine Chart List
     });
@@ -190,7 +195,7 @@ $(document).ready(function () {
         $('#loan_content').hide();
     });
 
-    
+
     $('#loan_category_calc').change(function () {
         if ($(this).val() != '') {
             $('#loan_amount_calc').val('')
@@ -282,7 +287,7 @@ $(document).ready(function () {
         $('.loan_list_div, .due_list_div').hide();
         let cus_id = $(this).attr('value');
         getLoanHistoryTable(cus_id)
-       
+
 
     });
     $('#loan_his_back_btn').click(function () {
@@ -292,14 +297,14 @@ $(document).ready(function () {
     });
 
     ///////////////////////////////////Loan History End/////////////////////
-        ///////////////////////////////////Document History Start/////////////////////
+    ///////////////////////////////////Document History Start/////////////////////
     $(document).on('click', '.doc-history', function () {
         $('#document_history_content').show();
         $('#back_btn').hide();
         $('.loan_list_div, .due_list_div').hide();
         let cus_id = $(this).attr('value');
         getDocumentHistoryTable(cus_id)
-       
+
 
     });
     $('#doc_his_back_btn').click(function () {
@@ -310,7 +315,7 @@ $(document).ready(function () {
 
     ///////////////////////////////////Document History End/////////////////////
     ///////////////////////////////////Commitement Start/////////////////////
-    
+
     {
         // Get today's date
         var today = new Date();
@@ -325,7 +330,7 @@ $(document).ready(function () {
 
         $('#follow_up_date').val(formattedDate);
     }
-     {
+    {
         // Get today's date
         var today = new Date().toISOString().split("T")[0];
 
@@ -418,7 +423,7 @@ $(document).ready(function () {
             'hint': $('#hint').val(),
         };
 
-        var data = ['follow_type', 'follow_status', 'remark', 'hint','comm_err'];
+        var data = ['follow_type', 'follow_status', 'remark', 'hint', 'comm_err'];
         var isValid = true;
 
         // Basic required fields validation
@@ -469,20 +474,12 @@ $(document).ready(function () {
 
 $(function () {
     getSubStsMapping(); //Call Customer status dropdown.
-
-    let cus_Sts = $("#customer_status").val();
-    let cusSts = cus_Sts.split(',');
-
-    if (cusSts != '') {
-        OnLoadFunctions(cusSts, '');
-    }
 });
 
 function getSubStsMapping() {
     let subStatus = ['OD', 'Pending', 'Current'];
     let editSubStatus = $('#customer_status').val() || '';
-
-    subStatusMultiselect.clearStore();
+    subStatusMultiselect.clearChoices();
     $.each(subStatus, function (index, val) {
         let selected = '';
         if (editSubStatus.includes(val)) {
@@ -492,17 +489,16 @@ function getSubStsMapping() {
             { value: val, label: val, selected: selected },
         ]
         subStatusMultiselect.setChoices(items);
-        subStatusMultiselect.init();
     });
 
 }
 
+
 function OnLoadFunctions(cusSts, comm_date) {
     if (!cusSts || cusSts.length === 0) {
-        warningSwal('Warning!', 'Select Customer Status.');
+        swalError('Warning!', 'Select Customer Status.');
         return;
     }
-
     let params = {
         cusSts: cusSts,
         comm_date: comm_date
@@ -1238,7 +1234,7 @@ function getLoanHistoryTable(cus_id) {
             'closed_date',
             'c_sts',
             'customer_sub_status',
-         
+
         ];
         appendDataToTable('#loan_history_table', response, columnMapping);
         setdtable('#loan_history_table');
@@ -1261,7 +1257,7 @@ function getDocumentHistoryTable(cus_id) {
             'c_sts',
             'customer_sub_status',
             'document_status'
-         
+
         ];
         appendDataToTable('#doc_history_table', response, columnMapping);
         setdtable('#doc_history_table');
@@ -1309,7 +1305,7 @@ function getNameRelationship(id, type) {
 }
 
 function getFamilyMember(optn, selector) {
-     let cus_id = $('#comm_cus_id').val();
+    let cus_id = $('#comm_cus_id').val();
     return new Promise((resolve, reject) => {
         const follow_person_name = $('#follow_person_name').val(); // Get current holder type
         $.post('api/loan_issue_files/get_guarantor.php', { cus_id }, function (response) {

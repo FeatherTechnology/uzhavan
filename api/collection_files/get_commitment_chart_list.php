@@ -3,7 +3,7 @@ require "../../ajaxconfig.php";
 
 $commitment_chart_arr = [];
 $follow_type_arr = [1 => 'Direct', 2 => 'Mobile'];
-$comm_status = [1 => 'Error', 2 => 'Legal'];
+$comm_status = [1 => 'Error', 2 => 'Clear'];
 $follow_person_name_arr = [1 => 'Customer', 2 => 'Guarantor', 3 => 'Family Member'];
 
 if (isset($_POST['cp_id'])) {
