@@ -19,9 +19,15 @@ if ($qry->rowCount() > 0) {
         } else {
             $holder = '';
         }
+        if (!empty($result['date_of_noc']) && $result['date_of_noc'] != '0000-00-00') {
+            $date = DateTime::createFromFormat('Y-m-d', $result['date_of_noc']);
+            $result['date_of_noc'] = $date ? $date->format('d-m-Y') : '';
+        } else {
+            $result['date_of_noc'] = '';
+        }
 
         $result['holder_type'] = $holder;
-        $result['action'] = "<input type='checkbox' class='noc_cheque_chkbx' name='noc_cheque_chkbx' value='" . $result['id'] . "' data-id='".$result['noc_status']."'>";
+        $result['action'] = "<input type='checkbox' class='noc_cheque_chkbx' name='noc_cheque_chkbx' value='" . $result['id'] . "' data-id='" . $result['noc_status'] . "'>";
         $cheque_info_arr[] = $result;
     }
 }

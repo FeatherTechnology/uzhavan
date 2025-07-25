@@ -12,6 +12,13 @@ if ($qry->rowCount() > 0) {
         $result['d_noc'] = '';
         $result['h_person'] = '';
         $result['relation'] = '';
+        if (!empty($result['date_of_noc']) && $result['date_of_noc'] != '0000-00-00') {
+            $date = DateTime::createFromFormat('Y-m-d', $result['date_of_noc']);
+            $result['date_of_noc'] = $date ? $date->format('d-m-Y') : '';
+        } else {
+            $result['date_of_noc'] = '';
+        }
+
           $result['doc_type'] = ($result['doc_type'] == '1') ? 'Original' : 'Xerox';
         $result['upload'] = "<a href='uploads/loan_issue/doc_info/" . $result['upload'] . "' target='_blank'>" . $result['upload'] . "</a>";
         $result['action'] = "<input type='checkbox' class='noc_doc_info_chkbx' name='noc_doc_info_chkbx' value='" . $result['id'] . "' data-id='".$result['noc_status']."'>";

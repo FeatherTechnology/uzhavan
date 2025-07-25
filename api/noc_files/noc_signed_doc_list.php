@@ -27,6 +27,13 @@ $qry = $pdo->query("
 if ($qry->rowCount() > 0) {
     while ($result = $qry->fetch()) {
         $result['doc_name'] = ($result['doc_name'] == '0') ? 'Signed Document' : '';
+        if (!empty($result['date_of_noc']) && $result['date_of_noc'] != '0000-00-00') {
+            $date = DateTime::createFromFormat('Y-m-d', $result['date_of_noc']);
+            $result['date_of_noc'] = $date ? $date->format('d-m-Y') : '';
+        } else {
+            $result['date_of_noc'] = '';
+        }
+
         $result['sign_type'] = $signed_type[$result['sign_type']];
         $qry2 = $pdo->query("SELECT uploads FROM signed_upload WHERE signed_info_id = '" . $result['id'] . "'");
         $result['upload'] = '';

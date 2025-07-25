@@ -73,7 +73,7 @@ $date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
 if ($date) {
     $converted_date = $date->format('Y-m-d');
 } else {
-    $converted_date = '';
+   $converted_date = '0000-00-00';
 }
 
 if ($customer_profile_id != '') {
