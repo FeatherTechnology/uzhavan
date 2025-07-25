@@ -13,7 +13,7 @@ if (isset($_POST['cus_id'])) {
             MIN(lelc.loan_date) AS first_loan_date  
         FROM customer_status cs  
         LEFT JOIN loan_entry_loan_calculation lelc ON cs.cus_profile_id = lelc.cus_profile_id 
-        WHERE cs.cus_id = ? AND cs.status >= 7
+        WHERE cs.cus_id = ? AND cs.status >= 7 AND cs.status NOT IN (13, 14)
     ");
     $stmt->execute([$cus_id]);
 

@@ -13,11 +13,12 @@ $column = array(
     'cp.mobile1',
     'cp.id'
 );
-$subQuery = "SELECT MAX(cp.id) as max_id
-             FROM customer_profile cp
-             LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
-             WHERE cs.status >= '7'
-             GROUP BY cp.cus_id";
+$subQuery = "SELECT MAX(cp.id) AS max_id
+FROM customer_profile cp
+JOIN customer_status cs ON cp.id = cs.cus_profile_id
+WHERE cs.status >= 7 AND cs.status NOT IN (13, 14)
+GROUP BY cp.cus_id
+";
 
 $query = "SELECT cp.id, cp.aadhar_num, cp.cus_id, cr.cus_name, anc.areaname, lnc.linename, bc.branch_name,
                  cr.mobile1, cs.id as cus_sts_id, cs.status as c_sts

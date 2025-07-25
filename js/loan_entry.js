@@ -880,6 +880,7 @@ $(document).ready(function () {
                     getFamilyInfoTable()
                     fingerprintTable();
                     getPropertyInfoTable();
+                    getFeedBackInfoTable();
                     getBankInfoTable()
                     getKycInfoTable()
                     getAreaName()
@@ -1829,6 +1830,7 @@ async function existingCustmerProfile(aadhar_num) {
         );
         $('#customer_profile_id').val('');
         if (response == 'New') {
+
             $('#area_edit').val('');
             $('#cus_name').val('');
             $('#gender').val('');
@@ -1853,10 +1855,19 @@ async function existingCustmerProfile(aadhar_num) {
             $('#line').val('');
             $('#cus_limit').val('');
             $('#about_cus').val('');
+            $('#how_to_know').val('');
+            $('#monthly_income').val('');
+            $('#other_income').val('');
+            $('#support_income').val('');
+            $('#commitment').val('');
+            $('#monthly_due_capacity').val('');
+            $('#guarantor_name').val('');
             $('#loan_entry_customer_profile').find('input[type="radio"]').prop('checked', false);
             $('.cus_status_div').hide();
             $('#data_checking_table_div').hide();
             $('#per_pic').val('');
+            await autoGenCusId("");
+            await getGuarantorName();
             var img = $('#imgshow');
             img.attr('src', 'img/avatar.png');
 
@@ -1884,10 +1895,10 @@ async function existingCustmerProfile(aadhar_num) {
             $('#occupation').val(response.occupation);
             $('#occ_address').val(response.occ_address);
             $('#occ_detail').val(response.occ_detail);
-            $('#occ_income').val(moneyFormatIndia(response.occ_income));
+            $('#occ_income').val(response.occ_income ? moneyFormatIndia(response.occ_income) : '');
             $('#area_confirm').val(response.area_confirm);
             $('#line').val(response.line);
-            $('#cus_limit').val(moneyFormatIndia(response.cus_limit));
+            $('#cus_limit').val(response.cus_limit ? moneyFormatIndia(response.cus_limit) : '');
             $('#about_cus').val(response.about_cus);
             $('#how_to_know').val(response.how_to_know);
             $('#monthly_income').val(moneyFormatIndia(response.monthly_income));
@@ -1908,6 +1919,7 @@ async function existingCustmerProfile(aadhar_num) {
             await getAreaName();
             getFamilyInfoTable()
             fingerprintTable();
+            getFeedBackInfoTable();
             $('#area').trigger('change');
             $('#guarantor_name').trigger('change');
             getBankInfoTable();
@@ -2252,22 +2264,27 @@ function getAutoGenLoanId(id) {
         $('#loan_id_calc').val(response);
     }, 'json');
 }
-function autoGenCusId(id) {
-    $.ajax({
-        url: "api/loan_entry/loan_calculation/get_autoGen_cus_id.php",
-        type: 'POST',
-        data: { id },
-        dataType: 'json',
-        cache: false,
-        success: function (response) {
-            $('#auto_gen_cus_id').val(response['cus_id']);
-        },
-        error: function (xhr, status, error) {
 
-            console.error('AJAX Error:', status, error);
-        }
+function autoGenCusId(id) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "api/loan_entry/loan_calculation/get_autoGen_cus_id.php",
+            type: 'POST',
+            data: { id },
+            dataType: 'json',
+            cache: false,
+            success: function (response) {
+                $('#auto_gen_cus_id').val(response['cus_id']);
+                resolve(); // resolve the promise when done
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                reject(error); // reject on error
+            }
+        });
     });
 }
+
 function getLoanCategoryName() {
     $.post('api/common_files/get_loan_category_creation.php', function (response) {
         let appendLoanCatOption = '';

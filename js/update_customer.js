@@ -722,7 +722,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity'];
+        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity','cus_limit'];
 
         //  var isValid = true;
         data.forEach(function (entry) {

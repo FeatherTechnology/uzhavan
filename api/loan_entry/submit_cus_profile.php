@@ -72,7 +72,7 @@ $date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
 if ($date) {
     $converted_date = $date->format('Y-m-d');
 } else {
-    $converted_date = '';
+    $converted_date = '0000-00-00';
 }
 
 if ($customer_profile_id != '') {
@@ -80,6 +80,7 @@ if ($customer_profile_id != '') {
     $row = $qry->fetch();
     $currentPic = $row['pic'] ?? '';
     $currentGuPic = $row['gu_pic'] ?? '';
+
     $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`aadhar_num`='$aadhar_num',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2', `whatsapp_no`='$whatsapp_no',`pic`='$picture',`guarantor_name`='$guarantor_name',`gu_pic`='$gpicture',`cus_data`='$cus_data',`cus_status`='$cus_status',`res_type`='$res_type',`res_detail`='$res_detail',`res_address`='$res_address',`native_address`='$native_address',`occupation`='$occupation',`occ_detail`='$occ_detail',`occ_income`='$occ_income',`occ_address`='$occ_address',`area_confirm`='$area_confirm',`area`='$area',`line`='$line',`cus_limit`='$cus_limit',`about_cus`='$about_cus',`how_to_know`='$how_to_know',`loan_count`='$loan_count',`first_loan_date`='$converted_date',`travel_with_company`='$travel_with_company',`monthly_income`='$monthly_income',`other_income`='$other_income',`support_income`='$support_income',`commitment`='$commitment',`monthly_due_capacity`='$monthly_due_capacity',`update_login_id`='$user_id',updated_on = now() WHERE `id`='$customer_profile_id'");
     $status = 0; //update
     $qry3 = $pdo->query("UPDATE `customer_status` SET `status`='1',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$customer_profile_id' AND status='0' ");
