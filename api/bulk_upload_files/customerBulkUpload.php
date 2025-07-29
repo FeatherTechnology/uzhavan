@@ -27,15 +27,14 @@ if (in_array($_FILES["excelFile"]["type"], $allowedFileType)) {
                 if (isset($data['loan_id'])) {
                     $data['loan_id'] = $obj->getLoanCode($pdo, $data['loan_id']);
                 }
-                $data['cus_id'] = isset($data['cus_id']) ? $data['cus_id'] : '';
-                if (isset($data['cus_id'])) {
-                    $data['cus_id'] = $obj->getCustomerCode($pdo, $data['cus_id']);
-                }
+         
+                    $data['cus_id'] = $obj->getCustomerCode($pdo, $data['aadhar_num']);
+                
 
                 $loan_cat_id = $obj->getLoanCategoryId($pdo, $data['loan_category']);
                 $data['loan_category_id'] = $loan_cat_id;
                 $agent_id = $obj->checkAgent($pdo, $data['agent_name']);
-                $data['agent_id'] = $agent_id;
+                $data['agent_table_id'] = $agent_id;
                  
 
                 $area_id = $obj->getAreaId($pdo, $data['area']);
