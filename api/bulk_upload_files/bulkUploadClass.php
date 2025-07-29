@@ -32,69 +32,78 @@ class bulkUploadClass
             'age' => isset($Row[5]) ? $Row[5] : "",
             'mobile' => isset($Row[6]) ? $Row[6] : "",
             'cus_data' => isset($Row[7]) ? $Row[7] : "",
-            'cus_id' => isset($Row[8]) ? $Row[8] : "",
-            'cus_status' => isset($Row[9]) ? $Row[9] : "",
-            'guarantor_name' => isset($Row[10]) ? $Row[10] : "",
-            'guarantor_relationship' => isset($Row[11]) ? $Row[11] : "",
-            'guarantor_aadhar_no' => isset($Row[12]) ? $Row[12] : "",
-            'guarantor_mobile_no' => isset($Row[13]) ? $Row[13] : "",
-            'guarantor_age' => isset($Row[14]) ? $Row[14] : "",
-            'guarantor_occupation' => isset($Row[15]) ? $Row[15] : "",
-            'guarantor_live' => isset($Row[16]) ? $Row[16] : "",
-            'residential_type' => isset($Row[17]) ? $Row[17] : "",
-            'resident_detail' => isset($Row[18]) ? $Row[18] : "",
-            'res_address' => isset($Row[19]) ? $Row[19] : "",
-            'native_address' => isset($Row[20]) ? $Row[20] : "",
-            'occupation' => isset($Row[21]) ? $Row[21] : "",
-            'occ_detail' => isset($Row[22]) ? $Row[22] : "",
-            'occ_income' => isset($Row[23]) ? $Row[23] : "",
-            'occ_address' => isset($Row[24]) ? $Row[24] : "",
-            'area_confirm' => isset($Row[25]) ? $Row[25] : "",
-            'area' => isset($Row[26]) ? $Row[26] : "",
-            'line' => isset($Row[27]) ? $Row[27] : "",
-            'cus_limit' => isset($Row[28]) ? $Row[28] : "",
-            'about_cus' => isset($Row[29]) ? $Row[29] : "",
-            'loan_category' => isset($Row[30]) ? $Row[30] : "",
-            'loan_amount' => isset($Row[31]) ? $Row[31] : "",
-            'profit_type' => isset($Row[32]) ? $Row[32] : "",
-            'due_method' => isset($Row[33]) ? $Row[33] : "",
-            'due_type' => isset($Row[34]) ? $Row[34] : "",
-            'profit_method' => isset($Row[35]) ? $Row[35] : "",
-            'due_method_scheme' => isset($Row[36]) ? $Row[36] : "",
-            'scheme_day' => isset($Row[37]) ? $Row[37] : "",
-            'scheme_name' => isset($Row[38]) ? $Row[38] : "",
-            'interest_rate' => isset($Row[39]) ? $Row[39] : "",
-            'due_period' => isset($Row[40]) ? $Row[40] : "",
-            'doc_charge' => isset($Row[41]) ? $Row[41] : "",
-            'processing_fees' => isset($Row[42]) ? $Row[42] : "",
-            'principal_amnt' => isset($Row[43]) ? $Row[43] : "",
-            'interest_amnt' => isset($Row[44]) ? $Row[44] : "",
-            'total_amnt' => isset($Row[45]) ? $Row[45] : "",
-            'due_amnt' => isset($Row[46]) ? $Row[46] : "",
-            'doc_charge_calculate' => isset($Row[47]) ? $Row[47] : "",
-            'processing_fees_calculate' => isset($Row[48]) ? $Row[48] : "",
-            'net_cash' => isset($Row[49]) ? $Row[49] : "",
-            'loan_date' => isset($Row[50]) ? $Row[50] : "",
-            'dueStart_date' => isset($Row[51]) ? $Row[51] : "",
-            'maturity_date' => isset($Row[52]) ? $Row[52] : "",
-            'referred' => isset($Row[53]) ? $Row[53] : "",
-            'agent_id' => isset($Row[54]) ? $Row[54] : "",
-            'agent_name' => isset($Row[55]) ? $Row[55] : "",
-            'payment_type' => isset($Row[56]) ? $Row[56] : "",
-            'payment_mode' => isset($Row[57]) ? $Row[57] : "",
-            'balance_cash' => isset($Row[58]) ? $Row[58] : "",
-            'cash' => isset($Row[59]) ? $Row[59] : "",
-            'cheque_val' => isset($Row[60]) ? $Row[60] : "",
-            'transaction_val' => isset($Row[61]) ? $Row[61] : "",
-            'transaction_id' => isset($Row[62]) ? $Row[62] : "",
-            'cheque_no' => isset($Row[63]) ? $Row[63] : "",
-            'bank_name' => isset($Row[64]) ? $Row[64] : "",
-            'cheque_remark' => isset($Row[65]) ? $Row[65] : "",
-            'trans_remark' => isset($Row[66]) ? $Row[66] : "",
-            'issue_date' => isset($Row[67]) ? $Row[67] : "",
-            'issue_person' => isset($Row[68]) ? $Row[68] : "",
-            'relationship' => isset($Row[69]) ? $Row[69] : "",
+            'cus_status' => isset($Row[8]) ? $Row[8] : "",
+            'guarantor_name' => isset($Row[9]) ? $Row[9] : "",
+            'guarantor_relationship' => isset($Row[10]) ? $Row[10] : "",
+            'guarantor_aadhar_no' => isset($Row[11]) ? $Row[11] : "",
+            'guarantor_mobile_no' => isset($Row[12]) ? $Row[12] : "",
+            'guarantor_age' => isset($Row[13]) ? $Row[13] : "",
+            'guarantor_occupation' => isset($Row[14]) ? $Row[14] : "",
+            'guarantor_live' => isset($Row[15]) ? $Row[15] : "",
+            'residential_type' => isset($Row[16]) ? $Row[16] : "",
+            'resident_detail' => isset($Row[17]) ? $Row[17] : "",
+            'res_address' => isset($Row[18]) ? $Row[18] : "",
+            'native_address' => isset($Row[19]) ? $Row[19] : "",
+            'occupation' => isset($Row[20]) ? $Row[20] : "",
+            'occ_detail' => isset($Row[21]) ? $Row[21] : "",
+            'occ_income' => isset($Row[22]) ? $Row[22] : "",
+            'occ_address' => isset($Row[23]) ? $Row[23] : "",
+            'area_confirm' => isset($Row[24]) ? $Row[24] : "",
+            'area' => isset($Row[25]) ? $Row[25] : "",
+            'line' => isset($Row[26]) ? $Row[26] : "",
+            'cus_limit' => isset($Row[27]) ? $Row[27] : "",
+            'how_to_know' => isset($Row[28]) ? $Row[28] : "",
+            'loan_count' => isset($Row[29]) ? $Row[29] : "",
+            'first_loan_date' => isset($Row[30]) ? $Row[30] : "",
+            'travel_with_company' => isset($Row[31]) ? $Row[31] : "",
+            'monthly_income' => isset($Row[32]) ? $Row[32] : "",
+            'other_income' => isset($Row[33]) ? $Row[33] : "",
+            'support_income' => isset($Row[34]) ? $Row[34] : "",
+            'commitment' => isset($Row[35]) ? $Row[35] : "",
+            'monthly_due_capacity' => isset($Row[36]) ? $Row[36] : "",
+            'about_cus' => isset($Row[37]) ? $Row[37] : "",
+            'loan_category' => isset($Row[38]) ? $Row[38] : "",
+            'loan_amount' => isset($Row[39]) ? $Row[39] : "",
+            'profit_type' => isset($Row[40]) ? $Row[40] : "",
+            'due_method' => isset($Row[41]) ? $Row[41] : "",
+            'due_type' => isset($Row[42]) ? $Row[42] : "",
+            'profit_method' => isset($Row[43]) ? $Row[43] : "",
+            'due_method_scheme' => isset($Row[44]) ? $Row[44] : "",
+            'scheme_day' => isset($Row[45]) ? $Row[45] : "",
+            'scheme_name' => isset($Row[46]) ? $Row[46] : "",
+            'interest_rate' => isset($Row[47]) ? $Row[47] : "",
+            'due_period' => isset($Row[48]) ? $Row[48] : "",
+            'doc_charge' => isset($Row[49]) ? $Row[49] : "",
+            'processing_fees' => isset($Row[50]) ? $Row[50] : "",
+            'principal_amnt' => isset($Row[51]) ? $Row[51] : "",
+            'interest_amnt' => isset($Row[52]) ? $Row[52] : "",
+            'total_amnt' => isset($Row[53]) ? $Row[53] : "",
+            'due_amnt' => isset($Row[54]) ? $Row[54] : "",
+            'doc_charge_calculate' => isset($Row[55]) ? $Row[55] : "",
+            'processing_fees_calculate' => isset($Row[56]) ? $Row[56] : "",
+            'net_cash' => isset($Row[57]) ? $Row[57] : "",
+            'loan_date' => isset($Row[58]) ? $Row[58] : "",
+            'dueStart_date' => isset($Row[59]) ? $Row[59] : "",
+            'maturity_date' => isset($Row[60]) ? $Row[60] : "",
+            'referred' => isset($Row[61]) ? $Row[61] : "",
+            'agent_id' => isset($Row[62]) ? $Row[62] : "",
+            'agent_name' => isset($Row[63]) ? $Row[63] : "",
+            'payment_type' => isset($Row[64]) ? $Row[64] : "",
+            'payment_mode' => isset($Row[65]) ? $Row[65] : "",
+            'balance_cash' => isset($Row[66]) ? $Row[66] : "",
+            'cash' => isset($Row[67]) ? $Row[67] : "",
+            'cheque_val' => isset($Row[68]) ? $Row[68] : "",
+            'transaction_val' => isset($Row[69]) ? $Row[69] : "",
+            'transaction_id' => isset($Row[70]) ? $Row[70] : "",
+            'cheque_no' => isset($Row[71]) ? $Row[71] : "",
+            'bank_name' => isset($Row[72]) ? $Row[72] : "",
+            'cheque_remark' => isset($Row[73]) ? $Row[73] : "",
+            'trans_remark' => isset($Row[74]) ? $Row[74] : "",
+            'issue_date' => isset($Row[75]) ? $Row[75] : "",
+            'issue_person' => isset($Row[76]) ? $Row[76] : "",
+            'relationship' => isset($Row[77]) ? $Row[77] : "",
         );
+
 
         $dataArray['aadhar_num'] = strlen($dataArray['aadhar_num']) == 12 ? $dataArray['aadhar_num'] : 'Invalid';
         $cus_dataArray = ['New' => 'New', 'Existing' => 'Existing'];
@@ -104,20 +113,26 @@ class bulkUploadClass
         $cus_status = $this->arrayItemChecker($cus_exist_typeArray, $dataArray['cus_status']);
         $dataArray['cus_status'] = ($cus_status == 'Not Found') ? '' : $cus_status; //cause cus_exist_type may not be available
         $dataArray['mobile'] = strlen($dataArray['mobile']) == 10 ? $dataArray['mobile'] : 'Invalid';
-
-        $dataArray['dob'] = $this->dateFormatChecker($dataArray['dob']);
-
+        if (!empty($dataArray['dob'])) {
+            $dataArray['dob'] = $this->dateFormatChecker($dataArray['dob']);
+        }
         $genderArray = ['Male' => '1', 'Female' => '2', 'Others' => '3'];
         $dataArray['gender'] = $this->arrayItemChecker($genderArray, $dataArray['gender']);
 
+        $howToKnowArray = ['Customer Reference' => '1', 'Advertisement' => '2', 'Promotion activity' => '3', 'Agent Reference' => '4', 'Staff Reference' => '5', 'Other Reference' => '6', 'Renewal' => '7'];
+        $dataArray['how_to_know'] = $this->arrayItemChecker($howToKnowArray, $dataArray['how_to_know']);
+        if (!empty($dataArray['first_loan_date'])) {
+            $dataArray['first_loan_date'] = $this->dateFormatChecker($dataArray['first_loan_date']);
+        }
         $dataArray['guarantor_aadhar_no'] = strlen($dataArray['guarantor_aadhar_no']) == 12 ? $dataArray['guarantor_aadhar_no'] : 'Invalid';
 
-        $guarantor_relationshipArray = ['Father' => 'Father', 'Mother' => 'Mother', 'Spouse' => 'Spouse', 'Sister' => 'Sister', 'Brother' => 'Brother', 'Son' => 'Son', 'Daughter' => 'Daughter'];
+        $guarantor_relationshipArray = ['Father' => 'Father', 'Mother' => 'Mother', 'Spouse' => 'Spouse', 'Sister' => 'Sister', 'Brother' => 'Brother', 'Son' => 'Son', 'Daughter' => 'Daughter', 'Other' => 'Other'];
         $dataArray['guarantor_relationship'] = $this->arrayItemChecker($guarantor_relationshipArray, $dataArray['guarantor_relationship']);
         $dataArray['guarantor_mobile_no'] = strlen($dataArray['guarantor_mobile_no']) == 10 ? $dataArray['guarantor_mobile_no'] : 'Invalid';
-
-        $liveArray = ['Live' => '1', 'Deceased' => '2'];
-        $dataArray['guarantor_live'] = $this->arrayItemChecker($liveArray, $dataArray['guarantor_live']);
+        if (!empty($dataArray['guarantor_live'])) {
+            $liveArray = ['Live' => '1', 'Deceased' => '2'];
+            $dataArray['guarantor_live'] = $this->arrayItemChecker($liveArray, $dataArray['guarantor_live']);
+        }
 
         $residential_typeArray = ['Own' => '1', 'Rental' => '2', 'Lease' => '3', 'Quarters' => '4'];
         $residential_type = $this->arrayItemChecker($residential_typeArray, $dataArray['residential_type']);
@@ -136,7 +151,7 @@ class bulkUploadClass
         $due_method_scheme = $this->arrayItemChecker($due_method_schemeArray, $dataArray['due_method_scheme']);
         $dataArray['due_method_scheme'] = ($due_method_scheme == 'Not Found') ? '' : $due_method_scheme; //cause due_method_scheme may not be available
 
-        $schemeday_typeArray = ['Monday' => '1','Tuesday' => '2','Wednesday'=>'3','Thursday'=>'4','Friday'=>'5','Saturday'=>'6','Sunday'=>'7'];
+        $schemeday_typeArray = ['Monday' => '1', 'Tuesday' => '2', 'Wednesday' => '3', 'Thursday' => '4', 'Friday' => '5', 'Saturday' => '6', 'Sunday' => '7'];
         $dataArray['scheme_day'] = $this->arrayItemChecker($schemeday_typeArray, $dataArray['scheme_day']);
         $dataArray['loan_date'] = $this->dateFormatChecker($dataArray['loan_date']);
 
@@ -179,7 +194,7 @@ class bulkUploadClass
         }
         return $arrayItem;
     }
-   
+
     function getLoanCode($pdo, $id)
     {
         if (!isset($id) || $id == '') {
@@ -207,22 +222,25 @@ class bulkUploadClass
 
         return $loan_ID_final;
     }
-    function getCustomerCode($pdo, $cus_id)
+    function getCustomerCode($pdo, $aadhar_num)
     {
-        if (!isset($cus_id) || $cus_id == '') {
+        $check_query = "SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'";
+        $result = $pdo->query($check_query);
+        if ($result->rowCount() > 0) {
+            $datacheck = $result->fetch(PDO::FETCH_ASSOC);
+            $auto_cus_id = $datacheck['cus_id'];
+        } else {
             $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
             $qry_info = $qry1->fetch();
             $company_name = $qry_info["company_name"];
             $str = preg_replace('/\s+/', '', $company_name);
             $myStr = mb_substr($str, 0, 1);
-        
-        
             $qry = $pdo->query("SELECT max(cus_id) as cus_id FROM customer_profile WHERE 1");
             $row = $qry->fetch(PDO::FETCH_ASSOC);
 
-            if ($row['cus_id']!='') {
+            if ($row['cus_id'] != '') {
                 // If branch codes exist, generate a new branch code
-               
+
                 $ac2 = $row["cus_id"];
                 $appno2 = ltrim(strstr($ac2, '-'), '-');
                 $appno2 = $appno2 + 1;
@@ -232,36 +250,26 @@ class bulkUploadClass
                 $initialapp = $myStr . "-101";
                 $auto_cus_id = $initialapp;
             }
-        } else {
-            $stmt = $pdo->prepare("SELECT cus_id FROM customer_profile WHERE cus_id = :cus_id");
-            $stmt->execute(['cus_id' => $cus_id]);
-
-            if ($stmt->rowCount() > 0) {
-                $qry_info = $stmt->fetch();
-                $auto_cus_id = $qry_info['cus_id'];
-            }
         }
 
         return $auto_cus_id;
     }
 
-    function checkCustomerData($pdo, $cus_id,$aadhar_num)
+    function checkCustomerData($pdo, $cus_id, $aadhar_num)
     {
-        
-    $check_query = "SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'";
+        $check_query = "SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'";
         $result = $pdo->query($check_query);
         if ($result->rowCount() > 0) {
             $datacheck = $result->fetch(PDO::FETCH_ASSOC);
-              $cus_id =$datacheck ['cus_id'];
-        }
-        else{
+            $cus_id = $datacheck['cus_id'];
+        } else {
             $cus_id = strip_tags($cus_id); // Sanitize input
         }
         $qry = $pdo->query("SELECT cp.*, cs.status 
                             FROM customer_profile cp
                             INNER JOIN customer_status cs ON cp.cus_id = cs.cus_id
                             WHERE cp.cus_id = '$cus_id'order by cp.id desc limit 1");
-    
+
         if ($qry && $qry->rowCount() > 0) {
             $result = $qry->fetch(PDO::FETCH_ASSOC);
             $status = $result['status'];  // Fetch the customer status
@@ -274,19 +282,19 @@ class bulkUploadClass
                 $cus_status = 'Renewal';  // For status 9 or above, cus_status is 'Renewal'
             }
             $response['cus_data'] = 'Existing';  // Customer is 'Existing'
-            $response['cus_id'] = $cus_id ;     // Return the customer ID
+            $response['cus_id'] = $cus_id;     // Return the customer ID
             $response['cus_status'] = $cus_status;  // Include the determined cus_status
-    
+
         } else {
             // If no result is found, it's a new customer
             $response['cus_data'] = 'New';   // Customer is 'New'
             $response['cus_id'] = $cus_id;            // No ID for new customers
             $response['cus_status'] = '';    // cus_status is empty for new customers
         }
-    
+
         return $response;
     }
-    function guarantorName($pdo,$cus_id)
+    function guarantorName($pdo, $cus_id)
     {
         $stmt = $pdo->query("SELECT id, fam_name FROM  family_info WHERE cus_id = '$cus_id'");
         if ($stmt->rowCount() > 0) {
@@ -298,7 +306,7 @@ class bulkUploadClass
 
     function getAreaId($pdo, $areaname)
     {
-        $stmt = $pdo->query("SELECT anc.id, anc.areaname  FROM area_creation ac JOIN area_name_creation anc ON FIND_IN_SET(anc.id, ac.area_id)
+        $stmt = $pdo->query("SELECT anc.id, anc.areaname  FROM area_creation ac  LEFT JOIN area_creation_area_name acan ON ac.id = acan.area_creation_id JOIN area_name_creation anc ON acan.area_id = anc.id
         WHERE  LOWER(REPLACE(TRIM(anc.areaname),' ','')) = LOWER(REPLACE(TRIM('$areaname'),' ',''))");
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -325,28 +333,23 @@ class bulkUploadClass
     }
     function getAreaLine($pdo, $areaId)
     {
-        $defaultLinename = 'Invalid';
         $defaultLineId = null;
+
         $query = "SELECT ac.line_id, lnc.linename 
-            FROM `area_creation` ac 
-            LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
-            WHERE FIND_IN_SET(:areaId, ac.area_id)";
+              FROM `area_creation` ac 
+              LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
+              LEFT JOIN area_creation_area_name acan ON ac.id = acan.area_creation_id 
+              WHERE acan.area_id = :areaId";
 
         $stmt = $pdo->prepare($query);
         $stmt->execute([':areaId' => $areaId]);
 
-        if ($stmt) {
-            if ($stmt->rowCount() > 0) {
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                $lineId = $result['line_id'];
-            } else {
-                $lineId = $defaultLineId; // If no matching line_id found, set to default
-            }
+        if ($stmt->rowCount() > 0) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['line_id']; // or return full $result if you need linename too
         } else {
-            $lineId = $defaultLineId;
+            return $defaultLineId;
         }
-
-        return $lineId;
     }
 
     function checkAgent($pdo, $agent_name)
@@ -422,29 +425,48 @@ class bulkUploadClass
     {
         // Print or log $data to see what values are being passed
         $user_id = $_SESSION['user_id'];
+        $firstLoanDate = !empty($data['first_loan_date']) ? strip_tags($data['first_loan_date']) : '0000-00-00';
+
         $insert_cp_query = "INSERT INTO customer_profile (
-            cus_id, aadhar_num ,cus_name, gender, dob, age, mobile1,pic, guarantor_name, gu_pic, cus_data, cus_status, res_type, res_detail, res_address, native_address, occupation, occ_detail, occ_income, occ_address, area_confirm, area, line, cus_limit, about_cus, insert_login_id, created_on, updated_on
+            cus_id, aadhar_num ,cus_name, gender, dob, age, mobile1,pic, guarantor_name, gu_pic, cus_data, cus_status, res_type, res_detail, res_address, native_address, occupation, occ_detail, occ_income, occ_address, area_confirm, area, line, cus_limit, about_cus,how_to_know,loan_count,first_loan_date,travel_with_company,monthly_income,other_income,support_income,commitment,monthly_due_capacity,insert_login_id, created_on, updated_on
         ) VALUES (
             '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['aadhar_num']) . "', '" . strip_tags($data['cus_name']) . "', '" . strip_tags($data['gender']) . "', '" . strip_tags($data['dob']) . "', '" . strip_tags($data['age']) . "', 
             '" . strip_tags($data['mobile']) . "', '', '" . strip_tags($data['gur_id']) . "', '', '" . strip_tags($data['cus_data']) . "', 
             '" . strip_tags($data['cus_status']) . "', '" . strip_tags($data['residential_type']) . "', '" . strip_tags($data['resident_detail']) . "', '" . strip_tags($data['res_address']) . "', 
             '" . strip_tags($data['native_address']) . "', '" . strip_tags($data['occupation']) . "', '" . strip_tags($data['occ_detail']) . "', '" . strip_tags($data['occ_income']) . "', 
             '" . strip_tags($data['occ_address']) . "', '" . strip_tags($data['area_confirm']) . "', '" . strip_tags($data['area_id']) . "', '" . strip_tags($data['line_id']) . "', 
-             '" . strip_tags($data['cus_limit']) . "',  '" . strip_tags($data['about_cus']) . "', '" . $user_id . "', '" . strip_tags($data['loan_date']) . "', '" . strip_tags($data['loan_date']) . "'
+             '" . strip_tags($data['cus_limit']) . "','" . strip_tags($data['about_cus']) . "','" . strip_tags($data['how_to_know']) . "','" . strip_tags($data['loan_count']) . "','$firstLoanDate','" . strip_tags($data['travel_with_company']) . "','" . strip_tags($data['monthly_income']) . "', '" . strip_tags($data['other_income']) . "','" . strip_tags($data['support_income']) . "', '" . strip_tags($data['commitment']) . "', '" . strip_tags($data['monthly_due_capacity']) . "',  '" . $user_id . "', '" . strip_tags($data['loan_date']) . "', '" . strip_tags($data['loan_date']) . "'
         )";
 
         $pdo->query($insert_cp_query);
-        $cus_profile_id = $pdo->lastInsertId(); 
+        $cus_profile_id = $pdo->lastInsertId();
 
         // Get the last inserted ID
-        
-        $cus_sts_insert_query = "INSERT INTO `customer_status` (`cus_profile_id`, `status`, `update_login_id`, `updated_on`, `cus_id`)  VALUES (:cus_profile_id, 1, :user_id, NOW(), :cus_id )";
+
+        $check_query = "SELECT id FROM customer_register WHERE cus_id = '" . $data['cus_id'] . "' AND aadhar_num = '" . $data['aadhar_num'] . "'";
+        $result = $pdo->query($check_query);
+        if ($result->rowCount() == 0) {
+            $insert_cr_query = "INSERT INTO customer_register (
+            cus_id,cus_profile_id, aadhar_num ,cus_name, gender, dob, age, mobile1,pic,cus_data, cus_status, res_type, res_detail, res_address, native_address, occupation, occ_detail, occ_income, occ_address, area_confirm, area, line, cus_limit, about_cus,how_to_know,loan_count,first_loan_date,travel_with_company,monthly_income,other_income,support_income,commitment,monthly_due_capacity, insert_login_id, created_on, updated_on
+        ) VALUES (
+            '" . strip_tags($data['cus_id']) . "','" . strip_tags($cus_profile_id) . "','" . strip_tags($data['aadhar_num']) . "', '" . strip_tags($data['cus_name']) . "', '" . strip_tags($data['gender']) . "', '" . strip_tags($data['dob']) . "', '" . strip_tags($data['age']) . "', 
+            '" . strip_tags($data['mobile']) . "', '', '" . strip_tags($data['cus_data']) . "', 
+            '" . strip_tags($data['cus_status']) . "', '" . strip_tags($data['residential_type']) . "', '" . strip_tags($data['resident_detail']) . "', '" . strip_tags($data['res_address']) . "', 
+            '" . strip_tags($data['native_address']) . "', '" . strip_tags($data['occupation']) . "', '" . strip_tags($data['occ_detail']) . "', '" . strip_tags($data['occ_income']) . "', 
+            '" . strip_tags($data['occ_address']) . "', '" . strip_tags($data['area_confirm']) . "', '" . strip_tags($data['area_id']) . "', '" . strip_tags($data['line_id']) . "', 
+             '" . strip_tags($data['cus_limit']) . "',  '" . strip_tags($data['about_cus']) . "','" . strip_tags($data['how_to_know']) . "','" . strip_tags($data['loan_count']) . "','$firstLoanDate','" . strip_tags($data['travel_with_company']) . "','" . strip_tags($data['monthly_income']) . "', '" . strip_tags($data['other_income']) . "','" . strip_tags($data['support_income']) . "', '" . strip_tags($data['commitment']) . "', '" . strip_tags($data['monthly_due_capacity']) . "', '" . $user_id . "', '" . strip_tags($data['loan_date']) . "', '" . strip_tags($data['loan_date']) . "'
+        )";
+
+            $pdo->query($insert_cr_query);
+        }
+        $cus_sts_insert_query = "INSERT INTO `customer_status` (`cus_profile_id`, `status`, `insert_login_id`, `created_on`, `cus_id`)  VALUES (:cus_profile_id, 1, :user_id,:insert_date, :cus_id )";
         $stmt = $pdo->prepare($cus_sts_insert_query);
         $stmt->execute([
             ':cus_profile_id' => $cus_profile_id,
             ':user_id' => $user_id,
+            ':insert_date' => strip_tags($data['loan_date']),
             ':cus_id' => strip_tags($data['cus_id'])
-            
+
         ]);
 
         // Insert into loan_entry_loan_calculation table
@@ -462,7 +484,7 @@ class bulkUploadClass
             '" . strip_tags($data['interest_rate']) . "','" . strip_tags($data['due_period']) . "','" . strip_tags($data['doc_charge']) . "','" . strip_tags($data['processing_fees']) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['principal_amnt']) . "',
             '" . strip_tags($data['interest_amnt']) . "', '" . strip_tags($data['total_amnt']) . "', '" . strip_tags($data['due_amnt']) . "', '" . strip_tags($data['doc_charge_calculate']) . "', '" . strip_tags($data['processing_fees_calculate']) . "',
             '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date']) . "','" . strip_tags($data['maturity_date']) . "',
-            '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_id']) . "','" . strip_tags($data['agent_name']) . "','" . $user_id . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['loan_date']) . "'
+            '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_table_id']) . "','" . strip_tags($data['agent_id']) . "','" . $user_id . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['loan_date']) . "'
         )";
 
         $pdo->query($insert_vlc);
@@ -471,34 +493,46 @@ class bulkUploadClass
         $loan_calculation_id = $pdo->lastInsertId();
 
 
-        $cus_sts_update_query = "UPDATE `customer_status` SET `loan_calculation_id` = :loan_calculation_id, `status` = 2, `update_login_id` = :user_id, `updated_on` = NOW() WHERE `cus_profile_id` = :cus_profile_id";
+        $cus_sts_update_query = "UPDATE `customer_status` SET `loan_calculation_id` = :loan_calculation_id, `status` = 2, `update_login_id` = :user_id, `updated_on` = :update_date WHERE `cus_profile_id` = :cus_profile_id";
         $stmt = $pdo->prepare($cus_sts_update_query);
         $stmt->execute([
             ':loan_calculation_id' => $loan_calculation_id,
             ':user_id' => $user_id,
+            ':update_date' => strip_tags($data['loan_date']),
             ':cus_profile_id' => $cus_profile_id
         ]);
 
         $insert_li_query = "INSERT INTO `loan_issue` 
-        (`cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`,`net_bal_cash`,`payment_type`, `payment_mode`,`bank_name`, `cash`,`cheque_val`,`transaction_val`,`transaction_id`,`cheque_remark`,`tran_remark`, `cheque_no`, `issue_date`, `issue_person`, `relationship`, `insert_login_id`, `created_on`) 
-        VALUES ('" . strip_tags($data['cus_id']) . "','" . strip_tags($cus_profile_id) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['net_cash']) .  "','" . strip_tags($data['balance_cash']) . "', '" . strip_tags($data['payment_type']) . "',  '" . strip_tags($data['payment_mode']) . "', '" . strip_tags($data['bank_id']) . "', '" . strip_tags($data['cash']) .  "', '" . strip_tags($data['cheque_val']) .  "', '" . strip_tags($data['transaction_val']) .  "','" . strip_tags($data['transaction_id']) . "','" . strip_tags($data['cheque_no']) . "','" . strip_tags($data['cheque_remark']) . "','" . strip_tags($data['trans_remark']) . "', '" . strip_tags($data['issue_date']) . "', '" . strip_tags($data['issue_person']) . "', '" . strip_tags($data['relationship']) . "', 
+        (`cus_id`, `cus_profile_id`, `loan_amnt`, `net_cash`,`net_bal_cash`,`payment_type`, `payment_mode`,`bank_name`, `cash`,`cheque_val`,`transaction_val`,`transaction_id`,`cheque_no`,`cheque_remark`,`tran_remark`,`balance_amount` ,`issue_date`, `issue_person`, `relationship`, `insert_login_id`, `created_on`) 
+        VALUES ('" . strip_tags($data['cus_id']) . "','" . strip_tags($cus_profile_id) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['net_cash']) .  "','" . strip_tags($data['balance_cash']) . "', '" . strip_tags($data['payment_type']) . "',  '" . strip_tags($data['payment_mode']) . "', '" . strip_tags($data['bank_id']) . "', '" . strip_tags($data['cash']) .  "', '" . strip_tags($data['cheque_val']) .  "', '" . strip_tags($data['transaction_val']) .  "','" . strip_tags($data['transaction_id']) . "','" . strip_tags($data['cheque_no']) . "','" . strip_tags($data['cheque_remark']) . "','" . strip_tags($data['trans_remark']) . "','0','" . strip_tags($data['issue_date']) . "', '" . strip_tags($data['issue_person']) . "', '" . strip_tags($data['relationship']) . "', 
          '" .  $user_id . "', '"  . strip_tags($data['loan_date']) . "')";
 
 
         $pdo->query($insert_li_query);
 
+        $current_date = date('Y-m-d');
+        if (strtotime($data['dueStart_date']) > strtotime($current_date)) {
+            $cus_payable = '0';
+        } else {
+            $cus_payable = $data['due_amnt'];
+        }
 
-        $cus_sts_update_query2 = "UPDATE `customer_status` 
-        SET `status` = 7, `update_login_id` = :user_id, `updated_on` = NOW() 
-        WHERE `cus_profile_id` = :cus_profile_id";
+        // Clean the total amount using strip_tags before using in query
+        $bal_amnt = strip_tags($data['total_amnt']);
+
+        $cus_sts_update_query2 = "UPDATE `customer_status` SET `status` = 7,`coll_status` = 'Current',`payable_amnt` = :payable_amnt,`bal_amnt` = :bal_amnt,`update_login_id` = :user_id,`updated_on` = :update_date WHERE `cus_profile_id` = :cus_profile_id";
         $stmt = $pdo->prepare($cus_sts_update_query2);
         $stmt->execute([
+            ':payable_amnt' => $cus_payable,
+            ':bal_amnt' => $bal_amnt,
             ':user_id' => $user_id,
+            ':update_date' => strip_tags($data['loan_date']),
             ':cus_profile_id' => $cus_profile_id
         ]);
+
         return $cus_profile_id;
     }
-   
+
     function handleError($data)
     {
         $errcolumns = array();
@@ -516,14 +550,12 @@ class bulkUploadClass
         if ($data['cus_status'] == 'Existing' && (!preg_match('/^[A-Za-z]+$/', $data['cus_status']) || $data['cus_status'] == '')) {
             $errcolumns[] = 'Customer Existence Type';
         }
-
-        // if ($data['cus_name'] == '') {
-        //     $errcolumns[] = 'Customer Name';
-        // }
-        if ($data['dob'] == 'Invalid Date') {
-            $errcolumns[] = 'Date Of Birth';
+        if (!empty($data['dob'])) {
+            if ($data['dob'] == 'Invalid Date') {
+                $errcolumns[] = 'Date Of Birth';
+            }
         }
-       
+
         if ($data['mobile'] == 'Invalid') {
             $errcolumns[] = 'Mobile Number';
         }
@@ -536,16 +568,14 @@ class bulkUploadClass
             $errcolumns[] = 'Guarantor Aadhar';
         }
 
-        if (!preg_match('/^[0-9]+$/', $data['guarantor_age'])) {
-            $errcolumns[] = 'Guarantor Age';
-        }
 
         if ($data['guarantor_mobile_no'] == 'Invalid') {
             $errcolumns[] = 'Guarantor Mobile Number';
         }
-
-        if (!preg_match('/^[A-Za-z0-9]+$/', $data['guarantor_occupation'])) {
-            $errcolumns[] = 'Guarantor Occupation';
+        if (!empty($data['first_loan_date'])) {
+            if ($data['first_loan_date'] == 'Invalid Date') {
+                $errcolumns[] = 'First Loan Date';
+            }
         }
 
         if ($data['loan_category_id'] == 'Not Found') {
@@ -587,6 +617,21 @@ class bulkUploadClass
         if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['cus_limit'])) {
             $errcolumns[] = 'Customer Limit';
         }
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['monthly_income'])) {
+            $errcolumns[] = 'Monthly Income';
+        }
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['other_income'])) {
+            $errcolumns[] = 'Other Income';
+        }
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['support_income'])) {
+            $errcolumns[] = 'Support Income';
+        }
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['monthly_due_capacity'])) {
+            $errcolumns[] = 'Monthly Due Capacity';
+        }
+        if (!preg_match('/^\d+(\.\d{1,2})?$/', $data['commitment'])) {
+            $errcolumns[] = 'Commitment';
+        }
 
         // Condition 1
         if ($data['area_confirm'] != 'Not Found') {
@@ -600,13 +645,18 @@ class bulkUploadClass
                 ) {
                     $errcolumns[] = 'Residential Type or Details or Address';
                 }
+            } else {
+                if (
+                    $data['occupation'] == ''
+                    || $data['occ_income'] == ''
+                    || $data['occ_address'] == ''
+                    || $data['occ_detail'] == ''
+                ) {
+                    $errcolumns[] = 'Occupation or income or Details or Address';
+                }
             }
         } else {
             $errcolumns[] = 'Area Confirm Type';
-        }
-
-        if ($data['occupation'] == 'Not Found') {
-            $errcolumns[] = 'Occupation Type';
         }
 
         // Condition 6
@@ -619,9 +669,10 @@ class bulkUploadClass
             // Subcondition 7.1
             if ($data['profit_type'] == '0') {
                 if (
+
                     $data['due_method'] == 'Not Found'
-                    || $data['due_type'] == 'Not Found'
-                    || $data['profit_method'] == 'Not Found'
+                    || $data['due_type'] == ''
+                    || $data['profit_method'] == ''
                 ) {
                     $errcolumns[] = 'Due Method Calc or Due Type or Profit Method';
                 }
@@ -629,8 +680,8 @@ class bulkUploadClass
 
             // Subcondition 7.2
             if ($data['profit_type'] == '1') {
-                if ($data['due_method_scheme'] == '' || $data['scheme_id'] == '') {
-                    $errcolumns[] = 'Due Method Scheme or Scheme Name';
+                if ($data['due_method_scheme'] == '' || $data['scheme_id'] == '' || $data['scheme_day'] == '') {
+                    $errcolumns[] = 'Due Method Scheme or Scheme Name or Scheme Day';
                 }
             }
         } else {
