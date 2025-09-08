@@ -25,19 +25,26 @@ JOIN branch_creation bc ON lnc.branch_id = bc.id
 JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
 JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN agent_creation ac ON lelc.agent_id = ac.id
-    LEFT JOIN (
-        SELECT 
-            cus_profile_id, 
-            SUM(due_amt_track) AS due_amt_track, 
-            SUM(princ_amt_track) AS princ_amt_track, 
-            SUM(int_amt_track) AS int_amt_track 
-        FROM 
-            collection 
-        GROUP BY 
-            cus_profile_id
-    ) c ON li.cus_profile_id = c.cus_profile_id
-JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id
-WHERE cs.status >=7 AND cs.status <=8 AND date(li.issue_date) <= date('$to_date')  group by li.cus_profile_id ";
+LEFT JOIN(
+    SELECT cus_profile_id,
+        SUM(due_amt_track) AS due_amt_track,
+        SUM(princ_amt_track) AS princ_amt_track,
+        SUM(int_amt_track) AS int_amt_track
+    FROM
+        collection
+    WHERE
+        DATE(coll_date) <= DATE('$to_date')
+    GROUP BY
+        cus_profile_id
+) c
+ON
+    li.cus_profile_id = c.cus_profile_id
+JOIN customer_status cs ON
+    li.cus_profile_id = cs.cus_profile_id
+WHERE
+    cs.status >= 7 AND DATE(li.issue_date) <= DATE('$to_date') AND(
+        cs.closed_date IS NULL OR DATE(cs.closed_date) >= DATE('$to_date')
+    )";
 
 if (isset($_POST['search']) && $_POST['search'] != "") {
     $search = $_POST['search'];
@@ -55,13 +62,12 @@ if (isset($_POST['search']) && $_POST['search'] != "") {
         lc.loan_category LIKE '%$search%'
     )";
 }
-
+$query .= "group by li.cus_profile_id";
 $orderColumn = $_POST['order'][0]['column'] ?? null;
 $orderDir = $_POST['order'][0]['dir'] ?? 'ASC';
 if ($orderColumn !== null) {
     $query .= " ORDER BY " . $column[$orderColumn] . " " . $orderDir;
 }
-
 $statement = $pdo->prepare($query);
 $statement->execute();
 $number_filter_row = $statement->rowCount();

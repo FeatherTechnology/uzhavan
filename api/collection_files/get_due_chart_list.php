@@ -414,7 +414,16 @@ function moneyFormatIndia($num)
                 $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.princ_amt_track, c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.princ_amt_track!='' or c.int_amt_track!='' or c.pre_close_waiver!='') && ((MONTH(coll_date)= MONTH('$cusDueMonth') || MONTH(trans_date)= MONTH('$cusDueMonth')) && (YEAR(coll_date)= YEAR('$cusDueMonth') || YEAR(trans_date)= YEAR('$cusDueMonth')) )");
             } elseif ($loanFrom['scheme_due_method'] == '2') {
                 //Query For Weekly.
-                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.pre_close_waiver!='') && ((WEEK(coll_date)= WEEK('$cusDueMonth') || WEEK(trans_date)= WEEK('$cusDueMonth')) && (YEAR(coll_date)= YEAR('$cusDueMonth') || YEAR(trans_date)= YEAR('$cusDueMonth')) )");
+                $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver,lelc.due_startdate, lelc.maturity_date, lelc.due_method,u.name, r.role 
+FROM collection c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id 
+LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id 
+WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver != '')
+  AND (
+        (c.coll_date BETWEEN '$cusDueMonth' AND DATE_ADD('$cusDueMonth', INTERVAL 6 DAY))
+        OR
+        (c.trans_date BETWEEN '$cusDueMonth' AND DATE_ADD('$cusDueMonth', INTERVAL 6 DAY))
+      )
+");
             } elseif ($loanFrom['scheme_due_method'] == '3') {
                 //Query For Day.
                 $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role FROM `collection` c LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id LEFT JOIN users u ON c.insert_login_id = u.id LEFT JOIN role r ON u.role = r.id WHERE (c.`cus_profile_id` = $cp_id) and (c.due_amt_track != '' or c.pre_close_waiver!='') && 
@@ -483,7 +492,10 @@ function moneyFormatIndia($num)
                                 <td></td>
                             <?php }
                         } else { //this is for weekly and daily loan to check lastcusduemonth comparision
-                            if (date('Y-m-d', strtotime($lastCusdueMonth)) != date('Y-m-d', strtotime($row['coll_date']))) {
+                            $weekStart = date('Y-m-d', strtotime($cusDueMonth));
+                            $weekEnd   = date('Y-m-d', strtotime($cusDueMonth . ' +6 days'));
+                            if (!isset($printedWeek) || $printedWeek != $weekStart) {
+                                $printedWeek = $weekStart;
                                 // this condition is to check whether the same month has collection again. if yes the no need to show month name and due amount and serial number
                             ?>
                                 <td><?php echo $i;
@@ -1166,14 +1178,14 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         //condition END
 
         //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
-        $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` 
-            where cus_profile_id = '$cp_id' 
-            AND (
-                (YEAR(trans_date) = YEAR('$current_date') AND WEEK(trans_date) <= WEEK('$current_date'))
-                OR (YEAR(trans_date) < YEAR('$current_date'))
-                OR (YEAR(coll_date) = YEAR('$current_date') AND WEEK(coll_date) <= WEEK('$current_date'))
-                OR (YEAR(coll_date) < YEAR('$current_date'))
-            ) ");
+
+        $qry = $pdo->query("SELECT SUM(due_amt_track) AS due_amt_track, SUM(pre_close_waiver) AS pre_close_waiver FROM collection c
+WHERE c.cus_profile_id = '$cp_id'  AND (
+       (trans_date <= DATE_ADD('$current_date', INTERVAL 6 DAY) AND trans_date <> '0000-00-00')
+       OR
+       (coll_date <= DATE_ADD('$current_date', INTERVAL 6 DAY) AND coll_date <> '0000-00-00')
+  );
+");
         if ($qry->rowCount() > 0) {
             $rowss = $qry->fetch();
             $tot_paid_tilldate = intVal($rowss['due_amt_track']);
@@ -1182,7 +1194,6 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
         if ($count > 0) {
             //if Due month exceeded due amount will be as pending with how many months are exceeded and subract pre closure amount if available
             $response['pending'] = ($response['due_amt'] * $count) - $tot_paid_tilldate - $preclose_tilldate;
-
             // If due month exceeded
             if ($loan_arr['scheme_name'] == '' || $loan_arr['scheme_name'] == null) {
                 $result = $pdo->query("SELECT  overdue_penalty as overdue FROM `loan_category_creation` WHERE `id` = '" . $loan_arr['loan_category'] . "' ");
@@ -1214,11 +1225,13 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
 
             //Payable amount will be pending amount added with current month due amount
             $response['payable'] = $response['due_amt'] + $response['pending'];
+        
             if ($response['payable'] > $response['balance']) {
                 //if payable is greater than balance then change it as balance amt coz dont collect more than balance
                 //this case will occur when collection status becoms OD
                 $response['payable'] = $response['balance'];
             }
+
         } else {
             //If still current month is not ended, then pending will be same due amt // pending will be 0 if due date not exceeded
             $response['pending'] = 0; // $response['due_amt'] - $response['total_paid'] - $response['pre_closure'] ;

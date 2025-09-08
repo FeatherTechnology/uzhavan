@@ -18,7 +18,7 @@ if ($follow_person_name == 3) {
 }
 
 $relationship = $_POST['relationship'];
-$commitment_date = !empty($_POST['commitment_date']) ? $_POST['commitment_date'] : null;
+$commitment_date = !empty($_POST['commitment_date']) ? $_POST['commitment_date'] : '0000-00-00';
 $remark = $_POST['remark'];
 $user_type = $_POST['user_type'];
 $user_name = $_POST['user_name'];

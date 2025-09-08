@@ -354,7 +354,7 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
         }
-        var data = ['proof_of', 'kyc_relationship', 'proof', 'proof_detail']
+        var data = ['proof_of', 'kyc_relationship', 'proof']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -722,7 +722,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity','cus_limit'];
+        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity', 'cus_limit'];
 
         //  var isValid = true;
         data.forEach(function (entry) {
@@ -2560,7 +2560,7 @@ $(document).ready(function () {
         if (printWindow) {
             // Load the content into the popup window
             $.ajax({
-                url: 'api/update_customer_files/print_update_document.php',
+                url: 'api/loan_issue_files/print_document.php',
                 data: { cus_profile_id },
                 cache: false,
                 type: "post",
@@ -2717,6 +2717,7 @@ function getChequeCreationTable() {
             "relationship",
             "bank_name",
             "cheque_cnt",
+            "cheque_no",
             "upload",
             "action"
         ]
@@ -2739,6 +2740,7 @@ function getChequeInfoTable() {
             "relationship",
             "bank_name",
             "cheque_cnt",
+            "cheque_no",
             "upload"
         ]
         appendDataToTable('#cheque_info_table', response, chequeColumn);
