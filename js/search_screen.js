@@ -736,7 +736,7 @@ async function editCustmerProfile(id) {
         $('#customer_profile_id').val(id);
         $('#area_edit').val(data.area);
         $('#cus_id').val(data.cus_id);
-        $('#aadhar_nums, #adhar_num').val(data.aadhar_num);
+        $('#adhar_num').val(data.aadhar_num);
         $('#cus_name').val(data.cus_name);
         $('#gender').val(data.gender);
         $('#dob').val(data.dob);

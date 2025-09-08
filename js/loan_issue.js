@@ -75,21 +75,21 @@ $(document).ready(function () {
             let due_method_scheme = $('#scheme_due_method_calc').val();
             if (due_method_scheme == '1') {//Monthly scheme as 1
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanMonthly(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
 
             } else if (due_method_scheme == '2') {//Weekly scheme as 2
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanWeekly(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
 
             } else if (due_method_scheme == '3') {//Daily scheme as 3
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanDaily(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
@@ -795,12 +795,12 @@ function getLoanAfterInterest(loan_amt, int_rate, due_period, doc_charge, proc_f
     $('#net_cash_calc').val(moneyFormatIndia(parseInt(net_cash).toFixed(0)));
 }
 
-function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
+function getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
 
     $('#loan_amount_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0))); //get loan amt from loan info card
     $('#principal_amnt_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0))); // principal amt as same as loan amt for after interest
 
-    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100) * parseInt(due_period)).toFixed(0); //Calculate interest rate 
+    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100)); //Calculate interest rate 
     $('#interest_amnt_calc').val(moneyFormatIndia(parseInt(interest_rate)));
 
     var tot_amt = parseInt(loan_amt) + parseFloat(interest_rate); //Calculate total amount from principal/loan amt and interest rate

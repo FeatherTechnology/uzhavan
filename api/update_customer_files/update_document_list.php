@@ -24,7 +24,7 @@ $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_i
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id'");
+WHERE cs.cus_id = '$cus_id' AND cs.status >= 7 AND cs.status NOT IN (13, 14)");
 if ($qry->rowCount() > 0) {
     while ($updateDocInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($updateDocInfo['loan_date']);

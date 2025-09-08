@@ -784,6 +784,7 @@
                                                 <th>Relationship</th>
                                                 <th>Bank Name</th>
                                                 <th>Cheque Count</th>
+                                                <th>Cheque Number</th>
                                                 <th>Upload</th>
                                             </tr>
                                         </thead>
@@ -1302,7 +1303,7 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="proof_detail">Proof Number</label><span class="text-danger">*</span>
+                                    <label for="proof_detail">Proof Number</label>
                                     <input class="form-control" name="proof_detail" id="proof_detail" tabindex="1" placeholder="Enter Proof Number">
                                     <input type="hidden" id="addproofdetail_id" value='0'>
                                 </div>
@@ -1675,6 +1676,7 @@
                                     <th>Relationship</th>
                                     <th>Bank Name</th>
                                     <th>Cheque Count</th>
+                                    <th>Cheque Number</th>
                                     <th>Upload</th>
                                     <th>Action</th>
                                 </tr>
@@ -1831,7 +1833,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="mortgage_no">Mortgage Number</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="mortgage_no" id="mortgage_no" tabindex="6" placeholder="Mortgage Number">
+                                    <input type="text" class="form-control" name="mortgage_no" id="mortgage_no" tabindex="6" placeholder="Mortgage Number">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -1843,7 +1845,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="mortgage_value">Mortgage Value</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="mortgage_value" id="mortgage_value" tabindex="8" placeholder="Mortgage value">
+                                    <input type="text" class="form-control" name="mortgage_value" id="mortgage_value" tabindex="8" placeholder="Mortgage value">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -2016,25 +2018,25 @@
                         <div class="row">
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
-                                    <label for="gold_type">Gold Type</label><span class="text-danger">*</span>
+                                    <label for="gold_type">Gold Type</label><span class="text-danger">*&nbsp;&nbsp;(Ornament's Name)</span>
                                     <input type="text" class="form-control" name="gold_type" id="gold_type" tabindex="1" placeholder="Enter Gold Type">
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
-                                    <label for="gold_purity">Purity</label><span class="text-danger">*</span>
+                                    <label for="gold_purity">Purity</label><span class="text-danger">*&nbsp;&nbsp;(Carat)</span>
                                     <input type="text" class="form-control" name="gold_purity" id="gold_purity" tabindex="2" placeholder="Enter Purity">
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
-                                    <label for="gold_weight">Weight</label><span class="text-danger">*</span>
+                                    <label for="gold_weight">Weight</label><span class="text-danger">*&nbsp;&nbsp;(Grams)</span>
                                     <input type="number" class="form-control" name="gold_weight" id="gold_weight" tabindex="3" placeholder="Enter Weight">
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
-                                    <label for="gold_value">Value</label><span class="text-danger">*</span>
+                                    <label for="gold_value">Value</label><span class="text-danger">*&nbsp;&nbsp;(Rupees)</span>
                                     <input type="number" class="form-control" name="gold_value" id="gold_value" tabindex="4" placeholder="Enter Value">
                                 </div>
                             </div>

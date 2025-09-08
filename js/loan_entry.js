@@ -32,7 +32,7 @@ $(document).ready(function () {
     $('#back_btn').click(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let cus_profile_id = $('#customer_profile_id').val();
-        $('.customer_content').show();
+        $('.customer_content').hide();
         $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
             if (response.status == 0) {
                 // If status is 0, proceed with confirmation
@@ -64,18 +64,45 @@ $(document).ready(function () {
     });
     $('input[name=loan_entry_type]').click(function () {
         let loanEntryType = $(this).val();
-        if (loanEntryType == 'cus_profile') {
-            $('#loan_entry_customer_profile').show(); $('#documentation_form').hide(); $('#loan_entry_loan_calculation').hide();
 
-        } else if (loanEntryType == 'loandoc') {
-            $('#documentation_form').show(); $('#loan_entry_customer_profile').hide(); $('#loan_entry_loan_calculation').hide();
-            callLoanDocumentFunctions();
+        if (loanEntryType == 'cus_profile') {
+            $('#loan_entry_customer_profile').show();
+            $('#documentation_form').hide();
+            $('#loan_entry_loan_calculation').hide();
+
+        } else if (loanEntryType == 'loandoc' || loanEntryType == 'loan_calc') {
+            // Before showing the form, check customer profile
+            let cus_id = $('#auto_gen_cus_id').val();
+            let cus_profile_id = $('#customer_profile_id').val();
+
+            if (!cus_profile_id) {
+                swalError('Warning',"Please Complete Customer Profile!");
+                 $('#customer_profile').trigger('click');
+            } else {
+                $.post('api/loan_entry/cus_sts_check.php', { cus_id, cus_profile_id }, function (response) {
+                    let status = response.status;
+
+                    if (status == 0) {
+                        swalError('Warning',"Please Complete Customer Profile!");
+                        $('#customer_profile').trigger('click');
+                    } else {
+                        // Profile complete, show the respective form
+                        if (loanEntryType == 'loandoc') {
+                            $('#documentation_form').show();
+                             $('#loan_entry_loan_calculation').hide();
+                            callLoanDocumentFunctions();
+                        } else if (loanEntryType == 'loan_calc') {
+                            $('#loan_entry_loan_calculation').show();
+                              $('#documentation_form').hide();
+                            callLoanCaculationFunctions();
+                        }
+
+                        $('#loan_entry_customer_profile').hide();
+                    }
+                }, 'json');
+            }
         }
-        else if (loanEntryType == 'loan_calc') {
-            $('#loan_entry_customer_profile').hide(); $('#documentation_form').hide(); $('#loan_entry_loan_calculation').show();
-            callLoanCaculationFunctions();
-        }
-    })
+    });
 
     // Function to format Aadhaar number input
     $('input[data-type="adhaar-number"]').keyup(function () {
@@ -371,7 +398,7 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
         }
-        var data = ['proof_of', 'kyc_relationship', 'proof', 'proof_detail']
+        var data = ['proof_of', 'kyc_relationship', 'proof']
         var isValid = true;
         data.forEach(function (entry) {
             var fieldIsValid = validateField($('#' + entry).val(), entry);
@@ -2060,21 +2087,21 @@ $(document).ready(function () {
             let due_method_scheme = $('#scheme_due_method_calc').val();
             if (due_method_scheme == '1') {//Monthly scheme as 1
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanMonthly(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
 
             } else if (due_method_scheme == '2') {//Weekly scheme as 2
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanWeekly(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
 
             } else if (due_method_scheme == '3') {//Daily scheme as 3
                 if (promet_method == 'After Benefit') {
-                    getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
+                    getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 } else {
                     getLoanDaily(loan_amt, int_rate, due_period, doc_charge, proc_fee);
                 }
@@ -2542,12 +2569,13 @@ function getLoanInterest(loan_amt, int_rate, doc_charge, proc_fee) {
     var net_cash = parseInt(loan_amt) - parseInt(doc_charge) - parseInt(proc_fee); //Net cash will be calculated by subracting other charges
     $('#net_cash_calc').val(parseInt(net_cash).toFixed(0));
 }
-function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
+
+function getSchemeAfterBenefit(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
 
     $('#loan_amnt_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0))); //get loan amt from loan info card
     $('#principal_amnt_calc').val(moneyFormatIndia(parseInt(loan_amt).toFixed(0))); // principal amt as same as loan amt for after interest
 
-    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100) * parseInt(due_period)).toFixed(0); //Calculate interest rate 
+    var interest_rate = (parseInt(loan_amt) * (parseFloat(int_rate) / 100)); //Calculate interest rate 
     $('#interest_amnt_calc').val(moneyFormatIndia(parseInt(interest_rate)));
 
     var tot_amt = parseInt(loan_amt) + parseFloat(interest_rate); //Calculate total amount from principal/loan amt and interest rate
@@ -2607,9 +2635,7 @@ function getLoanAfterBenifit(loan_amt, int_rate, due_period, doc_charge, proc_fe
     $('#processing_fees_calculate').val(moneyFormatIndia(parseInt(roundeprocfee)));
     var net_cash = parseInt(loan_amt) - parseInt(doc_charge) - parseInt(proc_fee); //Net cash will be calculated by subracting other charges
     $('#net_cash_calc').val(moneyFormatIndia(parseInt(net_cash).toFixed(0)));
-
 }
-
 //To Get Loan Calculation for Monthly Scheme method
 function getLoanMonthly(loan_amt, int_rate, due_period, doc_charge, proc_fee) {
 
@@ -3754,7 +3780,7 @@ $('#submit_gold_info').click(function (event) {
         'value': $('#gold_value').val(),
         'id': $('#gold_info_id').val(),
     };
-    if (customer_profile_id == '') {
+    if (goldInfo.customer_profile_id === '' || goldInfo.customer_profile_id === null) {
         swalError('Warning', 'Kindly Fill the Personal Info');
         return false;
     }
@@ -3979,6 +4005,7 @@ function getChequeCreationTable() {
             "relationship",
             "bank_name",
             "cheque_cnt",
+            "cheque_no",
             "upload",
             "action"
         ]
@@ -4003,6 +4030,7 @@ function getChequeInfoTable() {
             "relationship",
             "bank_name",
             "cheque_cnt",
+            "cheque_no",
             "upload"
         ];
 

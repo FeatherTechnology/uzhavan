@@ -482,6 +482,7 @@ $(document).ready(function () {
     $(document).on('click', '.due-chart', function () {
         var cp_id = $(this).attr('value');
         var cus_id = $('#cus_id').val();
+        $('#due_chart_table_div').empty();
         dueChartList(cp_id, cus_id); // To show Due Chart List.
         setTimeout(() => {
             $('.print_due_coll').click(function () {
