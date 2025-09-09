@@ -44,7 +44,7 @@ JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN agent_creation agc ON lelc.agent_id = agc.id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE u.id ='$user_id' AND us.id ='$user_id' AND li.issue_date BETWEEN '$from_date' AND '$to_date'  GROUP BY li.cus_profile_id";
+WHERE u.id ='$user_id' AND us.id ='$user_id' AND li.issue_date BETWEEN '$from_date' AND '$to_date'";
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
@@ -71,7 +71,7 @@ if (isset($_POST['search'])) {
         OR li.relationship LIKE '%" . $search . "%' )";
     }
 }
-
+$query .= " GROUP BY li.cus_profile_id ";
 if (isset($_POST['order'])) {
     $query .= " ORDER BY " . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'];
 } else {

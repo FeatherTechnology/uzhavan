@@ -58,7 +58,7 @@ if (isset($_POST['search'])) {
         $query .= " and (lelc.loan_id LIKE '%" . $_POST['search'] . "%'
                     OR li.issue_date LIKE '%" . $_POST['search'] . "%'
                     OR c.cus_id LIKE '%" . $_POST['search'] . "%'
-                    OR cp.aadhar_num LIKE '%" . $search . "%'
+                    OR cp.aadhar_num LIKE '%" . $_POST['search'] . "%'
                     OR cp.cus_name LIKE '%" . $_POST['search'] . "%'
                     OR lnc.linename LIKE '%" . $_POST['search'] . "%'
                     OR anc.areaname LIKE '%" . $_POST['search'] . "%'

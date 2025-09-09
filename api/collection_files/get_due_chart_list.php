@@ -255,6 +255,7 @@ function moneyFormatIndia($num)
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
             //Query For Weekly.
+          
             $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
@@ -262,31 +263,8 @@ function moneyFormatIndia($num)
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='' OR c.princ_amt_track != '')
             AND (
-                    (
-                        (WEEK(c.coll_date) >= WEEK('$issued') AND YEAR(c.coll_date) = YEAR('$issued'))
-                        AND 
-                        (
-                            (
-                                YEAR(c.coll_date) = YEAR('$due_start_from') AND WEEK(c.coll_date) < WEEK('$due_start_from')
-                            ) OR (
-                                YEAR(c.coll_date) < YEAR('$due_start_from')
-                            )
-                        )
-                    ) 
-                    OR
-                    (
-                        (WEEK(c.trans_date) >= WEEK('$issued') AND YEAR(c.trans_date) = YEAR('$issued'))
-                        AND 
-                        (
-                            (
-                                YEAR(c.trans_date) = YEAR('$due_start_from') AND WEEK(c.trans_date) < WEEK('$due_start_from')
-                            ) OR (
-                                YEAR(c.trans_date) < YEAR('$due_start_from')
-                            )
-                            AND c.trans_date != '0000-00-00'
-
-                        )
-                    )
+                   (DATE(c.coll_date) >= DATE('$issued') AND DATE(c.coll_date) < DATE('$due_start_from') AND DATE(c.coll_date) != '0000-00-00' ) OR
+                (DATE(c.trans_date) >= DATE('$issued') AND DATE(c.trans_date) < DATE('$due_start_from') AND DATE(c.trans_date) != '0000-00-00' )
                 )
             ");
         } else
@@ -1288,7 +1266,6 @@ WHERE c.cus_profile_id = '$cp_id'  AND (
             }
         }
         //condition END
-
         //this collection query for taking the paid amount until the looping date ($current_date) , to calculate dynamically for due chart
         $qry = $pdo->query("SELECT sum(due_amt_track) as due_amt_track, sum(pre_close_waiver) as pre_close_waiver from `collection` where cus_profile_id = $cp_id and (date(coll_date) <= date('$current_date') or date(trans_date) <= date('$current_date')) ");
         if ($qry->rowCount() > 0) {
