@@ -24,10 +24,12 @@ $(document).ready(function () {
         $('#back_btn').hide();
         $('.loan_list_div').hide();
         $('.due_list_div').show();
-        getSubStsMapping(); //Call Customer status dropdown.
+        getSubStsMapping(); // Call Customer status dropdown.
         let cusSts = $("#sub_status_mapping").val();
+        let commDate = $("#comm_date").val(); 
+
         if (cusSts != '') {
-            OnLoadFunctions(cusSts, '');
+            OnLoadFunctions(cusSts, commDate); 
         }
     });
 

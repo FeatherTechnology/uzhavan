@@ -21,7 +21,7 @@ if (isset($_POST['params']['comm_date'])) {
     } elseif ($comm_date == '4') { //After Date
         $qry_cndtn = "AND cm.commitment_date > '$current_date' AND (cm.commitment_date IS NOT NULL AND  cm.commitment_date != '0000-00-00') ";
     } elseif ($comm_date == '5') { //To Follow Date
-        $qry_cndtn = "AND cm.commitment_date IS NULL OR  cm.commitment_date = '0000-00-00' ";
+        $qry_cndtn = "AND (cm.commitment_date IS NULL OR cm.commitment_date = '0000-00-00') ";
     } else {
         $qry_cndtn = "";
     }
@@ -54,16 +54,15 @@ $query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linen
      LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
     JOIN users u ON FIND_IN_SET(cp.line, u.line) 
-   LEFT JOIN (
+  LEFT JOIN (
     SELECT c1.*
     FROM commitment c1
     INNER JOIN (
-        SELECT cus_id, MAX(commitment_date) AS max_date
+        SELECT cus_id, MAX(created_date) AS max_date
         FROM commitment 
         GROUP BY cus_id
-    ) c2 ON c1.cus_id = c2.cus_id AND c1.commitment_date = c2.max_date
+    ) c2 ON c1.cus_id = c2.cus_id AND c1.created_date = c2.max_date
 ) cm ON cp.cus_id = cm.cus_id
-
 WHERE
     cs.payable_amnt > 0 AND cs.status = 7 AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  ";
     
@@ -93,7 +92,6 @@ $query1 = '';
 if (isset($_POST['length']) && $_POST['length'] != -1) {
     $query1 = ' LIMIT ' . intval($_POST['start']) . ', ' . intval($_POST['length']);
 }
-
 
 $statement = $pdo->prepare($query);
 
