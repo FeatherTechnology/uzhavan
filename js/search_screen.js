@@ -9,72 +9,72 @@ $(document).ready(function () {
         }
     });
 
-     $('.scanBtn').click(function () {
-    const scanButton = $(this);
-    scanButton.attr('disabled', true);
-    showOverlay();
+    $('.scanBtn').click(function () {
+        const scanButton = $(this);
+        scanButton.attr('disabled', true);
+        showOverlay();
 
-    setTimeout(() => {
-        const quality = 60;
-        const timeout = 10;
-        const res = CaptureFinger(quality, timeout);
+        setTimeout(() => {
+            const quality = 60;
+            const timeout = 10;
+            const res = CaptureFinger(quality, timeout);
 
-        if (res.httpStaus && res.data.ErrorCode == "0") {
-            const match_fingerprint = res.data.AnsiTemplate;
-            $('#match_fingerprint').val(match_fingerprint);
+            if (res.httpStaus && res.data.ErrorCode == "0") {
+                const match_fingerprint = res.data.AnsiTemplate;
+                $('#match_fingerprint').val(match_fingerprint);
 
-            // 🔁 Get stored templates from DB
-            $.ajax({
-                url: 'api/search_files/get_match_fingerprint.php',
-                type: 'GET',
-                dataType: 'json',
-                success: function (fingerList) {
-                    let matchFound = false;
+                // 🔁 Get stored templates from DB
+                $.ajax({
+                    url: 'api/search_files/get_match_fingerprint.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (fingerList) {
+                        let matchFound = false;
 
-                    for (let i = 0; i < fingerList.length; i++) {
-                        const storedTemplate = fingerList[i].ansi_template;
-                        const aadhar = fingerList[i].adhar_num;
+                        for (let i = 0; i < fingerList.length; i++) {
+                            const storedTemplate = fingerList[i].ansi_template;
+                            const aadhar = fingerList[i].adhar_num;
 
-                        const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
+                            const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
 
-                        if (verifyRes.httpStaus && verifyRes.data.Status === true) {
-                            matchFound = true;
+                            if (verifyRes.httpStaus && verifyRes.data.Status === true) {
+                                matchFound = true;
 
+                                Swal.fire({
+                                    title: 'Fingerprint Matched',
+                                    icon: 'success',
+                                    confirmButtonColor: '#009688'
+                                });
+
+                                $('#matched_aadhar').val(aadhar);
+                                $("#hand_type").text('Done').attr('class', 'text-success');
+                            }
+                        }
+
+                        if (!matchFound) {
                             Swal.fire({
-                                title: 'Fingerprint Matched',
-                                icon: 'success',
+                                title: 'Fingerprint Not Matching',
+                                icon: 'error',
                                 confirmButtonColor: '#009688'
                             });
-
-                            $('#matched_aadhar').val(aadhar);
-                            $("#hand_type").text('Done').attr('class', 'text-success');
                         }
+                    },
+                    error: function () {
+                        alert('Failed to fetch stored fingerprints');
+                    },
+                    complete: function () {
+                        scanButton.removeAttr('disabled');
+                        hideOverlay();
                     }
+                });
 
-                    if (!matchFound) {
-                        Swal.fire({
-                            title: 'Fingerprint Not Matching',
-                            icon: 'error',
-                            confirmButtonColor: '#009688'
-                        });
-                    }
-                },
-                error: function () {
-                    alert('Failed to fetch stored fingerprints');
-                },
-                complete: function () {
-                    scanButton.removeAttr('disabled');
-                    hideOverlay();
-                }
-            });
-
-        } else {
-            alert('Fingerprint scan failed or device not connected');
-            scanButton.removeAttr('disabled');
-            hideOverlay();
-        }
-    }, 700);
-});
+            } else {
+                alert('Fingerprint scan failed or device not connected');
+                scanButton.removeAttr('disabled');
+                hideOverlay();
+            }
+        }, 700);
+    });
 
 
     $(document).on('click', '.view_customer', function (event) {
@@ -87,7 +87,7 @@ $(document).ready(function () {
         let cus_name = $('#cust_name').val();
         let area = $('#cus_area').val();
         let mobile = $('#cus_mobile').val();
-    
+
         OnLoadFunctions(cus_id, aadhar_num, cus_name, area, mobile)
     })
     $(document).on('click', '.noc-summary', function (event) {
@@ -260,7 +260,7 @@ $(document).ready(function () {
             $.ajax({
                 url: 'api/search_files/search_customer.php',
                 type: 'POST',
-                data: { cus_id, aadhar_num, cus_name, area, mobile,matched_aadhar },
+                data: { cus_id, aadhar_num, cus_name, area, mobile, matched_aadhar },
                 success: function (data) {
                     $('#custome_list').show();
                     getSearchTable(data);
@@ -343,13 +343,13 @@ function validate() {
     let cus_name = $('#cust_name').val().trim();
     let area = $('#cus_area').val().trim();
     let mobile = $('#cus_mobile').val().trim();
-     let matched_aadhar = $('#matched_aadhar').val();
+    let matched_aadhar = $('#matched_aadhar').val();
 
     // Reset all field borders initially
     $('#cust_id, #cust_name, #cus_area, #cus_mobile').css('border', '1px solid #cecece');
 
     // Check if any one field is filled
-    if (cus_id || aadhar_num || cus_name || area || mobile || matched_aadhar ) {
+    if (cus_id || aadhar_num || cus_name || area || mobile || matched_aadhar) {
         // If any field is filled, reset the other fields' borders
         if (cus_id) {
             $('#cust_name, #cus_area, #cus_mobile ,#aadhar_nums').css('border', '1px solid #cecece');
@@ -361,7 +361,7 @@ function validate() {
             $('#cust_id , #aadhar_nums , #cust_name, #cus_mobile ').css('border', '1px solid #cecece');
         } else if (mobile) {
             $('#cust_id, #aadhar_nums , #cust_name, #cus_area').css('border', '1px solid #cecece');
-        }else if (matched_aadhar) {
+        } else if (matched_aadhar) {
             $('#cust_id, #aadhar_nums , #cust_name, #cus_area,#matched_aadhar').css('border', '1px solid #cecece');
         }
     } else {
@@ -1258,6 +1258,7 @@ function loanCalculationEdit(id) {
         $('#net_cash_calc').val(response[0].net_cash);
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
+        $('#collection_method').val(response[0].collection_method);
         $('#maturity_date_calc').val(response[0].maturity_date);
         $('#referred_calc').val(response[0].referred);
         $('#referred_calc').trigger('change');

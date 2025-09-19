@@ -84,7 +84,7 @@ try {
             $appno2 = (int)$appno2 + 1;
             $cus_id = $myStr . "-" . $appno2;
         } else {
-            $initialapp = $myStr . "-101";
+            $initialapp = $myStr . "-1001";
             $cus_id = $initialapp;
         }
     }

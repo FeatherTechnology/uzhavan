@@ -625,6 +625,7 @@ function personalInfo() {
             $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
             $('#loan_date_calc').val(response[0].loan_date);
             $('#due_startdate_calc').val(response[0].due_startdate);
+            $('#collection_method').val(response[0].collection_method);
             $('#maturity_date_calc').val(response[0].maturity_date);
             $('#aadhar_num').val(response[0].aadhar_num);
             getIssuePerson(response[0].cus_name);

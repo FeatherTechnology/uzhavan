@@ -76,24 +76,24 @@ $(document).ready(function () {
             let cus_profile_id = $('#customer_profile_id').val();
 
             if (!cus_profile_id) {
-                swalError('Warning',"Please Complete Customer Profile!");
-                 $('#customer_profile').trigger('click');
+                swalError('Warning', "Please Complete Customer Profile!");
+                $('#customer_profile').trigger('click');
             } else {
                 $.post('api/loan_entry/cus_sts_check.php', { cus_id, cus_profile_id }, function (response) {
                     let status = response.status;
 
                     if (status == 0) {
-                        swalError('Warning',"Please Complete Customer Profile!");
+                        swalError('Warning', "Please Complete Customer Profile!");
                         $('#customer_profile').trigger('click');
                     } else {
                         // Profile complete, show the respective form
                         if (loanEntryType == 'loandoc') {
                             $('#documentation_form').show();
-                             $('#loan_entry_loan_calculation').hide();
+                            $('#loan_entry_loan_calculation').hide();
                             callLoanDocumentFunctions();
                         } else if (loanEntryType == 'loan_calc') {
                             $('#loan_entry_loan_calculation').show();
-                              $('#documentation_form').hide();
+                            $('#documentation_form').hide();
                             callLoanCaculationFunctions();
                         }
 
@@ -798,11 +798,12 @@ $(document).ready(function () {
                 success: function (response) {
                     // Handle success response
                     if (response.status == 0) {
-                        swalSuccess('Success', 'Customer Profile Updated Successfully!');
-                        $('#documentation').trigger('click')
-                        $('html, body').animate({
-                            scrollTop: $('.page-content').offset().top
-                        }, 3000);
+                        swalSuccessOk('Success', 'Customer Profile Updated Successfully!', function () {
+                            $('#documentation').trigger('click');
+                            $('html, body').animate({
+                                scrollTop: $('.page-content').offset().top
+                            }, 3000);
+                        });
                     }
                     $('#customer_profile_id').val(response.last_id);
                     $('#cus_profile_id').val(response.last_id);
@@ -1004,7 +1005,7 @@ function moveToNext(cus_sts_id) {
     let cus_sts = 3;
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
         if (response == '0') {
-            swalSuccess('Success', 'Moved to Approval');
+            swalSuccessOk('Success', 'Moved to Approval');
             getLoanEntryTable();
         } else {
             swalError('Alert', 'Failed to Move to Approval');
@@ -2235,6 +2236,7 @@ $(document).ready(function () {
                 'due_startdate_calc': $('#due_startdate_calc').val(),
                 'maturity_date_calc': $('#maturity_date_calc').val(),
                 'referred_calc': $('#referred_calc').val(),
+                'collection_method': $('#collection_method').val(),
                 'agent_id_calc': $('#agent_id_calc').val(),
                 'agent_name_calc': $('#agent_name_calc').val(),
                 'id': $('#loan_calculation_id').val(),
@@ -2243,19 +2245,23 @@ $(document).ready(function () {
             if (isFormDataValid(formData)) {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
                     if (response.status == '1') {
-                        swalSuccess('Success', 'Loan Calculation Added Successfully!');
-                        if ($('.page-content').length) {
-                            $('html, body').animate({
-                                scrollTop: $('.page-content').offset().top
-                            }, 3000);
-                        }
+                        swalSuccessOk('Success', 'Loan Calculation Added Successfully!', function () {
+                            if ($('.page-content').length) {
+                                $('html, body').animate({
+                                    scrollTop: $('.page-content').offset().top
+                                }, 3000);
+
+                            }
+                        });
                     } else if (response.status == '2') {
-                        swalSuccess('Success', 'Loan Calculation Updated Successfully!')
-                        if ($('.page-content').length) {
-                            $('html, body').animate({
-                                scrollTop: $('.page-content').offset().top
-                            }, 3000);
-                        }
+                        swalSuccessOk('Success', 'Loan Calculation Updated Successfully!', function () {
+                            if ($('.page-content').length) {
+                                $('html, body').animate({
+                                    scrollTop: $('.page-content').offset().top
+                                }, 3000);
+
+                            }
+                        });
                     } else {
                         swalError('Error', 'Error Occurs!')
                     }
@@ -2920,7 +2926,9 @@ function isFormDataValid(formData) {
             isValid = false;
         }
     }
-
+    if (!validateField(formData['collection_method'], 'collection_method')) {
+        isValid = false;
+    }
     if (formData['referred_calc'] == '0') { // Referred
         if (!validateField(formData['agent_id_calc'], 'agent_id_calc') ||
             !validateField(formData['agent_name_calc'], 'agent_name_calc')) {
@@ -2997,6 +3005,7 @@ function loanCalculationEdit(id) {
             $('#due_startdate_calc').val(response[0].due_startdate);
             $('#maturity_date_calc').val(response[0].maturity_date);
             $('#referred_calc').val(response[0].referred);
+            $('#collection_method').val(response[0].collection_method);
             $('#referred_calc').trigger('change');
 
             $('#profit_type_calc_scheme').show();

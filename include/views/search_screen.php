@@ -1261,6 +1261,18 @@
                                     <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="24" readonly>
                                 </div>
                             </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="collection_method" name="collection_method"  disabled tabindex="45">
+                                        <option value="">Select Collection Format</option>
+                                        <option value="1">BySelf</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Cheque Collection</option>
+                                        <option value="4">ECS</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

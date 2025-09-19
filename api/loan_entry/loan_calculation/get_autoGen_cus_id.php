@@ -11,8 +11,15 @@ if ($id != '0' && $id != '') {
     $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
     $qry_info = $qry1->fetch();
     $company_name = $qry_info["company_name"];
-    $str = preg_replace('/\s+/', '', $company_name);
-    $myStr = mb_substr($str, 0, 1);
+     $words = explode(" ", $company_name);
+
+    if (count($words) >= 2) {
+        // Take first letter of first two words
+        $myStr = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
+    } else {
+        // Take only first letter
+        $myStr = strtoupper(mb_substr($company_name, 0, 1));
+    }
 
 
     $qry = $pdo->query("SELECT MAX(cus_id) as cus_id FROM customer_profile");
@@ -25,7 +32,7 @@ if ($id != '0' && $id != '') {
         $auto_cus_id = $myStr . "-" . $appno2;
     } else {
         // If no branch codes exist, set an initial one
-        $initialapp = $myStr . "-101";
+        $initialapp = $myStr . "-1001";
         $auto_cus_id = $initialapp;
     }
 }

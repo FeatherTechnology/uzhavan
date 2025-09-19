@@ -26,10 +26,10 @@ $(document).ready(function () {
         $('.due_list_div').show();
         getSubStsMapping(); // Call Customer status dropdown.
         let cusSts = $("#sub_status_mapping").val();
-        let commDate = $("#comm_date").val(); 
+        let commDate = $("#comm_date").val();
 
         if (cusSts != '') {
-            OnLoadFunctions(cusSts, commDate); 
+            OnLoadFunctions(cusSts, commDate);
         }
     });
 
@@ -1197,6 +1197,7 @@ function loanCalculationEdit(id) {
         $('#net_cash_calc').val(response[0].net_cash);
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
+        $('#collection_method').val(response[0].collection_method);
         $('#maturity_date_calc').val(response[0].maturity_date);
         $('#referred_calc').val(response[0].referred);
         $('#referred_calc').trigger('change');

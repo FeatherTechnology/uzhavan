@@ -731,6 +731,9 @@ class bulkUploadClass
         if ($data['area_id'] == 'Not Found') {
             $errcolumns[] = 'Area ID';
         }
+        if ($data['guarantor_relationship'] == 'Not Found') {
+            $errcolumns[] = 'Guarantor Relationship';
+        }
         return $errcolumns;
     }
 }

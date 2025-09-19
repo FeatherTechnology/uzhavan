@@ -131,6 +131,123 @@
                     </div>
                 </div>
             </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Customer Summary</div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- How to Know -->
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="how_to_know">How To Know</label><span class="text-danger">*</span>
+                                <select class="form-control" id="how_to_know" name="how_to_know" tabindex="29" disabled>
+                                    <option value="">Select How To Know</option>
+                                    <option value="1">Customer Reference</option>
+                                    <option value="2">Advertisement</option>
+                                    <option value="3">Promotion activity</option>
+                                    <option value="4">Agent Reference</option>
+                                    <option value="5">Staff Reference</option>
+                                    <option value="6">Other Reference</option>
+                                    <option value="7">Renewal</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                            <div class="form-group">
+                                <label for="loan_count">Loan Count</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                            <div class="form-group">
+                                <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                            <div class="form-group">
+                                <label for="travel_with_company">Travel With Company</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="travel_with_company" name="travel_with_company" disabled tabindex="36" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="monthly_income">Monthly Income</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="monthly_income" name="monthly_income" placeholder=" Enter Monthly Income" tabindex="37" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="other_income">Other Income</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="other_income" name="other_income" placeholder="Enter Other Income" tabindex="38" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="support_income">Support Income</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="support_income" name="support_income" placeholder="Enter Support Income" tabindex="39" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="commitment">Commitment</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="commitment" name="commitment" placeholder="Enter Commitment" tabindex="40" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="monthly_due_capacity">Monthly Due Capacity</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control" id="monthly_due_capacity" name="monthly_due_capacity" placeholder="Enter Due Capacity" tabindex="41" readonly>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="cus_limit">Customer Limit</label>
+                                <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                    </div> <br>
+
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group table-responsive">
+                                <table class="table custom-table" id="feedbackListTable">
+                                    <thead>
+                                        <tr>
+                                            <th width="50"> S.No </th>
+                                            <th> Feedback Label </th>
+                                            <th> Feedback </th>
+                                            <th> Remarks </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <!-- About Customer -->
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <label for="about_cus">About Customer</label>
+                                <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="43" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -151,14 +268,27 @@
                     <form id="closed_remark_form" method="post">
                         <input type="hidden" id="cus_profile_id">
                         <div class="col-12 row">
-                            <div class="col-sm-2 col-md-2 col-lg-2"></div>
                             <div class="col-sm-4 col-md-4 col-lg-4">
                                 <div class="form-group">
                                     <label for="sub_status">Sub Status</label><span class="required">*</span>
                                     <select name="sub_status" id="sub_status" class="form-control" tabindex="2">
                                         <option value="">Select Sub Status</option>
                                         <option value="1">Consider</option>
-                                        <option value="2">Reject</option>
+                                        <option value="2"> Waiting List </option>
+                                        <option value="3"> Block List </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;" id="considerlevel">
+                                <div class="form-group">
+                                    <label for="branch"> Consider Level </label> <span class="required">*</span>
+                                    <select type="text" class="form-control" name="closed_Sts_consider" id="closed_Sts_consider">
+                                        <option value=""> Select Consider Level </option>
+                                        <option value="1"> Bronze </option>
+                                        <option value="2"> Silver </option>
+                                        <option value="3"> Gold </option>
+                                        <option value="4"> Platinum </option>
+                                        <option value="5"> Diamond </option>
                                     </select>
                                 </div>
                             </div>
@@ -286,6 +416,147 @@
                     </div>
                 </div>
 
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////// Fine Chart Modal END ////////////////////////////////////////////////////////////////////// -->
+<!--------------------------------------------------------------------- Commitment Chart Modal Start ------------------------------------------------------------------>
+
+<div class="modal fade" id="commitment_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Commitment Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-x-cls">
+                <table class="table custom-table" id="commitment_chart_table">
+                    <thead>
+                        <th>S No.</th>
+                        <th>Date</th>
+                        <th>Follow Type</th>
+                        <th>Followup Status </th>
+                        <th>Person Type</th>
+                        <th>Person Name</th>
+                        <th>Relationship</th>
+                        <th>Remark</th>
+                        <th>Commitment Date</th>
+                        <th>User Type</th>
+                        <th>User Name</th>
+                        <th>Hint</th>
+                        <th>Communication Status</th>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------- Commitment Chart Modal end ------------------------------------------------------------------>
+<!-- Add Loan Summary Modal START -->
+<div class="modal fade addloansummary" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel"> Add Loan Summary </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="feedback_form">
+                    <div class="row">
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="feedbackLabel"> Feedback Label </label> <span class="required">&nbsp;*</span>
+                                <input type="text" class="form-control" id="feedback_label" name="feedback_label" onkeydown="return /[a-z ]/i.test(event.key)" placeholder="Enter Feedback Label">
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="feedback "> Feedback Rating </label> <span class="required">&nbsp;*</span>
+                                <select type="text" class="form-control" id="cus_feedback" name="cus_feedback">
+                                    <option value=""> Select Feedback </option>
+                                    <option value="1"> Bad </option>
+                                    <option value="2"> Poor </option>
+                                    <option value="3"> Average </option>
+                                    <option value="4"> Good </option>
+                                    <option value="5"> Excellent </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="feedback_remark"> Remark </label>
+                                <textarea class="form-control" name="feedback_remark" id="feedback_remark"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-12 col-lg-12 col-md-6 col-sm-6 col-12 text-right">
+                            <input type="hidden" name="feedbackID" id="feedbackID">
+                            <label style="visibility:hidden"> Submit </label><br><br>
+                            <button type="button" name="feedbackBtn" id="feedbackBtn" class="btn btn-primary"> Submit </button>
+                        </div>
+                    </div>
+                </form>
+                </br>
+
+
+                <div class="table-responsive">
+                    <table class="table custom-table" id="feedbackTable">
+                        <thead>
+                            <tr>
+                                <th width="20%"> S.No </th>
+                                <th> Feedback Label </th>
+                                <th> Feedback </th>
+                                <th> Remark </th>
+                                <th> ACTION </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END  Add Loan Summary Modal -->
+<!-- /////////////////////////////////////////////////////////////////// Fine Chart Modal Start ////////////////////////////////////////////////////////////////////// -->
+<div class="modal fade" id="loansummary_model" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg " role="document">
+        <div class="modal-content" style="background-color: white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Loan Summary Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" tabindex="1" aria-label="Close" onclick="closeChartsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body overflow-x-cls">
+                <table class="table custom-table " id="feedbackInfoTable">
+                    <thead>
+                        <th width="30px">S No.</th>
+                        <th>Feedback Label</th>
+                        <th>Feedback</th>
+                        <th>Remark</th>
+                    </thead>
+                </table>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-dismiss="modal" onclick="closeChartsModal()" tabindex="4">Close</button>
