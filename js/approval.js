@@ -999,7 +999,7 @@ function moveToNext(cus_sts_id, cus_sts) {
             else if (cus_sts == '6') {
                 alertName = 'Revoked Successfully';
             }
-            swalSuccess('Success', alertName);
+            swalSuccessOk('Success', alertName);
             getApprovalTable();
         } else {
             swalError('Alert', 'Failed To Move');
@@ -1009,12 +1009,16 @@ function moveToNext(cus_sts_id, cus_sts) {
 
 function checkCustomerLimit(loan_calc_id, cus_sts_id, cus_sts) {
     $.post('api/common_files/check_customer_limit.php', { loan_calc_id }, function (response) {
-        if (response == '1') {
+        if (response.status == '1') {
             swalError('Warning', 'Kindly Enter The Customer Limit');
-        } else if (response == '2') {
+        } else if (response.status == '2') {
             swalError('Warning', 'Customer limit is less than the loan amount. Please update either the customer limit or the loan amount.');
-        } else if (response == '3') {
-            moveToNext(cus_sts_id, cus_sts);
+        } else if (response.status == '3') {
+            swalConfirm(
+                "Customer Limit",
+                "Customer limit is set to " +  moneyFormatIndia(response.cus_limit) + ". Do you want to Approve?",
+                () => moveToNext(cus_sts_id, cus_sts)
+            );
         } else {
             swalError('Alert', 'Failed To Approved');
         }

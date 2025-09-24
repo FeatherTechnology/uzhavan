@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#due_nill_btn').click(function (event) {
         event.preventDefault();
-       let Customer_Status = $(this).attr('value');
+        let Customer_Status = $(this).attr('value');
         getCollectionListTable(Customer_Status);
         $('#all_btn').show();
         $('#due_nill_btn').hide();
@@ -272,6 +272,71 @@ $(document).ready(function () {
         })
 
     });
+    $(document).on('click', '.move-error', function () {
+
+        let cus_sts_id = $(this).attr('value');
+        let cp_id = $(this).attr('data-id');
+        cus_sts = 15;
+        swalConfirm(
+            "Move",
+            "Are you sure to move to Error?",
+            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+        );
+        return;
+
+    })
+    $(document).on('click', '.move-legal', function () {
+
+        let cus_sts_id = $(this).attr('value');
+        let cp_id = $(this).attr('data-id');
+        cus_sts = 16;
+        swalConfirm(
+            "Move",
+            "Are you sure to move to Legal?",
+            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+        );
+        return;
+
+    })
+    $(document).on('click', '.return-sub', function () {
+
+        let cus_sts_id = $(this).attr('value');
+        let cp_id = $(this).attr('data-id');
+        cus_sts = 7;
+        swalConfirm(
+            "Move",
+            "Are you sure to return to Sub Status?",
+            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+        );
+        return;
+
+    })
+    function moveToNext(cus_sts_id, cus_sts,cp_id) {
+        let cusid = $('#cus_id').val();
+        $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
+            if (response == '0') {
+                let alertName;
+                if (cus_sts == '15') {
+                    alertName = 'Moved To Error';
+                }
+                else if (cus_sts == '16') {
+                    alertName = 'Moved To Legal';
+                }
+                else if (cus_sts == '7') {
+                    alertName = 'Moved To Sub Status';
+                }
+
+                swalSuccessOk('Success', alertName);
+                OnLoadFunctions(cusid, function () {
+                    getSubStatus(cp_id); // runs only after table is populated
+                });
+
+            } else {
+                swalError('Alert', 'Failed To Move');
+            }
+        }, 'json');
+    }
+
 
     {
         // Get today's date
@@ -421,6 +486,8 @@ $(document).ready(function () {
         $('#coll_main_container input').css('border', '1px solid #cecece');
         $('#coll_main_container select').css('border', '1px solid #cecece');
     });
+
+
     function printCollection(coll_id) {
         Swal.fire({
             title: 'Print',
@@ -582,6 +649,7 @@ $(document).ready(function () {
             'total_waiver': $('#total_waiver').val().replace(/,/g, ''),
             'collection_date': $('#collection_date').val(),
             'collection_id': $('#collection_id').val(),
+            'collection_method': $('#collection_method').val(),
             'collection_mode': $('#collection_mode').val(),
             'bank_id': $('#bank_id').val(),
             'cheque_no': $('#cheque_no').val(),
@@ -698,7 +766,7 @@ function swapTableAndCreation() {
 function getSubStatus(cp_id) {
     let sub_status = '';
     $('#loan_list_table tbody tr').each(function () {
-        const row_cp_id = $(this).find('.pay-due').attr('value');
+        const row_cp_id = $(this).find('.fine-form').attr('value');
         if (row_cp_id == cp_id) {
             // Get Sub Status from 8th column (adjust index if needed)
             sub_status = $(this).find('td:nth-child(8)').text().trim();
@@ -779,7 +847,7 @@ function getChequeList() {
     })
 }
 
-function OnLoadFunctions(cus_id) {
+function OnLoadFunctions(cus_id,callback) {
     //To get loan sub Status
     var pending_arr = [];
     var od_arr = [];
@@ -840,6 +908,9 @@ function OnLoadFunctions(cus_id) {
                 setdtable('#loan_list_table');
                 //Dropdown in List Screen
                 setDropdownScripts();
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }
         });
         hideOverlay();//loader stop
@@ -890,7 +961,9 @@ function isFormDataValid(collData) {
         $('#penalty_track').css('border', '1px solid #cecece');
         $('#coll_charge_track').css('border', '1px solid #cecece');
     }
-
+  if (!validateField(collData['collection_method'], 'collection_method')) {
+        isValid = false;
+    }
     // Validate collection_mode
     if (!validateField(collData['collection_mode'], 'collection_mode')) {
         isValid = false;

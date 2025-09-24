@@ -425,7 +425,7 @@ $(document).ready(function () {
             'hint': $('#hint').val(),
         };
 
-        var data = ['follow_type', 'follow_status', 'remark', 'hint', 'comm_err'];
+        var data = ['follow_type', 'follow_status', 'remark', 'hint'];
         var isValid = true;
 
         // Basic required fields validation
@@ -479,7 +479,7 @@ $(function () {
 });
 
 function getSubStsMapping() {
-    let subStatus = ['OD', 'Pending', 'Current'];
+    let subStatus = ['Legal','Error','OD', 'Pending', 'Current'];
     let editSubStatus = $('#customer_status').val() || '';
     subStatusMultiselect.clearChoices();
     $.each(subStatus, function (index, val) {
@@ -517,6 +517,7 @@ function getLoanListTable(cus_id) {
             'loan_category',
             'loan_date',
             'loan_amount',
+            'collection_method',
             'c_sts',
             'sub_status',
             'charts',
@@ -840,17 +841,17 @@ async function editCustmerProfile(id) {
         $('#occupation').val(data.occupation);
         $('#occ_address').val(data.occ_address);
         $('#occ_detail').val(data.occ_detail);
-        $('#occ_income').val(data.occ_income);
+        $('#occ_income').val(moneyFormatIndia(data.occ_income));
         $('#area_confirm').val(data.area_confirm);
         $('#line').val(data.line);
-        $('#cus_limit').val(data.cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(data.cus_limit));
         $('#about_cus').val(data.about_cus);
         $('#how_to_know').val(data.how_to_know);
-        $('#monthly_income').val(data.monthly_income);
-        $('#other_income').val(data.other_income);
-        $('#support_income').val(data.support_income);
-        $('#commitment').val(data.commitment);
-        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+        $('#monthly_income').val(moneyFormatIndia(data.monthly_income));
+        $('#other_income').val(moneyFormatIndia(data.other_income));
+        $('#support_income').val(moneyFormatIndia(data.support_income));
+        $('#commitment').val(moneyFormatIndia(data.commitment));
+        $('#monthly_due_capacity').val(moneyFormatIndia(data.monthly_due_capacity));
 
         // Handle WhatsApp number radio selection
         if (data.whatsapp_no === data.mobile1) {
@@ -1175,7 +1176,7 @@ function loanCalculationEdit(id) {
         $('#loan_category_calc').val(response[0].loan_category);
         $('#loan_category_calc2').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(response[0].loan_amount);
+        $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amount));
         $('#profit_type_calc').val(response[0].profit_type);
         $('#due_method_calc').val(response[0].due_method);
         $('#due_type_calc').val(response[0].due_type);
@@ -1187,14 +1188,14 @@ function loanCalculationEdit(id) {
         $('#due_period_upd').val(response[0].due_period);
         $('#doc_charge_upd').val(response[0].doc_charge);
         $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#loan_amnt_calc').val(response[0].loan_amnt);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
+       $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
+        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#collection_method').val(response[0].collection_method);

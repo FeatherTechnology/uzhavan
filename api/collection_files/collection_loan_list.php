@@ -33,7 +33,7 @@ function moneyFormatIndia($num)
 
 $loan_list_arr = array();
 
-$qry = $pdo->query("SELECT lelc.cus_profile_id as cp_id, lelc.cus_id, lelc.loan_id, lc.loan_category, li.issue_date, lelc.loan_amount, us.collection_access
+$qry = $pdo->query("SELECT lelc.cus_profile_id as cp_id, lelc.cus_id, lelc.loan_id, lc.loan_category, li.issue_date, lelc.loan_amount, us.collection_access,cs.id as cus_sts_id,cs.status as cus_sts
 FROM loan_entry_loan_calculation lelc
 JOIN customer_profile cp ON lelc.cus_profile_id = cp.id
 JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
@@ -43,7 +43,7 @@ JOIN loan_issue li ON lelc.cus_profile_id = li.cus_profile_id
 LEFT JOIN users us ON us.id = '$user_id'
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users urs ON FIND_IN_SET(lelc.loan_category, urs.loan_category)
-WHERE lelc.cus_id = '$cus_id' AND cs.status = 7 AND u.id ='$user_id' AND urs.id ='$user_id' AND li.balance_amount = 0 ORDER BY lelc.id DESC ");
+WHERE lelc.cus_id = '$cus_id' AND cs.status IN(7,15,16) AND u.id ='$user_id' AND urs.id ='$user_id' AND li.balance_amount = 0 ORDER BY lelc.id DESC ");
 if ($qry->rowCount() > 0) {
     $curdate = date('Y-m-d');
     $i = 1;
@@ -52,17 +52,24 @@ if ($qry->rowCount() > 0) {
         $loanInfo['loan_amount'] = moneyFormatIndia($loanInfo['loan_amount']);
         $loanInfo['bal_amount'] = moneyFormatIndia($bal_amt[$i - 1]);
         $loanInfo['status'] = 'Present';
-        if (date('Y-m-d', strtotime($loanInfo['issue_date'])) > date('Y-m-d', strtotime($curdate))  and $bal_amt[$i - 1] != 0) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
-            $sub_sts = 'Current';
+        if ($loanInfo['cus_sts'] == 15) {
+            $sub_sts = 'Error';
+        } elseif ($loanInfo['cus_sts'] == 16) {
+            $sub_sts = 'Legal';
         } else {
-            if ($pending_sts[$i - 1] == 'true' && $od_sts[$i - 1] == 'false') { //using i as 1 so subract it with 1
-                $sub_sts = 'Pending';
-            } else if ($od_sts[$i - 1] == 'true' && $due_nil_sts[$i - 1] == 'false') {
-                $sub_sts = 'OD';
-            } elseif ($due_nil_sts[$i - 1] == 'true') {
-                $sub_sts = 'Due Nil';
-            } elseif ($pending_sts[$i - 1] == 'false') {
+            // 🔹 Normal sub-status logic
+            if (date('Y-m-d', strtotime($loanInfo['issue_date'])) > $curdate && $bal_amt[$i - 1] != 0) {
                 $sub_sts = 'Current';
+            } else {
+                if ($pending_sts[$i - 1] == 'true' && $od_sts[$i - 1] == 'false') {
+                    $sub_sts = 'Pending';
+                } elseif ($od_sts[$i - 1] == 'true' && $due_nil_sts[$i - 1] == 'false') {
+                    $sub_sts = 'OD';
+                } elseif ($due_nil_sts[$i - 1] == 'true') {
+                    $sub_sts = 'Due Nil';
+                } elseif ($pending_sts[$i - 1] == 'false') {
+                    $sub_sts = 'Current';
+                }
             }
         }
         $loanInfo['sub_status'] = $sub_sts;
@@ -76,7 +83,15 @@ if ($qry->rowCount() > 0) {
         </div>
         </div>";
 
-        $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i><div class='dropdown-content'><a href='#' class='pay-due' value='" . $loanInfo['cp_id'] . "'>Pay Due</a>";
+        $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i><div class='dropdown-content'>";
+        if (!in_array($loanInfo['cus_sts'], [15, 16])) {
+            $loanInfo['action'] .= "<a href='#' class='pay-due' value='" . $loanInfo['cp_id'] . "'>Pay Due</a>";
+        }
+
+        $loanInfo['action'] .= "<a href='#' class='move-error' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Error</a>";
+        $loanInfo['action'] .= "<a href='#' class='move-legal' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Legal</a>";
+        $loanInfo['action'] .= "<a href='#' class='return-sub' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Return Sub Status</a>";
+
 
         if ($loanInfo['collection_access'] == 1) {
             $loanInfo['action'] .= "<a href='#' class='fine-form' value='" . $loanInfo['cp_id'] . "'>Fine</a>";

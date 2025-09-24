@@ -26,7 +26,7 @@ function moneyFormatIndia($num)
     return $thecash;
 }
 
-$sub_sts = ['' => '', 1 => 'Consider', 2 => 'Reject'];
+$sub_sts = ['' => '', 1 => 'Consider', 2 => 'Waiting List' ,3=>'Block List'];
 
 $loan_list_arr = array();
 $qry = $pdo->query("SELECT lelc.cus_profile_id as cp_id, lelc.cus_id, lelc.loan_id, lc.loan_category, li.issue_date, cs.closed_date, lelc.loan_amount, cs.sub_status

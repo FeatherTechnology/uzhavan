@@ -64,8 +64,8 @@ $query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linen
     ) c2 ON c1.cus_id = c2.cus_id AND c1.created_date = c2.max_date
 ) cm ON cp.cus_id = cm.cus_id
 WHERE
-    cs.payable_amnt > 0 AND cs.status = 7 AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  ";
-    
+    cs.payable_amnt > 0 AND cs.status IN (7,15,16) AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  ";
+
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];
@@ -139,9 +139,11 @@ foreach ($result as $row) {
     $qry1 = $pdo->query("SELECT 
         cus_id, 
         MIN(CASE 
-            WHEN coll_status = 'OD' THEN 1
-            WHEN coll_status = 'Pending' THEN 2
-            WHEN coll_status = 'Current' THEN 3
+           WHEN coll_status = 'Legal' THEN 1
+            WHEN coll_status = 'Error' THEN 2
+            WHEN coll_status = 'OD' THEN 3
+            WHEN coll_status = 'Pending' THEN 4
+            WHEN coll_status = 'Current' THEN 5
             ELSE 6 
         END) AS status_priority
         FROM customer_status
@@ -153,12 +155,18 @@ foreach ($result as $row) {
         $row11 = $qry1->fetch();
         switch ($row11['status_priority']) {
             case 1:
-                $cus_status = 'OD';
+                $cus_status = 'Legal';
                 break;
             case 2:
-                $cus_status = 'Pending';
+                $cus_status = 'Error';
                 break;
             case 3:
+                $cus_status = 'OD';
+                break;
+            case 4:
+                $cus_status = 'Pending';
+                break;
+            case 5:
                 $cus_status = 'Current';
                 break;
             default:

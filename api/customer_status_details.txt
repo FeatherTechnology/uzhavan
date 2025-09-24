@@ -9,10 +9,12 @@ Customer status Details:
 8 = To Closed [When Loan Balance Amount is 0, status has to change to '8' on collection screen. To Move Closed.];
 9 = Closed;(Not in Used because of direct close)
 10 = Closed;
-11 = NOC Completed;
+11 = NOC Completed;(not in used because of direct of move)
 12 = Removed From NOC;
 13 = Cancel in Loan Issue;
 14 = Revoke in Loan Issue;
+15 = Error in Collection;
+16 = Legal in Collection;
 /////////////////////////////////////////////////////////////
 Link used for auto-updating customer status in collection
 http://spfeather-002-site7.ktempurl.com/include/views/monthly_customer_update.php

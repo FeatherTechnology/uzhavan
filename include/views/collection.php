@@ -1,3 +1,12 @@
+<style>
+    /* Remove hover and active highlight completely */
+    .dropdown-menu .dropdown-item:hover,
+    .dropdown-menu .dropdown-item:focus,
+    .dropdown-menu .dropdown-item:active {
+        background-color: transparent !important;
+        color: inherit !important;
+    }
+</style>
 <div class="row gutters">
     <div class="col-12">
         <div class="card" id="collection_list">
@@ -316,6 +325,16 @@
                                     <div class="form-group">
                                         <label for="disabledInput">Collection ID</label>&nbsp;<span class="text-danger">*</span>
                                         <input type="text" readonly class="form-control" id="collection_id" name="collection_id" value='' tabindex='27'>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                        <select type="text" class="form-control" id="collection_method" name="collection_method" tabindex="45">
+                                            <option value="">Select Collection Format</option>
+                                            <option value="1"selected>BySelf</option>
+                                            <option value="2">On Spot</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

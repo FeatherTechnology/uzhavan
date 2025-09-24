@@ -24,7 +24,9 @@ $status = [
     11 => 'NOC',
     12 => 'NOC',
     13 => 'Loan Issue',
-    14 => 'Loan Issue'
+    14 => 'Loan Issue',
+    15 => 'Present',
+    16 => 'Present',
 ];
 
 $whereClause = "WHERE 1"; // Initial WHERE clause
@@ -70,7 +72,7 @@ if ($qry->rowCount() > 0) {
         $response['status'] = $status[$row['status']];
 
         // Calculate loan customer status and store in variable
-            $loanCustomerStatus = loanCustomerStatus($pdo, $row['cus_profile_id'], $i);
+        $loanCustomerStatus = loanCustomerStatus($pdo, $row['cus_profile_id'], $i);
         $response['sub_status'] = $loanCustomerStatus;
 
         $response['info'] = "<div class='dropdown'>
@@ -81,10 +83,11 @@ if ($qry->rowCount() > 0) {
         $response['info'] .=  "<a href='#' class='customer-profile' value='" . $row['cus_profile_id'] . "'>Customer Profile</a>";
         $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
-        
-        if ($row['status'] >= '8' && $row['status'] != '13' && $row['status'] != '14') {
+
+        if ($row['status'] >= 8 && !in_array($row['status'], [13, 14, 15,16])) {
             $response['info'] .= " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
         }
+
         if ($row['status'] == '10' || $row['status'] == '11') {
             $response['info'] .=  " <a href='#' class='noc-summary' value='" . $row['cus_profile_id'] . "'>Noc Summary</a>";
         }
@@ -122,7 +125,7 @@ if ($qry->rowCount() > 0) {
 $pdo = null; // Close Connection
 echo json_encode($loan_list_arr);
 
-function loanCustomerStatus($pdo, $cus_profile_id,$i)
+function loanCustomerStatus($pdo, $cus_profile_id, $i)
 {
     $qry1 = $pdo->query("SELECT lelc.loan_date, cs.status as cs_status, cs.sub_status as sub_sts
     FROM loan_entry_loan_calculation lelc
@@ -138,7 +141,7 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
         $od_sts = isset($_POST["od_sts"]) ? explode(',', $_POST["od_sts"]) : [];
         $due_nil_sts = isset($_POST["due_nil_sts"]) ? explode(',', $_POST["due_nil_sts"]) : [];
         $bal_amt = isset($_POST["bal_amt"]) ? explode(',', $_POST["bal_amt"]) : [];
-        
+
 
         if ($cs_status == '1' || $cs_status == '2') {
             $status = 'Loan Entry';
@@ -171,7 +174,9 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
             if ($sub_sts == '1') {
                 $status = 'Consider';
             } elseif ($sub_sts == '2') {
-                $status = 'Rejected';
+                $status = 'Waiting List';
+            } elseif ($sub_sts == '3') {
+                $status = 'Block List';
             }
         } elseif ($cs_status == '10') {
             $status = 'Pending';
@@ -183,6 +188,10 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
             $status = 'Cancel';
         } elseif ($cs_status == '14') {
             $status = 'Revoke';
+        } elseif ($cs_status == '15') {
+            $status = 'Error';
+        } elseif ($cs_status == '16') {
+            $status = 'Legal';
         }
 
         return $status;

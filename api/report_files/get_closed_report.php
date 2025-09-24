@@ -6,7 +6,7 @@ $user_id = $_SESSION['user_id'];
 $from_date = $_POST['from_date'];
 $to_date = $_POST['to_date'];
 
-$sub_status = ['' => '', 1 => 'Consider', 2 => 'Reject'];
+$sub_status = ['' => '', 1 => 'Consider', 2 => 'Waiting List',3 => 'Block List'];
 
 $column = array(
     'cs.id',

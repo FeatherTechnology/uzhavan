@@ -5,7 +5,7 @@ $user_id = $_SESSION['user_id'];
 
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed'];
+$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',15=>'Error',16=>'Legal'];
 
 $column = [
     'li.id', 'lnc.linename', 'lelc.loan_id', 'li.issue_date', 'lelc.maturity_date',
@@ -42,7 +42,7 @@ ON
 JOIN customer_status cs ON
     li.cus_profile_id = cs.cus_profile_id
 WHERE
-    cs.status >= 7 AND DATE(li.issue_date) <= DATE('$to_date') AND(
+    cs.status >= 7 AND cs.status NOT IN(13,14) AND DATE(li.issue_date) <= DATE('$to_date') AND(
         cs.closed_date IS NULL OR DATE(cs.closed_date) >= DATE('$to_date')
     )";
 

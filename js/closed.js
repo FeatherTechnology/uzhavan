@@ -74,7 +74,7 @@ $(document).ready(function () {
             let remark = $('#remark').val();
             $.post('api/closed_files/closed_submit.php', { sub_status, closed_Sts_consider, remark, cus_profile_id }, function (response) {
                 if (response == '1') {
-                    swalSuccess('Success', 'Closed Info Updated Successfully!');
+                    swalSuccessOk('Success', 'Closed Info Updated Successfully!');
                     $('#closed_remark_form input').val('');
                     $('#closed_remark_form select').val('');
                     $('#closed_remark_form textarea').val('');

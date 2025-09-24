@@ -14,7 +14,9 @@ $status = [
     11 => 'NOC',
     12 => 'NOC',
     13 => 'Loan Issue',
-    14 => 'Loan Issue'
+    14 => 'Loan Issue',
+    15 => 'Present',
+    16 => 'Present',
 ];
 //$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
@@ -106,7 +108,9 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
             if ($sub_sts == '1') {
                 $status = 'Consider';
             } elseif ($sub_sts == '2') {
-                $status = 'Rejected';
+                $status = 'Waiting List';
+            }elseif ($sub_sts == '3') {
+                $status = 'Block List';
             }
         } elseif ($cs_status == '10') {
             $status = 'Pending';
@@ -118,6 +122,12 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
             $status = 'Cancel';
         } elseif ($cs_status == '14') {
             $status = 'Revoke';
+        }
+         elseif ($cs_status == '15') {
+            $status = 'Error';
+        }
+         elseif ($cs_status == '16') {
+            $status = 'Legal';
         }
 
         return $status;

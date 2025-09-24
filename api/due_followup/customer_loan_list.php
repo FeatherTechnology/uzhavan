@@ -3,18 +3,21 @@ require '../../ajaxconfig.php';
 
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
-$qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.coll_status FROM loan_entry_loan_calculation lelc 
+$coll_method = [1 => 'BySelf', 2 => 'On Spot', 3 => 'Cheque Collection', 4 => 'ECS'];
+$qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,lelc.collection_method ,cs.closed_date,cs.status as c_sts,cs.coll_status FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id' AND cs.status = 7");
+WHERE cs.cus_id = '$cus_id' AND cs.status IN (7,15,16)");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($loanInfo['loan_date']);
         $loanInfo['loan_date'] = $loanDate->format('d-m-Y');
         $loanInfo['loan_amount'] = moneyFormatIndia($loanInfo['loan_amount']);
+        $loanInfo['collection_method'] = $coll_method[$loanInfo['collection_method']];
         $loanInfo['c_sts'] = 'Present';
         $loanInfo['sub_status'] = $loanInfo['coll_status'];
+
 
         $loanInfo['charts'] = "<div class='dropdown'>
         <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
@@ -44,7 +47,7 @@ if ($qry->rowCount() > 0) {
         <button type="button" class="btn btn-outline-secondary"><i class="fa">&#xf107;</i></button>
         <div class="dropdown-content">';
 
-      $loanInfo['action'] .= "<a href='#' class='commitment-form' value='" . $loanInfo['cus_profile_id'] . "'data-value ='" . $loanInfo['cus_id'] . "'>New Commitment</a>";
+        $loanInfo['action'] .= "<a href='#' class='commitment-form' value='" . $loanInfo['cus_profile_id'] . "'data-value ='" . $loanInfo['cus_id'] . "'>New Commitment</a>";
         $loanInfo['action'] .= "</div></div>";
         $update_doc_list_arr[] = $loanInfo; // Append to the array
     }

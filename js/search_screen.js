@@ -1,5 +1,16 @@
 $(document).ready(function () {
 
+    $('input[name=search_type]').click(function () {
+        let searchType = $(this).val();
+
+        if (searchType == 'cus_list') {
+            $('#custome_list').show();
+            $('#family_list').hide();
+        } else if (searchType == 'fam_list') {
+            $('#custome_list').hide();
+            $('#family_list').show();
+        }
+    });
     $('#cus_mobile').change(function () {
         let mobileValue = $(this).val().trim();  // Retrieve and trim the value of the mobile input
 
@@ -34,7 +45,6 @@ $(document).ready(function () {
                         for (let i = 0; i < fingerList.length; i++) {
                             const storedTemplate = fingerList[i].ansi_template;
                             const aadhar = fingerList[i].adhar_num;
-
                             const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
 
                             if (verifyRes.httpStaus && verifyRes.data.Status === true) {
@@ -80,7 +90,8 @@ $(document).ready(function () {
     $(document).on('click', '.view_customer', function (event) {
         event.preventDefault();
         $('#customer_status').show();
-        $('#custome_list, #search_form').hide();
+        $('#custome_list, #search_form ,#family_list').hide();
+        $('.search_cus_fam').hide();
         let cus_id = $(this).closest('tr').find('td:nth-child(2)').text();
         // let cus_id = $('#cust_id').val().replace(/\s/g, '');
         let aadhar_num = $('#aadhar_nums').val().replace(/\s/g, '');
@@ -116,6 +127,7 @@ $(document).ready(function () {
         event.preventDefault();
         $('#customer_status').hide();
         $('#custome_list, #search_form').show();
+        $('.search_cus_fam').show();
     })
     $('#back_to_cus_status').click(function (event) {
         event.preventDefault();
@@ -263,11 +275,16 @@ $(document).ready(function () {
                 data: { cus_id, aadhar_num, cus_name, area, mobile, matched_aadhar },
                 success: function (data) {
                     $('#custome_list').show();
+                    $('#family_list').hide();
+                    $('.search_cus_fam').show();
+                    $('#cus_list_radio').trigger('click');
                     getSearchTable(data);
+                    getSearchFamTable(data)
                 }
             });
         } else {
             $('#custome_list').hide();
+            $('.search_cus_fam').hide();
         }
     });
     //////////////////////////////////////////////////////////////customer profile////////////////////////////////////////////////////
@@ -391,25 +408,50 @@ function validate() {
 }
 
 function getSearchTable(data) {
-    // Assuming response is in JSON format and contains customer data
     let response = JSON.parse(data);
-    // if (response && response.length > 0) {
-    var columnMapping = [
-        'sno',
-        'cus_id',
-        'aadhar_num',
-        'cus_name',
-        'area',
-        'branch_name',
-        'linename',
-        'mobile1',
-        'action'
-    ];
-    appendDataToTable('#search_table', response, columnMapping);
-    setdtable('#search_table');
-    setDropdownScripts();
-    // }
+    if (response.customer_data && response.customer_data.length > 0) {
+        var columnMapping = [
+            'sno',
+            'cus_id',
+            'aadhar_num',
+            'cus_name',
+            'area',
+            'branch_name',
+            'linename',
+            'mobile1',
+            'action'
+        ];
+        appendDataToTable('#search_table', response.customer_data, columnMapping);
+        setdtable('#search_table');
+        setDropdownScripts();
+    } else {
+        // Clear table if no data
+        appendDataToTable('#search_table', [], []);
+        setdtable('#search_table');
+    }
 }
+
+function getSearchFamTable(data) {
+    let response = JSON.parse(data);
+    if (response.family_data && response.family_data.length > 0) {
+        var columnMapping = [
+            'sno',
+            'fam_name',
+            'fam_relationship',
+            'fam_aadhar',
+            'fam_mobile',
+            'cus_name',
+            'cus_id'
+        ];
+        appendDataToTable('#fam_search_table', response.family_data, columnMapping);
+        setdtable('#fam_search_table');
+        setDropdownScripts();
+    } else {
+        appendDataToTable('#fam_search_table', [], []);
+        setdtable('#fam_search_table');
+    }
+}
+
 function getLoanTable(cus_id, aadhar_num, cus_name, area, mobile, pending_sts, od_sts, due_nil_sts, balAmnt) {
     $.post('api/search_files/search_loan.php', { cus_id, aadhar_num, cus_name, area, mobile, pending_sts, od_sts, due_nil_sts, balAmnt }, function (response) {
         var columnMapping = [
@@ -754,17 +796,17 @@ async function editCustmerProfile(id) {
         $('#occupation').val(data.occupation);
         $('#occ_address').val(data.occ_address);
         $('#occ_detail').val(data.occ_detail);
-        $('#occ_income').val(data.occ_income);
+        $('#occ_income').val(moneyFormatIndia(data.occ_income));
         $('#area_confirm').val(data.area_confirm);
         $('#line').val(data.line);
-        $('#cus_limit').val(data.cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(data.cus_limit));
         $('#about_cus').val(data.about_cus);
         $('#how_to_know').val(data.how_to_know);
-        $('#monthly_income').val(data.monthly_income);
-        $('#other_income').val(data.other_income);
-        $('#support_income').val(data.support_income);
-        $('#commitment').val(data.commitment);
-        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+        $('#monthly_income').val(moneyFormatIndia(data.monthly_income));
+        $('#other_income').val(moneyFormatIndia(data.other_income));
+        $('#support_income').val(moneyFormatIndia(data.support_income));
+        $('#commitment').val(moneyFormatIndia(data.commitment));
+        $('#monthly_due_capacity').val(moneyFormatIndia(data.monthly_due_capacity));
 
         // Handle WhatsApp number radio selection
         if (data.whatsapp_no === data.mobile1) {
@@ -1236,7 +1278,7 @@ function loanCalculationEdit(id) {
         $('#loan_category_calc').val(response[0].loan_category);
         $('#loan_category_calc2').val(response[0].loan_category);
         $('#category_info_calc').val(response[0].category_info);
-        $('#loan_amount_calc').val(response[0].loan_amount);
+        $('#loan_amount_calc').val(moneyFormatIndia(response[0].loan_amount));
         $('#profit_type_calc').val(response[0].profit_type);
         $('#due_method_calc').val(response[0].due_method);
         $('#due_type_calc').val(response[0].due_type);
@@ -1248,14 +1290,14 @@ function loanCalculationEdit(id) {
         $('#due_period_upd').val(response[0].due_period);
         $('#doc_charge_upd').val(response[0].doc_charge);
         $('#proc_fees_upd').val(response[0].processing_fees);
-        $('#loan_amnt_calc').val(response[0].loan_amnt);
-        $('#principal_amnt_calc').val(response[0].principal_amnt);
-        $('#interest_amnt_calc').val(response[0].interest_amnt);
-        $('#total_amnt_calc').val(response[0].total_amnt);
-        $('#due_amnt_calc').val(response[0].due_amnt);
-        $('#doc_charge_calculate').val(response[0].doc_charge_calculate);
-        $('#processing_fees_calculate').val(response[0].processing_fees_calculate);
-        $('#net_cash_calc').val(response[0].net_cash);
+        $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
+        $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
+        $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
+        $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
+        $('#due_amnt_calc').val(moneyFormatIndia(response[0].due_amnt));
+        $('#doc_charge_calculate').val(moneyFormatIndia(response[0].doc_charge_calculate));
+        $('#processing_fees_calculate').val(moneyFormatIndia(response[0].processing_fees_calculate));
+        $('#net_cash_calc').val(moneyFormatIndia(response[0].net_cash));
         $('#loan_date_calc').val(response[0].loan_date);
         $('#due_startdate_calc').val(response[0].due_startdate);
         $('#collection_method').val(response[0].collection_method);

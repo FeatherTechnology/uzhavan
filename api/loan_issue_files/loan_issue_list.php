@@ -93,7 +93,7 @@ foreach ($result as $row) {
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
     <div class='dropdown-content'>";
-    $action .= "<a href='#' class='edit-loan-issue' value='" . $row['id'] . "' data-id='" . $row['cus_id'] . "' title='Edit details'>Edit</a>";
+    $action .= "<a href='#' class='edit-loan-issue' value='" . $row['id'] . "' data-id='" . $row['cus_id'] . "' title='Issue details'>Issue</a>";
     $action .= "<a href='#' class='loan-issue-cancel' value='" . $row['cus_sts_id'] . "' title='Cancel'>Cancel</a>";
     $action .= "<a href='#' class='loan-issue-revoke' value='" . $row['cus_sts_id'] . "' title='Revoke'>Revoke</a>";
     $action .= "</div></div>";

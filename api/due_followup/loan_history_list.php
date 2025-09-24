@@ -10,13 +10,15 @@ $status = [
     10 => 'NOC',
     11 => 'NOC',
     12 => 'NOC',
+    15 => 'Present',
+    16 => 'Present',
 ];
 $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.coll_status,cs.sub_status,ag.agent_name FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN agent_creation ag ON lelc.agent_id = ag.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id' AND cs.status BETWEEN 7 AND 12");
+WHERE cs.cus_id = '$cus_id' AND cs.status >=7 AND cs.status NOT IN(13,14)");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($loanInfo['loan_date']);
@@ -33,18 +35,20 @@ if ($qry->rowCount() > 0) {
         $subStatusText = '';
 
         switch ($originalStatus) {
-            case '7':
+            case '7' || '15' || '16':
                 $subStatusText = $loanInfo['coll_status'];
                 break;
             case '8':
                 $subStatusText = 'In Closed';
                 break;
             case '9':
-                $subStatus = $loanInfo['sub_status'];
+               $subStatus = $loanInfo['sub_status'];
                 if ($subStatus == '1') {
                     $subStatusText = 'Consider';
                 } elseif ($subStatus == '2') {
-                    $subStatusText = 'Rejected';
+                    $subStatusText = 'Waiting List';
+                } elseif ($subStatus == '3') {
+                    $subStatusText = 'Block List';
                 }
                 break;
             case '10':

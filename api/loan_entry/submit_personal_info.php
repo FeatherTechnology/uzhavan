@@ -43,11 +43,11 @@ if ($qry->rowCount() > 0) {
     $status = $result['status'];  // Customer status from the customer_status table
 
     // If status is between 1 and 6, cus_status should be empty
-    if ($status >= 1 && $status <= 6) {
+    if ($status >= 1 && $status <= 6 || $status == 14|| $status == 13) {
         $cus_status = '';
     }
     // If status is 7 or 8, cus_status should be 'Additional'
-    else if ($status == 7 || $status == 8) {
+    else if (in_array($status, [7, 8, 15, 16]))  {
         $cus_status = 'Additional';
     }
     // If status is 9 or above, cus_status should be 'Renewal'

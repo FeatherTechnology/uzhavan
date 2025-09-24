@@ -66,7 +66,7 @@ $(document).ready(function () {
         if (isFormDataValid(loanIssue)) {
             $.post('api/accounts_files/loan_issue_files/submit_accounts_loan_issue.php', loanIssue, function (response) {
                 if (response == '1') {
-                    swalSuccess('Success', 'Loan Issued Successfully');
+                    swalSuccessOk('Success', 'Loan Issued Successfully');
                     swapTableAndCreation();
                     getAccountsLoanIssueTable();
                 } else {
@@ -159,6 +159,7 @@ function personalInfo() {
                 $('#loan_date_calc').val(response[0].loan_date);
                 $('#due_startdate_calc').val(response[0].due_startdate);
                 $('#maturity_date_calc').val(response[0].maturity_date);
+                $('#collection_method').val(response[0].collection_method);
                 $('#aadhar_num').val(response[0].aadhar_num);
                 $('#issue_person').val(response[0].issue_person);
                 $('#due_startdate_calc').attr('min', response[0].loan_date);

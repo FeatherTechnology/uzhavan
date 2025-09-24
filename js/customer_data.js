@@ -54,15 +54,15 @@ $(document).ready(function () {
         event.preventDefault();
 
         // Collect form data
-        let cus_name = $('#cus_name').val();
-        let area = $('#area').val();
+        let cust_name = $('#cust_name').val();
+        let cus_area = $('#cus_area').val();
         let mobile = $('#mobile').val();
         let loan_cat = $('#loan_cat').val();
         let loan_amount = $('#loan_amount').val();
         let new_promotion_id = $('#new_Promotion_id').val();
 
         // Fields to validate
-        var data = ['cus_name', 'area', 'mobile', 'loan_cat', 'loan_amount'];
+        var data = ['cust_name','cus_area', 'mobile', 'loan_cat', 'loan_amount'];
 
         // Validate fields
         var isValid = true;
@@ -89,7 +89,7 @@ $(document).ready(function () {
                     case 4: statusMsg = "Approved"; break;
                     case 5: statusMsg = "Cancel in Approval"; break;
                     case 6: statusMsg = "Revoke in Approval"; break;
-                    case 7: statusMsg = "Loan Issue"; break;
+                    case 7: statusMsg = "Loan Issued"; break;
                     case 8: statusMsg = "In Close"; break;
                     case 9: statusMsg = "Closed"; break;
                     case 10: statusMsg = "In NOC"; break;
@@ -97,6 +97,8 @@ $(document).ready(function () {
                     case 12: statusMsg = "NOC Removed"; break;
                     case 13: statusMsg = "Cancel in Loan Issue"; break;
                     case 14: statusMsg = "Revoke in Loan Issue"; break;
+                    case 15: statusMsg = "Collection"; break;
+                    case 16: statusMsg = "Collection"; break;
                     default: statusMsg = "Unknown Status"; break;
                 }
 
@@ -107,7 +109,7 @@ $(document).ready(function () {
             // If mobile does not exist and form is valid, proceed with submission
             if (isValid) {
                 $.post('api/customer_data_files/submit_new.php', {
-                    cus_name, area, mobile, loan_cat, loan_amount, new_promotion_id
+                    cust_name, cus_area, mobile, loan_cat, loan_amount, new_promotion_id
                 }, function (response) {
                     if (response == '1') {
                         swalSuccess('Success', 'Customer Data Added Successfully!');
@@ -234,21 +236,25 @@ $(function () {
 
 
 });
-function getAreaName() {
+function getUsermappedAreaName() {
     $.post('api/customer_data_files/get_usermapped_area.php', function (response) {
         let appendAreaOption = "<option value=''>Select Area Name</option>";
         let editArea = $('#area_edit').val();
-        $.each(response, function (index, val) {
-            let selected = (val.id == editArea) ? 'selected' : '';
-            appendAreaOption += `<option value="${val.id}" ${selected}>${val.areaname}</option>`;
-        });
-        $('#area').empty().append(appendAreaOption);
+
+        // response[0].areas contains your list
+        if (response.length > 0 && response[0].areas) {
+            $.each(response[0].areas, function (index, val) {
+                let selected = (val.area_id == editArea) ? 'selected' : '';
+                appendAreaOption += `<option value="${val.area_id}" ${selected}>${val.areaname}</option>`;
+            });
+        }
+
+        $('#cus_area').empty().append(appendAreaOption);
     }, 'json').fail(function (xhr, status, error) {
         console.error("Error fetching area list:", error);
-        reject(error); // reject the promise on error
     });
-
 }
+
 function getNewPromotionTable() {
     $.post('api/customer_data_files/get_new_promotion.php', function (response) {
         var columnMapping = [
@@ -763,17 +769,17 @@ async function editCustmerProfile(id) {
         $('#occupation').val(data.occupation);
         $('#occ_address').val(data.occ_address);
         $('#occ_detail').val(data.occ_detail);
-        $('#occ_income').val(data.occ_income);
+        $('#occ_income').val(moneyFormatIndia(data.occ_income));
         $('#area_confirm').val(data.area_confirm);
         $('#line').val(data.line);
-        $('#cus_limit').val(data.cus_limit);
+        $('#cus_limit').val(moneyFormatIndia(data.cus_limit));
         $('#about_cus').val(data.about_cus);
         $('#how_to_know').val(data.how_to_know);
-        $('#monthly_income').val(data.monthly_income);
-        $('#other_income').val(data.other_income);
-        $('#support_income').val(data.support_income);
-        $('#commitment').val(data.commitment);
-        $('#monthly_due_capacity').val(data.monthly_due_capacity);
+        $('#monthly_income').val(moneyFormatIndia(data.monthly_income));
+        $('#other_income').val(moneyFormatIndia(data.other_income));
+        $('#support_income').val(moneyFormatIndia(data.support_income));
+        $('#commitment').val(moneyFormatIndia(data.commitment));
+        $('#monthly_due_capacity').val(moneyFormatIndia(data.monthly_due_capacity));
 
         // Handle WhatsApp number radio selection
         if (data.whatsapp_no === data.mobile1) {

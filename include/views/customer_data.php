@@ -80,7 +80,7 @@
     <div class="card new_table_content">
         <div class="card-header">
             <div class="card-title">New Promotion List
-                <button type="button" class="btn btn-primary" id="add_new" name="add_new" data-toggle="modal" data-target="#add_new_list_modal" style="padding: 5px 35px; float: right;"><span class="icon-add"></span></button>
+                <button type="button" class="btn btn-primary" id="add_new" name="add_new" data-toggle="modal" data-target="#add_new_list_modal" style="padding: 5px 35px; float: right;" onclick="getUsermappedAreaName()"><span class="icon-add"></span></button>
             </div>
         </div>
         <div class="card-body">
@@ -501,7 +501,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" disabled placeholder="Enter Income" tabindex="24">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" disabled placeholder="Enter Income" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -710,7 +710,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit">Customer Limit</label>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
                                 </div>
                             </div>
                         </div>
@@ -859,16 +859,15 @@
                             <input type="hidden" name="new_promotion_id" id='new_promotion_id'>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="cus_name">Customer Name</label><span class="text-danger">*</span>
-                                    <input tye="text" class="form-control" name="cus_name" id="cus_name" tabindex="1" placeholder="Enter Customer Name">
+                                    <label for="cust_name">Customer Name</label><span class="text-danger">*</span>
+                                    <input tye="text" class="form-control" name="cust_name" id="cust_name" tabindex="1" placeholder="Enter Customer Name">
                                     <input type="hidden" id="addcus_name_id" value='0'>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="area">Area</label><span class="text-danger">*</span>
-                                    <input type="hidden" id="area_edit">
-                                    <select type="text" class="form-control" id="area" name="area" tabindex="1">
+                                    <label for="cus_area">Area</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="cus_area" name="cus_area" tabindex="1">
                                         <option value="">Select Area</option>
                                     </select>
                                 </div>
