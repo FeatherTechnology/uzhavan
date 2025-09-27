@@ -10,6 +10,8 @@ $(document).ready(function () {
             $('.existing_table_content').hide();
             $('.repromotion_table_content').hide();
             $('.filter_card').hide();
+            getNewPromotionTable();
+
         } else if (customerDataType == 'existing_list') {
             $('.new_table_content').hide();
             $('.existing_table_content').show();
@@ -43,7 +45,7 @@ $(document).ready(function () {
 
         let btnName = $("input[name='customer_data']:checked").val();
         if (btnName == 'existing_list') {
-            showPromotionList('api/customer_data_files/get_existing_promotion.php', 'existing_list_table', '15');
+            showPromotionList('api/customer_data_files/get_existing_promotion.php', 'existing_list_table', '14');
 
         } else if (btnName == 'repromotion_list') {
             showPromotionList('api/customer_data_files/get_repromotion_list.php', 'repromotion_list_table', '15');
@@ -62,7 +64,7 @@ $(document).ready(function () {
         let new_promotion_id = $('#new_Promotion_id').val();
 
         // Fields to validate
-        var data = ['cust_name','cus_area', 'mobile', 'loan_cat', 'loan_amount'];
+        var data = ['cust_name', 'cus_area', 'mobile', 'loan_cat', 'loan_amount'];
 
         // Validate fields
         var isValid = true;
@@ -114,6 +116,10 @@ $(document).ready(function () {
                     if (response == '1') {
                         swalSuccess('Success', 'Customer Data Added Successfully!');
                         $('#new_form input').val('').css('border', '1px solid #cecece');
+                        $('#new_form select').each(function () {
+                            $(this).val($(this).find('option:first').val());
+
+                        });
                     } else {
                         swalError('Error', 'Failed to add customer data.');
                     }
@@ -227,6 +233,39 @@ $(document).ready(function () {
     });
 
     ///////////////////////////////////Document History End/////////////////////
+    ///////new promotion///
+    $(document).off('click', '.new_intrest, .new_not-intrest').on('click', '.new_intrest, .new_not-intrest', function () {
+        let value = $(this).find('span').text().trim(); // Get span text
+        let new_id = $(this).data('cpid'); // customer id data-
+        $('#orgin_table').val('')
+        // Set values in modal fields
+        $('#promo_status').val(value);
+        $('#promo_cusprofile_id').val(new_id);
+
+        // set current date in promo_date
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let yyyy = today.getFullYear();
+        let formattedDate = dd + "-" + mm + "-" + yyyy;
+        $('#promo_date').val(formattedDate);
+        $.post('api/customer_data_files/get_usermapped_area.php', {}, function (response) {
+            if (response.length > 0) {
+                $('#promo_user_type').val(response[0].role);
+                $('#promo_user').val(response[0].username);
+
+            }
+        }, 'json');
+    });
+
+
+    $(document).off('click', '.new-promo-chart').on('click', '.new-promo-chart', function () {
+        let promo_id = $(this).attr('value');
+        $.post('api/customer_data_files/resetPromotionChart.php', { promo_id: promo_id }, function (html) {
+            $('#promoChartDiv').empty().html(html);
+        });
+    });
+
 })
 
 
@@ -256,22 +295,14 @@ function getUsermappedAreaName() {
 }
 
 function getNewPromotionTable() {
-    $.post('api/customer_data_files/get_new_promotion.php', function (response) {
-        var columnMapping = [
-            'sno',
-            'cus_name',
-            'area',
-            'mobile',
-            'loan_cat',
-            'loan_amount',
-            'action'
-        ];
-        appendDataToTable('#new_list_table', response, columnMapping);
-        setdtable('#new_list_table');
-        $('#new_form input').val('');
-        $('#new_form input').css('border', '1px solid #cecece');
-    }, 'json')
+    serverSideTable('#new_list_table', '', 'api/customer_data_files/get_new_promotion.php');
+
+    // Run after every draw (first load, pagination, search, sort)
+    $('#new_list_table').on('draw.dt', function () {
+        promotionChartColor('new_list_table', 8);
+    });
 }
+
 function getNewPromoDelete(id) {
     $.post('api/customer_data_files/delete_new_promotion.php', { id }, function (response) {
         if (response == '1') {
@@ -384,9 +415,9 @@ function getPersonalInfo(cus_id) {
     })
 }
 function promotionChartColor(tableid, colNo) {
+
     $(`#${tableid} tbody tr`).not('th').each(function () {
         var element = $(this).find(`td:eq(${colNo})`); // Get the text content of the 15th td element (Follow date)
-
         let tddate = element.text();
         let datecorrection = tddate.split("-").reverse().join("-").replaceAll(/\s/g, ''); // Correct the date format
         let values = new Date(datecorrection); // Create a Date object from the corrected date
@@ -438,7 +469,7 @@ function intNotintOnclick() {
     $(document).off('click', '.intrest, .not-intrest').on('click', '.intrest, .not-intrest', function () {
         let value = $(this).find('span').text().trim(); // Get span text
         let cus_id = $(this).data('id'); // customer id
-        let cp_id = $(this).data('cpid'); // customer id
+        let cp_id = $(this).data('cpid'); // customer id 
 
         // Set values in modal fields
         $('#promo_status').val(value);
@@ -478,6 +509,7 @@ function intNotintOnclick() {
             $("input[name='customer_data'][value='repromotion_list']").prop('checked', true).trigger('click');
         } else {
             $("input[name='customer_data'][value='new_list']").prop('checked', true).trigger('click');
+            $('#orgin_table').val('')
         }
     });
 }

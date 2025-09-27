@@ -17,9 +17,9 @@ $to_date = $_POST['toDate'];
             <?php
 
             $todate = new DateTime($to_date);
-            // Calculate Start date (12 months)
+            // Calculate Start date (15 months)
             $startDate = clone $todate;
-            $startDate->modify('-11 months'); //modify here for getting how many months to select
+            $startDate->modify('-14 months'); //modify here for getting how many months to select
 
             // Generate months between start and end dates
             $months = generateMonths($startDate, $todate);
@@ -95,6 +95,7 @@ $to_date = $_POST['toDate'];
    GROUP BY li.cus_profile_id 
    ORDER BY
        li.id ASC";
+
      //loan type 0 = calculation, 1 = Scheme and monthly loan =2. 
         $dailyData = $pdo->prepare($query);
         $dailyData->execute();

@@ -11,7 +11,7 @@ if ($id != '0' && $id != '') {
     $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
     $qry_info = $qry1->fetch();
     $company_name = $qry_info["company_name"];
-     $words = explode(" ", $company_name);
+    $words = explode(" ", $company_name);
 
     if (count($words) >= 2) {
         // Take first letter of first two words

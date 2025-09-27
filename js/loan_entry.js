@@ -1953,6 +1953,7 @@ async function existingCustmerProfile(aadhar_num) {
             getBankInfoTable();
             getPropertyInfoTable();
             $('.cus_status_div').show();
+            checkAdditionalRenewal(response.cus_id);
             let path = "uploads/loan_entry/cus_pic/";
             $('#per_pic').val(response.pic);
             var img = $('#imgshow');

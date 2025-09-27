@@ -82,26 +82,28 @@ class bulkUploadClass
             'doc_charge_calculate' => isset($Row[55]) ? $Row[55] : "",
             'processing_fees_calculate' => isset($Row[56]) ? $Row[56] : "",
             'net_cash' => isset($Row[57]) ? $Row[57] : "",
-            'loan_date' => isset($Row[58]) ? $Row[58] : "",
-            'dueStart_date' => isset($Row[59]) ? $Row[59] : "",
-            'maturity_date' => isset($Row[60]) ? $Row[60] : "",
-            'referred' => isset($Row[61]) ? $Row[61] : "",
-            'agent_id' => isset($Row[62]) ? $Row[62] : "",
-            'agent_name' => isset($Row[63]) ? $Row[63] : "",
-            'payment_type' => isset($Row[64]) ? $Row[64] : "",
-            'payment_mode' => isset($Row[65]) ? $Row[65] : "",
-            'balance_cash' => isset($Row[66]) ? $Row[66] : "",
-            'cash' => isset($Row[67]) ? $Row[67] : "",
-            'cheque_val' => isset($Row[68]) ? $Row[68] : "",
-            'transaction_val' => isset($Row[69]) ? $Row[69] : "",
-            'transaction_id' => isset($Row[70]) ? $Row[70] : "",
-            'cheque_no' => isset($Row[71]) ? $Row[71] : "",
-            'bank_name' => isset($Row[72]) ? $Row[72] : "",
-            'cheque_remark' => isset($Row[73]) ? $Row[73] : "",
-            'trans_remark' => isset($Row[74]) ? $Row[74] : "",
-            'issue_date' => isset($Row[75]) ? $Row[75] : "",
-            'issue_person' => isset($Row[76]) ? $Row[76] : "",
-            'relationship' => isset($Row[77]) ? $Row[77] : "",
+            'loan_date'        => isset($Row[58]) ? $Row[58] : "",
+            'dueStart_date'    => isset($Row[59]) ? $Row[59] : "",
+            'maturity_date'    => isset($Row[60]) ? $Row[60] : "",
+            'collection_method' => isset($Row[61]) ? $Row[61] : "",
+            'referred'         => isset($Row[62]) ? $Row[62] : "",
+            'agent_id'         => isset($Row[63]) ? $Row[63] : "",
+            'agent_name'       => isset($Row[64]) ? $Row[64] : "",
+            'payment_type'     => isset($Row[65]) ? $Row[65] : "",
+            'payment_mode'     => isset($Row[66]) ? $Row[66] : "",
+            'balance_cash'     => isset($Row[67]) ? $Row[67] : "",
+            'cash'             => isset($Row[68]) ? $Row[68] : "",
+            'cheque_val'       => isset($Row[69]) ? $Row[69] : "",
+            'transaction_val'  => isset($Row[70]) ? $Row[70] : "",
+            'transaction_id'   => isset($Row[71]) ? $Row[71] : "",
+            'cheque_no'        => isset($Row[72]) ? $Row[72] : "",
+            'bank_name'        => isset($Row[73]) ? $Row[73] : "",
+            'cheque_remark'    => isset($Row[74]) ? $Row[74] : "",
+            'trans_remark'     => isset($Row[75]) ? $Row[75] : "",
+            'issue_date'       => isset($Row[76]) ? $Row[76] : "",
+            'issue_person'     => isset($Row[77]) ? $Row[77] : "",
+            'relationship'     => isset($Row[78]) ? $Row[78] : "",
+
         );
 
 
@@ -118,7 +120,8 @@ class bulkUploadClass
         }
         $genderArray = ['Male' => '1', 'Female' => '2', 'Others' => '3'];
         $dataArray['gender'] = $this->arrayItemChecker($genderArray, $dataArray['gender']);
-
+        $collection_methodArray = ['Byself' => '1', 'On Spot' => '2', 'Cheque Collection' => '3', 'ECS' => '4'];
+        $dataArray['collection_method'] = $this->arrayItemChecker($collection_methodArray, $dataArray['collection_method']);
         $howToKnowArray = ['Customer Reference' => '1', 'Advertisement' => '2', 'Promotion activity' => '3', 'Agent Reference' => '4', 'Staff Reference' => '5', 'Other Reference' => '6', 'Renewal' => '7'];
         $dataArray['how_to_know'] = $this->arrayItemChecker($howToKnowArray, $dataArray['how_to_know']);
         if (!empty($dataArray['first_loan_date'])) {
@@ -233,8 +236,16 @@ class bulkUploadClass
             $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
             $qry_info = $qry1->fetch();
             $company_name = $qry_info["company_name"];
-            $str = preg_replace('/\s+/', '', $company_name);
-            $myStr = mb_substr($str, 0, 1);
+            $words = explode(" ", $company_name);
+
+            if (count($words) >= 2) {
+                // Take first letter of first two words
+                $myStr = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
+            } else {
+                // Take only first letter
+                $myStr = strtoupper(mb_substr($company_name, 0, 1));
+            }
+
             $qry = $pdo->query("SELECT max(cus_id) as cus_id FROM customer_profile WHERE 1");
             $row = $qry->fetch(PDO::FETCH_ASSOC);
 
@@ -247,7 +258,7 @@ class bulkUploadClass
                 $auto_cus_id = $myStr . "-" . $appno2;
             } else {
                 // If no branch codes exist, set an initial one
-                $initialapp = $myStr . "-101";
+                $initialapp = $myStr . "-1001";
                 $auto_cus_id = $initialapp;
             }
         }
@@ -383,10 +394,9 @@ class bulkUploadClass
     }
     function getBankId($pdo, $bank_name)
     {
-        $stmt = $pdo->query("SELECT b.id
-    FROM `loan_issue` si 
-    JOIN bank_creation b ON FIND_IN_SET(b.id, si.bank_name)
-    WHERE LOWER(REPLACE(TRIM(b.bank_name), ' ', '')) = LOWER(REPLACE(TRIM('$bank_name'), ' ', ''))");
+        $stmt = $pdo->query("SELECT id
+    FROM `bank_creation` 
+    WHERE LOWER(REPLACE(TRIM(bank_name), ' ', '')) = LOWER(REPLACE(TRIM('$bank_name'), ' ', ''))");
 
         if ($stmt->rowCount() > 0) {
             $bank_id = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
@@ -477,13 +487,13 @@ class bulkUploadClass
 
         $insert_vlc = "INSERT INTO loan_entry_loan_calculation (
             cus_profile_id, cus_id,  loan_id, loan_category, loan_amount, profit_type, due_method, due_type, profit_method, scheme_due_method, scheme_day, scheme_name, interest_rate, due_period, doc_charge, processing_fees,
-            loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, referred, agent_id, agent_name, insert_login_id, created_on, updated_on
+            loan_amnt, principal_amnt, interest_amnt, total_amnt, due_amnt, doc_charge_calculate, processing_fees_calculate, net_cash, loan_date, due_startdate, maturity_date, collection_method,referred, agent_id, agent_name, insert_login_id, created_on, updated_on
         ) VALUES (
             '" . strip_tags($cus_profile_id) . "', '" . strip_tags($data['cus_id']) . "','" . strip_tags($data['loan_id']) . "', '" . strip_tags($data['loan_category_id']) . "','" . strip_tags($data['loan_amount']) . "', '" . strip_tags($data['profit_type']) . "', '" . $due_method . "', '" . strip_tags($data['due_type']) . "',
             '" . strip_tags($data['profit_method']) . "','" . strip_tags($data['due_method_scheme']) . "','" . strip_tags($data['scheme_day']) . "','" . strip_tags($data['scheme_id']) . "',
             '" . strip_tags($data['interest_rate']) . "','" . strip_tags($data['due_period']) . "','" . strip_tags($data['doc_charge']) . "','" . strip_tags($data['processing_fees']) . "','" . strip_tags($data['loan_amount']) . "','" . strip_tags($data['principal_amnt']) . "',
             '" . strip_tags($data['interest_amnt']) . "', '" . strip_tags($data['total_amnt']) . "', '" . strip_tags($data['due_amnt']) . "', '" . strip_tags($data['doc_charge_calculate']) . "', '" . strip_tags($data['processing_fees_calculate']) . "',
-            '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date']) . "','" . strip_tags($data['maturity_date']) . "',
+            '" . strip_tags($data['net_cash']) . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['dueStart_date']) . "','" . strip_tags($data['maturity_date']) . "','" . strip_tags($data['collection_method']) . "',
             '" . strip_tags($data['referred']) . "','" . strip_tags($data['agent_table_id']) . "','" . strip_tags($data['agent_id']) . "','" . $user_id . "','" . strip_tags($data['loan_date']) . "','" . strip_tags($data['loan_date']) . "'
         )";
 
@@ -733,6 +743,9 @@ class bulkUploadClass
         }
         if ($data['guarantor_relationship'] == 'Not Found') {
             $errcolumns[] = 'Guarantor Relationship';
+        }
+        if ($data['collection_method'] == 'Not Found') {
+            $errcolumns[] = 'Collection Method';
         }
         return $errcolumns;
     }

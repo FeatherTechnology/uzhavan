@@ -95,6 +95,8 @@
                             <th>Loan Category</th>
                             <th>Loan Amount</th>
                             <th>Action</th>
+                            <th>Promotion Chart</th>
+                            <th>Follow Date</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

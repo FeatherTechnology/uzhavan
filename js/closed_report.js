@@ -11,6 +11,11 @@ $(document).ready(function () {
 
     //Closed Report Table
     $('#closed_report_btn').click(function () {
+
+         let from_date=$('#from_date').val();
+        let to_date=$('#to_date').val();
+        if(from_date!='' && to_date!=''){
+     
         // Check if download access is granted
         getUserAccess(function (downloadAccess) {
             // Destroy any existing DataTable instance
@@ -96,6 +101,11 @@ $(document).ready(function () {
                 }
             });
         });
+    }
+        else{
+            swalError('Please Fill Dates!', 'Both From and To dates are required.');
+
+        }
     });
 
 });

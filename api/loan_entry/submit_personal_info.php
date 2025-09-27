@@ -43,11 +43,11 @@ if ($qry->rowCount() > 0) {
     $status = $result['status'];  // Customer status from the customer_status table
 
     // If status is between 1 and 6, cus_status should be empty
-    if ($status >= 1 && $status <= 6 || $status == 14|| $status == 13) {
+    if ($status >= 1 && $status <= 6 || $status == 14 || $status == 13) {
         $cus_status = '';
     }
     // If status is 7 or 8, cus_status should be 'Additional'
-    else if (in_array($status, [7, 8, 15, 16]))  {
+    else if (in_array($status, [7, 8, 15, 16])) {
         $cus_status = 'Additional';
     }
     // If status is 9 or above, cus_status should be 'Renewal'
@@ -74,8 +74,16 @@ try {
         $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
         $qry_info = $qry1->fetch();
         $company_name = $qry_info["company_name"];
-        $str = preg_replace('/\s+/', '', $company_name);
-        $myStr = mb_substr($str, 0, 1);
+        $words = explode(" ", $company_name);
+
+        if (count($words) >= 2) {
+            // Take first letter of first two words
+            $myStr = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
+        } else {
+            // Take only first letter
+            $myStr = strtoupper(mb_substr($company_name, 0, 1));
+        }
+
         $row = $selectIC->fetch();
         $ac2 = $row["cus_id"];
 
