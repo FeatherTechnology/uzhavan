@@ -59,6 +59,17 @@ if (!empty($_FILES['sign_upload']['name'])) {
         }
     }
 }
+
+// Update take_status based on uploads
+$qryCheck = $pdo->query("SELECT COUNT(*) AS cnt FROM `signed_upload` WHERE signed_info_id = '$last_id'");
+$uploadCount = $qryCheck->fetch()['cnt'];
+
+if ($uploadCount > 0) {
+    $pdo->query("UPDATE `signed_doc_info` SET `take_status`='1' WHERE `id`='$last_id'");
+} else {
+    $pdo->query("UPDATE `signed_doc_info` SET `take_status`='0' WHERE `id`='$last_id'");
+}
+
 echo json_encode($result);
 
 // Close the database connection
