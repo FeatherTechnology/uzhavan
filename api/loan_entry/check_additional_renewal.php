@@ -8,7 +8,7 @@ $qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND
 if ($qry->rowCount() >0) {
     $result = "Additional"; //Additional
 }else{
-    $qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status >= 9 AND status IN (13,14)");
+    $qry = $pdo->query("SELECT * FROM `customer_status` WHERE cus_id = '$cus_id' AND status >= 9 AND status NOT IN (13,14)");
     if($qry->rowCount()>0){
         $result = "Renewal";
     }

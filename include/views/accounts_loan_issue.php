@@ -22,7 +22,7 @@
                         <th>Mobile</th>
                         <th>Loan Category</th>
                         <th>Loan Amount</th>
-                        <th>Customer Status</th>
+                        <th>Customer Data</th>
                         <th>Action</th>
                     </tr>
                 </thead>
