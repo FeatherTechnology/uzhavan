@@ -11,6 +11,7 @@ $cus_id = $_POST['cus_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
 $id = $_POST['id'];
 
+$picture = '';
 
 if (!empty($_FILES['doc_upload']['name'])) {
     $path = "../../uploads/loan_issue/doc_info/";
@@ -28,12 +29,14 @@ if (!empty($_FILES['doc_upload']['name'])) {
     $picture = (isset($_POST['doc_upload_edit'])) ? $_POST['doc_upload_edit'] : '';
 }
 
+$take_status = (!empty($picture)) ? 1 : 0;
+
 $status = 0;
 if ($id != '') {
-    $qry = $pdo->query("UPDATE `document_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`doc_name`='$doc_name',`doc_type`='$doc_type',`holder_name`='$doc_holder_name',`relationship`='$doc_relationship',`upload`='$picture',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
+    $qry = $pdo->query("UPDATE `document_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`doc_name`='$doc_name',`doc_type`='$doc_type',`holder_name`='$doc_holder_name',`relationship`='$doc_relationship',`upload`='$picture', `take_status`='$take_status',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
     $status = 1; //update
 } else {
-    $qry = $pdo->query("INSERT INTO `document_info`(`cus_id`,`cus_profile_id`,`doc_name`, `doc_type`, `holder_name`, `relationship`, `upload`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$doc_name','$doc_type','$doc_holder_name','$doc_relationship','$picture','$user_id',now())");
+    $qry = $pdo->query("INSERT INTO `document_info`(`cus_id`,`cus_profile_id`,`doc_name`, `doc_type`, `holder_name`, `relationship`, `upload`, `take_status`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$doc_name','$doc_type','$doc_holder_name','$doc_relationship','$picture','$take_status','$user_id',now())");
     $status = 2; //Insert
 }
 

@@ -65,4 +65,14 @@ if ($cheque_upd_no != '') {
     }
 }
 
+// Update take_status based on uploads
+$qryCheck = $pdo->query("SELECT COUNT(*) AS cnt FROM `cheque_upd` WHERE cheque_info_id = '$last_id'");
+$uploadCount = $qryCheck->fetch()['cnt'];
+
+if ($uploadCount > 0) {
+    $pdo->query("UPDATE `cheque_no_list` SET `take_status`='1' WHERE `cheque_info_id`='$last_id'");
+} else {
+    $pdo->query("UPDATE `cheque_no_list` SET `take_status`='0' WHERE `cheque_info_id`='$last_id'");
+}
+
 echo json_encode($status);

@@ -13,6 +13,7 @@ $key_original = $_POST['key_original'];
 $rc_original = $_POST['rc_original'];
 $id = $_POST['id'];
 
+$picture = '';
 
 if (!empty($_FILES['endorsement_upload']['name'])) {
     $path = "../../uploads/loan_issue/endorsement_info/";
@@ -30,12 +31,14 @@ if (!empty($_FILES['endorsement_upload']['name'])) {
     $picture = (isset($_POST['endorsement_upload_edit'])) ? $_POST['endorsement_upload_edit'] : '';
 }
 
+$take_status = (!empty($picture)) ? 1 : 0;
+
 $status = 0;
 if ($id != '') {
-    $qry = $pdo->query("UPDATE `endorsement_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`owner_name`='$owner_name',`relationship`='$owner_relationship',`vehicle_details`='$vehicle_details',`endorsement_name`='$endorsement_name',`key_original`='$key_original',`rc_original`='$rc_original',`upload`='$picture',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
+    $qry = $pdo->query("UPDATE `endorsement_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`owner_name`='$owner_name',`relationship`='$owner_relationship',`vehicle_details`='$vehicle_details',`endorsement_name`='$endorsement_name',`key_original`='$key_original',`rc_original`='$rc_original',`upload`='$picture',`take_status`='$take_status', `update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
     $status = 1; //update
 } else {
-    $qry = $pdo->query("INSERT INTO `endorsement_info`(`cus_id`, `cus_profile_id`, `owner_name`, `relationship`, `vehicle_details`, `endorsement_name`, `key_original`, `rc_original`, `upload`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$owner_name','$owner_relationship','$vehicle_details','$endorsement_name','$key_original','$rc_original','$picture','$user_id',now())");
+    $qry = $pdo->query("INSERT INTO `endorsement_info`(`cus_id`, `cus_profile_id`, `owner_name`, `relationship`, `vehicle_details`, `endorsement_name`, `key_original`, `rc_original`, `upload`, `take_status`, `insert_login_id`, `created_on`) VALUES ('$cus_id','$customer_profile_id','$owner_name','$owner_relationship','$vehicle_details','$endorsement_name','$key_original','$rc_original','$picture','$take_status','$user_id',now())");
     $status = 2; //Insert
 }
 

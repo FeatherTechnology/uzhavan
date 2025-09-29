@@ -15,6 +15,7 @@ $cus_id = $_POST['cus_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
 $id = $_POST['id'];
 
+$picture = '';
 
 if (!empty($_FILES['mort_upload']['name'])) {
     $path = "../../uploads/loan_issue/mortgage_info/";
@@ -32,12 +33,14 @@ if (!empty($_FILES['mort_upload']['name'])) {
     $picture = (isset($_POST['mort_upload_edit'])) ? $_POST['mort_upload_edit'] : ''; 
 }
 
+$take_status = (!empty($picture)) ? 1 : 0;
+
 $status = 0;
 if ($id != '') {
-    $qry = $pdo->query("UPDATE `mortgage_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`property_holder_name`='$property_holder_name',`relationship`='$mort_relationship',`property_details`='$mort_property_details',`mortgage_name`='$mortgage_name',`designation`='$mort_designation',`mortgage_number`='$mortgage_no',`reg_office`='$reg_office',`mortgage_value`='$mortgage_value',`upload`='$picture',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
+    $qry = $pdo->query("UPDATE `mortgage_info` SET `cus_id`='$cus_id',`cus_profile_id`='$customer_profile_id',`property_holder_name`='$property_holder_name',`relationship`='$mort_relationship',`property_details`='$mort_property_details',`mortgage_name`='$mortgage_name',`designation`='$mort_designation',`mortgage_number`='$mortgage_no',`reg_office`='$reg_office',`mortgage_value`='$mortgage_value',`upload`='$picture', `take_status`='$take_status', `update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id' ");
     $status = 1; //update
 } else {
-    $qry = $pdo->query("INSERT INTO `mortgage_info`(`cus_id`, `cus_profile_id`, `property_holder_name`, `relationship`, `property_details`, `mortgage_name`, `designation`, `mortgage_number`, `reg_office`, `mortgage_value`, `upload`, `insert_login_id`,  `created_on`) VALUES ('$cus_id','$customer_profile_id','$property_holder_name','$mort_relationship','$mort_property_details','$mortgage_name','$mort_designation','$mortgage_no','$reg_office','$mortgage_value','$picture','$user_id',now())");
+    $qry = $pdo->query("INSERT INTO `mortgage_info`(`cus_id`, `cus_profile_id`, `property_holder_name`, `relationship`, `property_details`, `mortgage_name`, `designation`, `mortgage_number`, `reg_office`, `mortgage_value`, `upload`, `take_status`, `insert_login_id`,  `created_on`) VALUES ('$cus_id','$customer_profile_id','$property_holder_name','$mort_relationship','$mort_property_details','$mortgage_name','$mort_designation','$mortgage_no','$reg_office','$mortgage_value','$picture', '$take_status','$user_id',now())");
     $status = 2; //Insert
 }
 
