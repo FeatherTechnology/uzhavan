@@ -7,12 +7,7 @@ $(document).ready(function () {
         getPersonalInfo(cusid);
         getNOCLoanList(cusid);
     });
-    $(document).on('click', '#remove-noc', function (event) {
-        event.preventDefault();
-        let cid = $(this).attr('value');
-        swalConfirm('Remove', 'Do you want to remove the NOC?', removenoc, cid);
-        return;
-    });
+   
     $('#back_to_noc_list').click(function (event) {
         event.preventDefault();
         getNOCList();
@@ -265,7 +260,7 @@ $(document).ready(function () {
 
             $.post('api/noc_files/submit_noc.php', nocData, function (response) {
                 if (response == '1') {
-                    swalSuccess('Success', 'NOC submitted successfully.');
+                    swalSuccessOk('Success', 'NOC submitted successfully.');
                     callAllFunctions(cpid);
                 } else {
                     swalError('Error', 'NOC submission failed.');
@@ -602,15 +597,4 @@ function validate() {
     let response = true;
 
     return response;
-}
-
-function removenoc(cid) {
-    $.post('api/common_files/move_to_next.php', { 'cus_sts': '12', 'cus_sts_id': cid }, function (response) {
-        if (response == '0') {
-            swalSuccess('Success', 'NOC Removed Successfully.');
-            getNOCList();
-        } else {
-            swalError('Error', 'Something went wrong. Please try again later.');
-        }
-    }, 'json');
 }

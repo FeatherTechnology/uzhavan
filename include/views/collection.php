@@ -1,16 +1,29 @@
+<style>
+    /* Remove hover and active highlight completely */
+    .dropdown-menu .dropdown-item:hover,
+    .dropdown-menu .dropdown-item:focus,
+    .dropdown-menu .dropdown-item:active {
+        background-color: transparent !important;
+        color: inherit !important;
+    }
+</style>
 <div class="row gutters">
     <div class="col-12">
         <div class="card" id="collection_list">
-            <div class="card-header">
-                <h5 class="card-title">Collection List</h5>
+            <!-- Add this inside your <head> -->
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Collection List</h5>
+                <div class="dropdown">
+                    <button class="border-0 bg-transparent" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-filter" style="color:#7CA5B8; font-size:30px;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
+                        <li><a class="dropdown-item filter-option" id="due_nill_btn" value="Due Nil" data-filter="DueNil">Due Nil</a></li>
+                        <li><a class="dropdown-item filter-option" id="all_btn" value="All" style="display: none;" data-filter="All">All</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top:13px">
-                <h4>Customer Status</h4>
-            </div>
-            <div class="col-12 sub_status" style="display: flex; align-items: center; justify-content: center; margin-top: 13px;">
-                <button type="button" class="btn btn-primary" id="due_nill_btn" value="Due Nil">Due Nill</button>
-                <button type="button" class="btn btn-primary" id="all_btn" value="All" style="display: none;">All</button>
-            </div>
+
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
@@ -312,6 +325,16 @@
                                     <div class="form-group">
                                         <label for="disabledInput">Collection ID</label>&nbsp;<span class="text-danger">*</span>
                                         <input type="text" readonly class="form-control" id="collection_id" name="collection_id" value='' tabindex='27'>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                        <select type="text" class="form-control" id="collection_method" name="collection_method" tabindex="45">
+                                            <option value="">Select Collection Format</option>
+                                            <option value="1"selected>BySelf</option>
+                                            <option value="2">On Spot</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

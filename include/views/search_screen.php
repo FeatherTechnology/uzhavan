@@ -72,6 +72,19 @@
             </form>
 
             <!----------------------------- CARD END SEARCH FORM------------------------------>
+            <div class="radio-container search_cus_fam" style="display:none">
+                <div class="selector">
+                    <div class="selector-item">
+                        <input type="radio" id="cus_list_radio" name="search_type" class="selector-item_radio" value="cus_list" checked>
+                        <label for="cus_list_radio" class="selector-item_label">Customer List</label>
+                    </div>
+                    <div class="selector-item">
+                        <input type="radio" id="fam_list_radio" name="search_type" class="selector-item_radio" value="fam_list">
+                        <label for="fam_list_radio" class="selector-item_label">Family List</label>
+                    </div>
+                </div>
+            </div>
+            <br>
             <div class="card" id="custome_list" style="display:none">
                 <div class="card-header">
                     <h5 class="card-title">Customer List</h5>
@@ -89,6 +102,28 @@
                                 <th>Line</th>
                                 <th>Mobile Number</th>
                                 <th>Action</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card" id="family_list" style="display:none">
+                <div class="card-header">
+                    <h5 class="card-title">Family List</h5>
+                </div>
+                <div class="card-body">
+                    <div class="col-12">
+                        <table id="fam_search_table" class="table custom-table">
+                            <thead>
+                                <th width="20">S No.</th>
+                                <th>Name</th>
+                                <th>Relationship</th>
+                                <th>Aadhar Number</th>
+                                <th>Mobile Number</th>
+                                <th>Under Customer Name</th>
+                                <th>Under Customer ID</th>
                             </thead>
                             <tbody>
                             </tbody>
@@ -766,7 +801,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="occ_income"> Income</label>
-                                    <input type="number" class="form-control" id="occ_income" name="occ_income" disabled placeholder="Enter Income" tabindex="24">
+                                    <input type="text" class="form-control" id="occ_income" name="occ_income" disabled placeholder="Enter Income" tabindex="24">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -975,7 +1010,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="cus_limit">Customer Limit</label>
-                                    <input type="number" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1068,7 +1103,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amount_calc"> Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" id="loan_amount_calc" name="loan_amount_calc" disabled tabindex="4">
+                                    <input type="text" class="form-control" id="loan_amount_calc" name="loan_amount_calc" disabled tabindex="4">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -1186,49 +1221,49 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="loan_amnt_calc">Loan Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="14" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="loan_amnt_calc" name="loan_amnt_calc" tabindex="14" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="principal_amnt_calc">Principal Amount</label><span class="text-danger princ-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="15" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="principal_amnt_calc" name="principal_amnt_calc" tabindex="15" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="interest_amnt_calc">Interest Amount</label><span class="text-danger int-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="16" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="interest_amnt_calc" name="interest_amnt_calc" tabindex="16" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="total_amnt_calc">Total Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="total_amnt_calc" name="total_amnt_calc" tabindex="17" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_amnt_calc">Due Amount</label><span class="text-danger due-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="due_amnt_calc" name="due_amnt_calc" tabindex="18" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="doc_charge_calculate">Document Charges</label><span class="text-danger doc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="19" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="doc_charge_calculate" name="doc_charge_calculate" tabindex="19" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="processing_fees_calculate">Processing Fees</label><span class="text-danger proc-diff">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="20" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="processing_fees_calculate" name="processing_fees_calculate" tabindex="20" readonly>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="net_cash_calc">Net Cash</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="21" readonly>
+                                    <input type="text" class="form-control refresh_loan_calc" id="net_cash_calc" name="net_cash_calc" tabindex="21" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1259,6 +1294,18 @@
                                 <div class="form-group">
                                     <label for="maturity_date_calc">Maturity Date</label><span class="text-danger">*</span>
                                     <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="24" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="collection_method" name="collection_method" disabled tabindex="45">
+                                        <option value="">Select Collection Format</option>
+                                        <option value="1">BySelf</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Cheque Collection</option>
+                                        <option value="4">ECS</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

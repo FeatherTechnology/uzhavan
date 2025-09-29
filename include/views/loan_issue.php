@@ -22,7 +22,7 @@
                         <th>Mobile</th>
                         <th>Loan Category</th>
                         <th>Loan Amount</th>
-                        <th>Customer Status</th>
+                        <th>Customer Data</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -103,6 +103,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12 mt-3 text-right">
+                                <button name="customer_profile" id="customer_profile" class="btn btn-primary">&nbsp;Customer Profile</button>
                             </div>
                         </div>
                     </div>
@@ -332,6 +335,18 @@
                                     <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="31" readonly>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="collection_method" name="collection_method" disabled tabindex="32">
+                                        <option value="">Select Collection Format</option>
+                                        <option value="1">BySelf</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Cheque Collection</option>
+                                        <option value="4">ECS</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -431,7 +446,7 @@
                                     <input type="text" class="form-control" name="issue_relationship" id="issue_relationship" tabindex="46" placeholder="Relationship" readonly>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" id ="finger_hide" style="display:none">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12" id="finger_hide" style="display:none">
                                 <div class="form-group">
 
                                     <!--Already Store in Finger Print Table... when select fam name above the finger print will be shown here to compare. -->
@@ -655,7 +670,503 @@
 </div>
 
 <!---------------------------------------------------------------------------Cancel and Revoke Modal End---------------------------------------------------------------->
+<!-- /////////////////////////////////////////////////////////////////// customer Profile start ////////////////////////////////////////////////////////////////////// -->
+<div id="loan_entry_content" style="display:none;">
+    <div class="text-right">
+        <button type="button" class="btn btn-primary" id="cus_back_btn"><span class="icon-arrow-left"></span>&nbsp; Back </button>
+        <br><br>
+    </div>
+    <form id="loan_entry_customer_profile" name="loan_entry_customer_profile">
+        <input type="hidden" id="customer_profile_id">
+        <div class="row gutters">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Personal Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cust_id"> Customer ID</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" id="cust_id" name="cust_id" data-type="adhaar-number" placeholder="Enter Customer ID" tabindex="1" maxlength="14" readonly>
+                                            <input type="hidden" id="cus_id_upd" name="cus_id_upd">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="adhar_num"> Aadhar Number</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" name="adhar_num" id="adhar_num" tabindex="2" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cust_name"> Customer Name</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control personal_info_disble" id="cust_name" name="cust_name" pattern="[a-zA-Z\s]+" placeholder="Enter Customer Name" tabindex=" 2" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_gender">Gender</label><span class="text-danger">*</span>
+                                            <select type="text" class="form-control  personal_info_disble" id="cus_gender" name="cus_gender" tabindex="3" readonly>
+                                                <option value="">Select Gender</option>
+                                                <option value="1">Male</option>
+                                                <option value="2">Female</option>
+                                                <option value="3">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_dob"> DOB</label>
+                                            <input type="date" class="form-control  personal_info_disble" id="cus_dob" name="cus_dob" placeholder="Enter Date Of Birth" tabindex="4" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_age"> Age</label>
+                                            <input type="number" class="form-control  personal_info_disble" id="cus_age" name="cus_age" readonly placeholder="Age" tabindex="5" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_mobile1"> Mobile Number 1</label><span class="text-danger">*</span>
+                                            <input type="number" class="form-control  personal_info_disble" id="cus_mobile1" name="cus_mobile1" placeholder="Enter Mobile Number 1" onKeyPress="if(this.value.length==10) return false;" tabindex="6" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_mobile2"> Mobile Number 2</label>
+                                            <input type="number" class="form-control  personal_info_disble" id="cus_mobile2" name="cus_mobile2" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter Mobile Number 2" tabindex="7" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label>Choose Mobile Number for WhatsApp:</label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile1" id="mobile1_radio" class="personal_info_disble" readonly>
+                                                Mobile Number 1
+                                            </label><br>
+                                            <label>
+                                                <input type="radio" name="mobile_whatsapp" value="mobile2" id="mobile2_radio" class="personal_info_disble" readonly>
+                                                Mobile Number 2
+                                            </label>
+                                            <input type="hidden" id="selected_mobile_radio">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="whatsapp_no"> WhatsApp Number </label>
+                                            <input type="number" class="form-control  personal_info_disble" id="whatsapp_no" name="whatsapp_no" onKeyPress="if(this.value.length==10) return false;" placeholder="Enter WhatsApp Number" tabindex="11" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="cus_pic"> Photo</label><span class="text-danger">*</span><br>
+                                            <img id='imgshow' class="img_show" src='img\avatar.png' />
+                                            <input type="hidden" class="personal_info_disble" id="pers_pic">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Family Info
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <table id="fam_info_table" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20">S.NO</th>
+                                                <th>Name</th>
+                                                <th>Relationship</th>
+                                                <th>Remarks</th>
+                                                <th>Age</th>
+                                                <th>Live/Deceased</th>
+                                                <th>Occupation</th>
+                                                <th>Aadhar No</th>
+                                                <th>Mobile No</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Guarantor Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="guarantor_name"> Guarantor Name</label><span class="text-danger" disabled>*</span>
+                                            <input type="hidden" id="guarantor_name_edit">
+                                            <select type="text" class="form-control" id="guarantor_name" name="guarantor_name" disabled tabindex="10">
+                                                <option value="">Select Guarantor Name</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="relationship"> Relationship</label><span class="text-danger">*</span>
+                                            <input type="text" class="form-control" id="relationship" name="relationship" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Relationship" tabindex="11">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <div class="form-group">
+                                            <label for="pic"> Photo</label><br>
+                                            <img id='gur_imgshow' class="img_show" src='img\avatar.png' />
+                                            <input type="hidden" id="gur_pic">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Resident Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="res_type">Residential Type</label>
+                                    <select type="text" class="form-control" id="res_type" name="res_type" tabindex="18" disabled>
+                                        <option value="">Select Residential Type</option>
+                                        <option value="1">Own</option>
+                                        <option value="2">Rental</option>
+                                        <option value="3">Lease</option>
+                                        <option value="4">Quaters</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="res_detail"> Residential Details </label>
+                                    <input type="text" class="form-control" id="res_detail" name="res_detail" pattern="[a-zA-Z\s]+" placeholder="Enter Residential Details" disabled tabindex="19">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="res_address"> Address </label>
+                                    <input type="text" class="form-control" id="res_address" name="res_address" placeholder="Enter Address" disabled tabindex="20">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="native_address"> Native Address </label>
+                                    <input type="text" class="form-control" id="native_address" name="native_address" placeholder="Enter Native Address" disabled tabindex="21">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Occupation Info</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="occupation"> Occupation </label>
+                                    <input type="text" class="form-control" id="occupation" name="occupation" pattern="[a-zA-Z\s]+" disabled placeholder="Enter Occupation" tabindex="22">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="occ_detail"> Occupation Detail</label>
+                                    <input type="text" class="form-control" id="occ_detail" name="occ_detail" disabled placeholder="Enter Occupation Detail " tabindex="23">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="occ_income"> Income</label>
+                                    <input type="number" class="form-control" id="occ_income" name="occ_income" disabled placeholder="Enter Income" tabindex="24">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="occ_address"> Address </label>
+                                    <input type="text" class="form-control" id="occ_address" name="occ_address" disabled placeholder="Enter Address" tabindex="25">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Area Confirmation</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="area_confirm">Area Confirm</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="area_confirm" name="area_confirm" disabled tabindex="26">
+                                        <option value="">Select Area Confirm</option>
+                                        <option value="1">Resident</option>
+                                        <option value="2">Occupation</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="area">Area</label><span class="text-danger">*</span>
+                                    <input type="hidden" id="area_edit">
+                                    <select type="text" class="form-control" id="area" name="area" tabindex="27" disabled>
+                                        <option value="">Select Area</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="line"> Line </label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="line" name="line" disabled placeholder="Enter line" tabindex="28">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Property Info
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <table id="prop_info" class="custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20">S.NO</th>
+                                                <th>Property</th>
+                                                <th>Property Detail</th>
+                                                <th>Property Holder</th>
+                                                <th>Relationship</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Bank Info
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <table id="cus_bank_info" class="custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20">S.No.</th>
+                                                <th>Bank Name</th>
+                                                <th>Branch Name</th>
+                                                <th>Account Holder Name</th>
+                                                <th>Account Number</th>
+                                                <th>IFSC Code</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">KYC Info <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group">
+                                    <table id="kyc_info" class="table custom-table">
+                                        <thead>
+                                            <tr>
+                                                <th width="20">S.NO</th>
+                                                <th>Proof Of</th>
+                                                <th>Relationship</th>
+                                                <th>Proof</th>
+                                                <th>Proof Number</th>
+                                                <th>Upload</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Customer Summary</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- How to Know -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="how_to_know">How To Know</label><span class="text-danger">*</span>
+                                    <select class="form-control" id="how_to_know" name="how_to_know" tabindex="29" disabled>
+                                        <option value="">Select How To Know</option>
+                                        <option value="1">Customer Reference</option>
+                                        <option value="2">Advertisement</option>
+                                        <option value="3">Promotion activity</option>
+                                        <option value="4">Agent Reference</option>
+                                        <option value="5">Staff Reference</option>
+                                        <option value="6">Other Reference</option>
+                                        <option value="7">Renewal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="cus_loan_count">Loan Count</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="cus_loan_count" name="cus_loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="cus_first_loan_date">First Loan Date</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="cus_first_loan_date" name="cus_first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
+                                <div class="form-group">
+                                    <label for="travel_with_company">Travel With Company</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="travel_with_company" name="travel_with_company" disabled tabindex="36" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_income">Monthly Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_income" name="monthly_income" placeholder=" Enter Monthly Income" tabindex="37" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="other_income">Other Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="other_income" name="other_income" placeholder="Enter Other Income" tabindex="38" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="support_income">Support Income</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="support_income" name="support_income" placeholder="Enter Support Income" tabindex="39" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="commitment">Commitment</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="commitment" name="commitment" placeholder="Enter Commitment" tabindex="40" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="monthly_due_capacity">Monthly Due Capacity</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="monthly_due_capacity" name="monthly_due_capacity" placeholder="Enter Due Capacity" tabindex="41" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="cus_limit">Customer Limit</label>
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" disabled tabindex="42" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                        </div> <br>
+
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="form-group table-responsive">
+                                    <table class="table custom-table" id="feedbackListTable">
+                                        <thead>
+                                            <tr>
+                                                <th width="50"> S.No </th>
+                                                <th> Feedback Label </th>
+                                                <th> Feedback </th>
+                                                <th> Remarks </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <!-- About Customer -->
+                        <div class="row">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="about_cus">About Customer</label>
+                                    <textarea class="form-control" name="about_cus" id="about_cus" placeholder="Enter About Customer" tabindex="43" readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- /////////////////////////////////////////////////////////////////// customer Profile END ////////////////////////////////////////////////////////////////////// -->
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!-- to get icons like fingerprint -->
 <!-- Old jQuery for MFS100 (fingerprint) -->

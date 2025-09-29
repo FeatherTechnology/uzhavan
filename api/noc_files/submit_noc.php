@@ -119,7 +119,7 @@ if($g_qry->rowCount() == $gold_list_cnt){
 
 if($sign_sts == '2' && $cheque_sts == '2' && $mort_sts == '2' && $endorse_sts =='2' && $doc_sts =='2' && $gold_sts =='2'){
     $status = '2';
-    $pdo->query("UPDATE `customer_status` SET `status`='11',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cpid'");
+    $pdo->query("UPDATE `customer_status` SET `status`='12',`update_login_id`='$user_id',`updated_on`=now() WHERE `cus_profile_id`='$cpid'");
 }else{
     $status = '1';
 }

@@ -29,6 +29,7 @@
 
 <?php
 require "../../ajaxconfig.php";
+include "../common_files/moneyformatIndia.php"; 
 $cus_profile_id = $_POST['cus_profile_id'];
 ?>
 <!---////////////////////////////////////////////////////////////////////////Personal Info start////////////////////////////////////////////////////////-->
@@ -290,7 +291,7 @@ if ($qry->rowCount() > 0) {
                     <td><?php echo $mortgage_info->designation; ?></td>
                     <td><?php echo $mortgage_info->mortgage_number; ?></td>
                     <td><?php echo $mortgage_info->reg_office; ?></td>
-                    <td><?php echo $mortgage_info->mortgage_value; ?></td>
+                    <td><?php echo moneyFormatIndia($mortgage_info->mortgage_value); ?></td>
                 </tr>
             <?php
             }
@@ -379,7 +380,7 @@ if ($qry->rowCount() > 0) {
                     <td><?php echo $gold_info->gold_type; ?></td>
                     <td><?php echo $gold_info->purity; ?></td>
                     <td><?php echo $gold_info->weight; ?></td>
-                    <td><?php echo $gold_info->value; ?></td>
+                    <td><?php echo moneyFormatIndia($gold_info->value); ?></td>
                 </tr>
             <?php
             }

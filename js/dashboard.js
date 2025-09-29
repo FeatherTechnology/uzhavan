@@ -154,12 +154,12 @@ function getLoanIssueCounts() {
 function getCollectionCounts() {
     let lineId = $('#line_id').val();
     $.post('api/dashboard_files/collection_details.php', { lineId }, function (response) {
-        $('#tot_paid').text(response['total_paid'])
-        $('#tot_penalty').text(response['total_penalty'])
-        $('#tot_fine').text(response['total_fine'])
-        $('#today_paid').text(response['today_paid'])
-        $('#today_penalty').text(response['today_penalty'])
-        $('#today_fine').text(response['today_fine'])
+        $('#tot_paid').text(moneyFormatIndia(response['total_paid']))
+        $('#tot_penalty').text(moneyFormatIndia(response['total_penalty']))
+        $('#tot_fine').text(moneyFormatIndia(response['total_fine']))
+        $('#today_paid').text(moneyFormatIndia(response['today_paid']))
+        $('#today_penalty').text(moneyFormatIndia(response['today_penalty']))
+        $('#today_fine').text(moneyFormatIndia(response['today_fine']))
     }, 'json').then(function () {
         // google.charts.load('current', { 'packages': ['bar'] });
         // google.charts.setOnLoadCallback(callCollectionChart);

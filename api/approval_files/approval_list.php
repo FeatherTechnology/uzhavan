@@ -12,6 +12,8 @@ $column = array(
     'lnc.linename',
     'bc.branch_name',
     'cp.mobile1',
+    'cp.cus_data',
+    'cp.id',
     'cp.id'
 );
 $query = "SELECT cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name,cp.cus_data, anc.areaname, lnc.linename, bc.branch_name ,lc.loan_category, cp.mobile1,lelc.loan_amount, lelc.id as loan_calc_id, lelc.loan_date ,cs.id as cus_sts_id, cs.status as c_sts 
@@ -78,6 +80,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['loan_category']) ? $row['loan_category'] : '';
     $sub_array[] = isset($row['loan_amount']) ? moneyFormatIndia($row['loan_amount']) : '';
     $sub_array[] = isset($row['cus_data']) ? $row['cus_data'] : '';
+    $sub_array[] = 'In Approval';
     $action = "<div class='dropdown'>
     <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
    <div class='dropdown-content'>";

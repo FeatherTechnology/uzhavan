@@ -65,6 +65,7 @@
                                             <button type="button" class="btn btn-primary modalBtnCss" id="line_modal_btn" onclick="getLineNameTable()"><span class="icon-add"></span></button>
                                         </div>
                                     </div>
+                                       <div class="col-md-3 col-sm-4"></div>
                                     <div class="col-md-3 col-sm-4">
                                         <div class="form-group">
                                             <label for="area_name">Area Name</label><span class="text-danger">*</span>

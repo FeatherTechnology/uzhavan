@@ -594,25 +594,25 @@ $(document).ready(function () {
         $('#age').val(age);
     });
 
-    $("#loan_id").change(function () {
-        const selectedOption = $(this).find("option:selected");
-        const guarantorName = selectedOption.data("guarantor");
-        const guPic = selectedOption.data("gupic");
-        const guPath = "uploads/loan_entry/gu_pic/";
+    // $("#loan_id").change(function () {
+    //     const selectedOption = $(this).find("option:selected");
+    //     const guarantorName = selectedOption.data("guarantor");
+    //     const guPic = selectedOption.data("gupic");
+    //     const guPath = "uploads/loan_entry/gu_pic/";
 
-        $('#guarantor_name_edit').val(guarantorName);
-        // Call function to load and preselect guarantor name
-        getGuarantorName();
-        // Set image in <img id="gur_imgshow"> and filename in <input id="gur_pic">
-        if (guPic) {
-            $('#gur_pic').val(guPic);
-            $('#gur_imgshow').attr('src', guPath + guPic);
-        } else {
-            $('#gur_pic').val('');
-            $('#gu_pic').val('');
-            $('#gur_imgshow').attr('src', 'img/avatar.png');
-        }
-    });
+    //     $('#guarantor_name_edit').val(guarantorName);
+    //     // Call function to load and preselect guarantor name
+    //     getGuarantorName();
+    //     // Set image in <img id="gur_imgshow"> and filename in <input id="gur_pic">
+    //     if (guPic) {
+    //         $('#gur_pic').val(guPic);
+    //         $('#gur_imgshow').attr('src', guPath + guPic);
+    //     } else {
+    //         $('#gur_pic').val('');
+    //         $('#gu_pic').val('');
+    //         $('#gur_imgshow').attr('src', 'img/avatar.png');
+    //     }
+    // });
 
     $('#guarantor_name').change(function () {
         var guarantorId = $(this).val();
@@ -684,22 +684,14 @@ $(document).ready(function () {
         let commitment = $('#commitment').val().replace(/,/g, '');
         let monthly_due_capacity = $('#monthly_due_capacity').val().replace(/,/g, '');
         let customer_profile_id = $('#customer_profile_id').val();
-        let loan_id = $('#loan_id').val();
+        // let loan_id = $('#loan_id').val();
 
         if (customer_profile_id === '') {
             swalError('Warning', 'Please Fill out personal Info!');
             return false;
         }
         let isValid = true;
-        if (loanidResponse === "true") {
-            let validationResults = [
-                validateField(loan_id, 'loan_id'),
-                validateField(guarantor_name, 'guarantor_name')
-            ];
-            if (!validationResults.every(result => result)) {
-                isValid = false;
-            }
-        }
+
         // Validate fields based on area_confirm value
         if (area_confirm == '1') {
             let validationResults = [
@@ -722,7 +714,8 @@ $(document).ready(function () {
                 isValid = false;
             }
         }
-        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity', 'cus_limit'];
+
+        data = ['cus_name', 'gender', 'mobile1', 'area_confirm', 'area', 'line', 'how_to_know', 'monthly_income', 'other_income', 'support_income', 'commitment', 'monthly_due_capacity', 'cus_limit', 'guarantor_name'];
 
         //  var isValid = true;
         data.forEach(function (entry) {
@@ -778,7 +771,6 @@ $(document).ready(function () {
             entryDetail.append('support_income', support_income);
             entryDetail.append('monthly_due_capacity', monthly_due_capacity);
             entryDetail.append('customer_profile_id', customer_profile_id);
-            entryDetail.append('loan_id', loan_id);
 
             // AJAX call to submit data
             $.ajax({
@@ -1093,9 +1085,9 @@ function getGuarantorName() {
             appendGuarantorOption += "<option value='" + val.id + "' " + selected + ">" + val.fam_name + "</option>";
         });
         $('#guarantor_name').empty().append(appendGuarantorOption);
-        $('#guarantor_name').trigger('change');
     }, 'json');
 }
+
 function getLoanId(selector) {
     return new Promise((resolve, reject) => {
         let cus_id = $('#cus_id_upd').val();
@@ -1109,7 +1101,7 @@ function getLoanId(selector) {
             } else {
                 // Loop through each returned record and build <option> tags
                 $.each(response, function (index, val) {
-                    appendLoanIdOption += `<option value="${val.cus_profile_id}" data-guarantor="${val.guarantor_name}" data-gupic="${val.gu_pic}">${val.loan_id}</option>`;
+                    appendLoanIdOption += `<option value="${val.cus_profile_id}">${val.loan_id}</option>`;
                 });
 
                 loanidResponse = "true"; // Loan IDs found
@@ -1670,15 +1662,17 @@ async function editCustmerProfile(id, cus_id) {
         dataCheckList(data.cus_id, data.cus_name, data.mobile1, data.aadhar_num);
         await getGuarantorName();
         await getAreaName();
-        await getLoanId('#loan_id')
+        // await getLoanId('#loan_id')
         getFamilyInfoTable();
         fingerprintTable();
         getPropertyInfoTable();
         getBankInfoTable();
         getKycInfoTable();
         getFeedBackInfoTable();
-        $('#loan_id').val(id);
-        $('#loan_id').trigger('change');
+        // $('#loan_id').val(id);
+        // $('#loan_id').trigger('change');
+        $('#guarantor_name').val(data.guarantor_name).trigger('change');
+
         $('#area').trigger('change');
 
         // Show/hide based on customer data

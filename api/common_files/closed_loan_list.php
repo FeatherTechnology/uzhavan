@@ -23,14 +23,14 @@ if ($qry->rowCount() > 0) {
         $closedDate = new DateTime($loanInfo['closed_date']);
         $loanInfo['closed_date'] = $closedDate->format('d-m-Y');
         $loanInfo['charts'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button><div class='dropdown-content'><a href='#' class='due-chart' value='" . $loanInfo['cus_profile_id'] . "'>Due Chart</a><a href='#' class='penalty-chart' value='" .
-            $loanInfo['cus_profile_id'] . "'>Penalty Chart</a><a href='#' class='fine-chart' value='" . $loanInfo['cus_profile_id'] . "'>Fine Chart</a></div></div>";
+            $loanInfo['cus_profile_id'] . "'>Penalty Chart</a><a href='#' class='fine-chart' value='" . $loanInfo['cus_profile_id'] . "'>Fine Chart</a><a href='#' class='commitment-chart' value='" . $loanInfo['cus_profile_id'] . "'>Commitment Chart</a><a href='#' class='loansummary-chart' value='" . $loanInfo['cus_profile_id'] . "'>Loan Summary Chart</a></div></div>";
 
         $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
         <div class='dropdown-content'>";
 
         if ($loanInfo['status'] == '8') {
 
-            $loanInfo['action'] .= "<a href='#' class='closed-view' value='" . $loanInfo['cus_profile_id'] . "'>Close</a>";
+            $loanInfo['action'] .= "<a href='#' class='closed-view' value='" . $loanInfo['cus_profile_id'] . "'>Close</a> <a href='#' class='loan-summary' value='" . $loanInfo['cus_profile_id'] . "'>Loan Summary</a>";
         }
 
         $loanInfo['action'] .= "</div></div>";

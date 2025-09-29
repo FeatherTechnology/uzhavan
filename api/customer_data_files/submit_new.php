@@ -1,8 +1,8 @@
 <?php
 require '../../ajaxconfig.php';
 @session_start();
-$cus_name = $_POST['cus_name']; 
-$area = $_POST['area'];
+$cus_name = $_POST['cust_name']; 
+$area = $_POST['cus_area'];
 $mobile = $_POST['mobile'];
 $loan_cat = $_POST['loan_cat'];
 $loan_amount=$_POST['loan_amount'];

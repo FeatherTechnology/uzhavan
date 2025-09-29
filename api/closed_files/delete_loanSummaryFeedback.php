@@ -3,8 +3,7 @@ require '../../ajaxconfig.php';
 
 $id = $_POST['id'];
 
-$qry = $pdo->query("DELETE FROM `customer_data` WHERE `id` = '$id'");
-$qry1 = $pdo->query("DELETE FROM `new_cus_promo` WHERE `promo_id` = '$id'");
+$qry = $pdo->query("DELETE FROM `loan_summary_feedback` WHERE `id` = '$id'");
 
 if ($qry) {
     $result = '1'; // Success

@@ -22,6 +22,7 @@
                         <th>Mobile</th>
                         <th>Loan Category</th>
                         <th>Loan Amount</th>
+                        <th>Customer Data</th>
                         <th>Customer Status</th>
                         <th>Action</th>
                     </tr>
@@ -1144,6 +1145,18 @@
                                 <div class="form-group">
                                     <label for="maturity_date_calc">Maturity Date</label><span class="text-danger">*</span>
                                     <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="24" readonly>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="collection_method" name="collection_method" tabindex="45">
+                                        <option value="">Select Collection Format</option>
+                                        <option value="1">BySelf</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Cheque Collection</option>
+                                        <option value="4">ECS</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

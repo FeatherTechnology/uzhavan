@@ -7,7 +7,7 @@ if (isset($_POST['cus_id'])) {
 
 $cp_arr = array();
 if (isset($cus_id)) {
-    $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7  and li.balance_amount = 0 ORDER BY li.cus_profile_id DESC ");
+    $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status IN(7,15,16)  and li.balance_amount = 0 ORDER BY li.cus_profile_id DESC ");
     while ($row = $qry->fetch()) {
         $cp_arr[] = $row['cp_id'];
     }
@@ -663,27 +663,36 @@ function getTillDateInterest($loan_arr, $response, $pdo, $data)
 
 function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
 {
-
     if ($response) {
         for ($i = 0; $i < count($response['pending_customer']); $i++) {
 
-            // $query = $pdo->query("SELECT cs.status AS cus_status FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status =7 ");
-            // $row = $query->fetch();
+            $query = $pdo->query("SELECT cs.status AS cus_status, cs.cus_profile_id 
+                                  FROM loan_issue li 
+                                  JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  
+                                  WHERE li.cus_id = '$cus_id'  AND cs.status IN (7,15,16)");
+            $row = $query->fetch();
             $curdate = date('Y-m-d');
 
-            if (date('Y-m-d', strtotime($loan_arr['due_startdate'])) > date('Y-m-d', strtotime($curdate))) { //If the start date is on upcoming date then the sub status is current, until current date reach due_start_from date.
+            // 🔹 Priority check: if status is 15 or 16
+            if ($row && $row['cus_status'] == 15) {
+                $response['follow_cus_sts'] = 'Error';
+                return $response['follow_cus_sts']; // exit immediately
+            } elseif ($row && $row['cus_status'] == 16) {
+                $response['follow_cus_sts'] = 'Legal';
+                return $response['follow_cus_sts']; // exit immediately
+            }
+
+            // 🔹 Normal flow
+            if (date('Y-m-d', strtotime($loan_arr['due_startdate'])) > $curdate) {
                 $response['follow_cus_sts'] = 'Current';
             } else {
-                if ($response['pending_customer'][$i] == true && $response['od_customer'][$i] == false) { //using i as 1 so subract it with 1
-
+                if ($response['pending_customer'][$i] == true && $response['od_customer'][$i] == false) {
                     $response['follow_cus_sts'] = 'Pending';
-                } else if ($response['od_customer'][$i] == true && $response['due_nil_customer'][$i] == false) {
+                } elseif ($response['od_customer'][$i] == true && $response['due_nil_customer'][$i] == false) {
                     $response['follow_cus_sts'] = 'OD';
                 } elseif ($response['due_nil_customer'][$i] == true) {
-
                     $response['follow_cus_sts'] = 'Due Nil';
-                } elseif ($response['pending_customer'][$i] == false) {
-
+                } else {
                     $response['follow_cus_sts'] = 'Current';
                 }
             }

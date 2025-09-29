@@ -6,8 +6,8 @@ $user_id = $_SESSION['user_id'];
 $from_date = $_POST['from_date'];
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 =>'Move',4 => 'Approved',5 => 'Cancel',6 => 'Revoke',7 => 'Current',8 => 'In Closed',9=>'Closed',10=>'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',13 => 'Cancel',14 => 'Revoke'];
-$sub_status = [''=>'',1=>'Consider',2=>'Reject'];
+$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed', 13 => 'Cancel', 14 => 'Revoke', 15 => 'Error', 16 => 'Legal'];
+$sub_status = ['' => '', 1 => 'Consider', 2 => 'Waiting List', 3 => 'Block List'];
 
 $column = array(
     'c.id',
@@ -137,10 +137,10 @@ foreach ($result as $row) {
     $sub_array[] = moneyFormatIndia(intval($row['coll_charge_track']));
     $sub_array[] = moneyFormatIndia(intval($row['total_paid_track']));
 
-    if ($row['status'] >= '8') {
+    if ($row['status'] >= 8 && !in_array($row['status'], [15, 16])) {
         $sub_array[] = 'Closed';
 
-        if ($row['sub_status'] != ''){
+        if (!empty($row['sub_status'])) {
             $sub_array[] = $sub_status[$row['sub_status']];
         } else {
             $sub_array[] = $status[$row['status']];
@@ -149,6 +149,8 @@ foreach ($result as $row) {
         $sub_array[] = 'Present';
         $sub_array[] = $status[$row['status']];
     }
+
+
 
     $data[]      = $sub_array;
     $sno = $sno + 1;

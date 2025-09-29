@@ -23,9 +23,9 @@ $cus_id = $_POST['cus_id'];
             <td><input type='hidden' id='name_print' name='name_print[]' value='<?php echo $cus_name; ?>'><?php echo 'Customer'; ?></td>
             <td>
                 <select type='text' id='hand_selection' name='hand_selection[]' class='btn hand_selection' style="border: #7CA5B8 1px solid;height: 38px;" tabindex='42'>
-                    <option value=''>Select Hand</option>
-                    <option value='1'>Left Hand</option>
-                    <option value='2'>Right Hand</option>
+                    <option value=''>Select Finger</option>
+                    <option value='1'>Finger 1</option>
+                    <option value='2'>Finger 2</option>
                 </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="button" class='btn btn-success scanBtn' style='background-color:#7CA5B8;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
                 <input type='hidden' id='fingerprint' name='fingerprint[]'>
@@ -45,9 +45,9 @@ $cus_id = $_POST['cus_id'];
                 <td><input type='hidden' id='name_print' name='name_print[]' value='<?php echo $row['fam_name']; ?>'><?php echo $row["fam_relationship"]; ?></td>
                 <td>
                     <select type='text' id='hand_selection' name='hand_selection[]' class='btn hand_selection' style="border: #7CA5B8 1px solid;height: 38px;" tabindex='42'>
-                        <option value=''>Select Hand</option>
-                        <option value='1'>Left Hand</option>
-                        <option value='2'>Right Hand</option>
+                        <option value=''>Select Finger</option>
+                        <option value='1'>Finger 1</option>
+                        <option value='2'>Finger 2</option>
                     </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <button type="button" class='btn btn-success scanBtn' style='background-color:#7CA5B8;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons">&#xe90d;</i>&nbsp;Scan</button>
                     <input type='hidden' id='fingerprint' name='fingerprint[]'>

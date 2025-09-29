@@ -198,14 +198,14 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="row">
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <!-- <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="loan_id">Loan ID</label><span class="text-danger">*</span>
                                             <select type="text" class="form-control" id="loan_id" name="loan_id" tabindex="1">
                                                 <option value="">Select Loan ID</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div class="form-group">
                                             <label for="guarantor_name"> Guarantor Name</label><span class="text-danger">*</span>
