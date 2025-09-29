@@ -36,7 +36,9 @@ if ($qry->rowCount() > 0) {
         $subStatusText = '';
 
         switch ($originalStatus) {
-            case '7' || '15' || '16':
+            case '7':
+            case '15':
+            case '16':
                 $subStatusText = $loanInfo['coll_status'];
                 break;
             case '8':

@@ -35,14 +35,16 @@ if ($qry->rowCount() > 0) {
         $subStatusText = '';
 
         switch ($originalStatus) {
-            case '7' || '15' || '16':
+            case '7':
+            case '15':
+            case '16':
                 $subStatusText = $loanInfo['coll_status'];
                 break;
             case '8':
                 $subStatusText = 'In Closed';
                 break;
             case '9':
-               $subStatus = $loanInfo['sub_status'];
+                $subStatus = $loanInfo['sub_status'];
                 if ($subStatus == '1') {
                     $subStatusText = 'Consider';
                 } elseif ($subStatus == '2') {
@@ -53,15 +55,14 @@ if ($qry->rowCount() > 0) {
                 break;
             case '10':
                 $subStatusText = 'Pending';
-                 break;
+                break;
             case '11':
                 $subStatusText = 'Completed';
-                 break;
+                break;
             case '12':
                 $subStatusText = 'Removed';
                 break;
         }
-
         $loanInfo['customer_sub_status'] = $subStatusText;
 
         $update_doc_list_arr[] = $loanInfo; // Append to the array
