@@ -2741,10 +2741,13 @@ function getChequeInfoTable() {
             "bank_name",
             "cheque_cnt",
             "cheque_no",
-            "upload"
+            "upload",
+            "availability",
+            "info"
         ]
         appendDataToTable('#cheque_info_table', response, chequeColumn);
         setdtable('#cheque_info_table');
+        setTempDocumentEvents();
     }, 'json');
 }
 
@@ -2800,10 +2803,13 @@ function getSignedDocInfoTable() {
             "sign_type",
             "signed_name",
             "doc_Count",
-            "upload"
+            "upload",
+            "availability",
+            "info"
         ]
         appendDataToTable('#signDocResetTable', response, signColumn);
         setdtable('#signDocResetTable');
+        setTempDocumentEvents();
     }, 'json');
 }
 
@@ -2851,10 +2857,13 @@ function getDocInfoTable() {
             "doc_type",
             "holder_name",
             "relationship",
-            "upload"
+            "upload",
+            "availability",
+            "info"
         ]
         appendDataToTable('#document_info', response, docColumn);
-        setdtable('#document_info')
+        setdtable('#document_info');
+        setTempDocumentEvents();
     }, 'json');
 }
 
@@ -2911,10 +2920,13 @@ function getMortInfoTable() {
             "mortgage_number",
             "reg_office",
             "mortgage_value",
-            "upload"
+            "upload",
+            "availability",
+            "info"
         ]
         appendDataToTable('#mortgage_info', response, mortgageColumn);
-        setdtable('#mortgage_info')
+        setdtable('#mortgage_info');
+        setTempDocumentEvents();
     }, 'json');
 }
 
@@ -2967,10 +2979,13 @@ function getEndorsementInfoTable() {
             "endorsement_name",
             "key_original",
             "rc_original",
-            "upload"
+            "upload",
+            "availability",
+            "info"
         ]
         appendDataToTable('#endorsement_info', response, endorsementColumn);
-        setdtable('#endorsement_info')
+        setdtable('#endorsement_info');
+        setTempDocumentEvents();
     }, 'json');
 }
 
@@ -3039,5 +3054,157 @@ function refreshGoldModal() {
     $('#clear_gold_form').trigger('click');
 }
 
+function setTempDocumentEvents() {
+
+    $('.temp-take-out, .temp-take-in').off('click');
+    $('.temp-take-out, .temp-take-in').click(function () {// to take values from table on click of buttons
+        let table_id = $(this).data('tableid');
+        let doc_type = $(this).data('doc');
+
+        let doc_obj = {//set of document path
+            'sign': 'uploads/loan_issue/signed_info/',
+            'cheque': 'uploads/loan_issue/cheque_info/',
+            'document': 'uploads/loan_issue/doc_info/',
+            'mortgage': 'uploads/loan_issue/mortgage_info/',
+            'endorsement': 'uploads/loan_issue/endorsement_info/'
+        }
+        let doc_path = doc_obj[doc_type];//assign path accoding to document type
+        let row = $(this).closest('tr');
+
+        let doc_link = $(this).parent().prev().prev().children().text();// to take document name
+        let doc_name = '';
+
+        // pick correct column based on table type
+        if (doc_type === 'mortgage') {
+            doc_name = row.find('td:eq(4)').text(); // Mortgage Name column index
+        } else if (doc_type === 'endorsement') {
+            doc_name = row.find('td:eq(4)').text(); // Endorsement Name column index
+        } else if (doc_type === 'document') {
+            doc_name = row.find('td:eq(1)').text(); // Document Name column index
+        } else if (doc_type === 'sign') {
+            doc_name = row.find('td:eq(1)').text(); // Doc Name column index
+        } else if (doc_type === 'cheque') {
+            doc_name = "Cheque"; // fixed name
+        }
+
+        $('#doc_name_tempout, #doc_name_tempin').val(doc_name);
+        $('#doc_tempout_link, #doc_tempin_link').parent().attr('href', doc_path + doc_link);// to set the path of file
+
+        $('#doc_tempout_link, #doc_tempin_link').val(doc_link);
+        $('#table_id_tempout, #table_id_tempin').val(table_id);
+        $('#table_name_tempout, #table_name_tempin').val(doc_type);
+    })
+
+    $('.closetempout, .closetempin').off('click');
+
+    $('.closetempout, .closetempin').click(function () {
+
+        // Clear values except date fields
+        $("#tempoutform").find("input, select").not('#tempout_date').val("");
+        $("#tempinform").find("input, select").not('#tempin_date').val("");
+
+        // Reset border color for all inputs/selects
+        $("#tempoutform").find("input, select").css('border', '1px solid #cecece');
+        $("#tempinform").find("input, select").css('border', '1px solid #cecece');
+    })
+
+    $('#tempout_submit, #tempin_submit').off('click');
+    $('#tempout_submit, #tempin_submit').click(function () {
+
+        let type = $(this).data('type');
+        if (type == 'take-out') {
+            submitForTakeOut();
+        } else if (type == 'take-in') {
+            submitForTakeIn();
+        }
+        function submitForTakeOut() {
+            let temp_person = $('#tempout_person').val();
+            let temp_purpose = $('#tempout_purpose').val();
+            let temp_remarks = $('#tempout_remarks').val();
+            let table_id = $('#table_id_tempout').val();
+            let table_name = $('#table_name_tempout').val();
+
+            var data = ['tempout_purpose', 'tempout_person', 'tempout_remarks'];
+            var isValid = true;
+            data.forEach(function (entry) {
+                var fieldIsValid = validateField($('#' + entry).val(), entry);
+                if (!fieldIsValid) {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                swalConfirm('Are you sure', 'To take this Document Out?',
+                    function () {
+                        $.ajax({
+                            url: 'api/update_customer_files/submitTempDocument.php',
+                            data: { "type": 'out', "table_id": table_id, "table_name": table_name, "temp_person": temp_person, "temp_purpose": temp_purpose, "temp_remarks": temp_remarks },
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            success: function (response) {
+                                if (response.includes('Successfully')) {
+                                    swalSuccess('success', 'Document Taken Out Successfully');
+                                    getSignedDocInfoTable();
+                                    getChequeInfoTable();
+                                    getDocInfoTable();
+                                    getMortInfoTable();
+                                    getEndorsementInfoTable();
+                                    $('.closetempout').trigger('click');
+                                } else if (response.includes('Error')) {
+                                    swalError('Warning', 'Error in Document Taking Out');
+                                }
+                            }
+                        })
+                    }
+                );
+            }
+        }
+
+        function submitForTakeIn() {
+            let temp_person = $('#tempin_person').val();
+            let temp_purpose = $('#tempin_purpose').val();
+            let temp_remarks = $('#tempin_remarks').val();
+            let table_id = $('#table_id_tempin').val();
+            let table_name = $('#table_name_tempin').val();
+
+            var data = ['tempin_purpose', 'tempin_person', 'tempin_remarks'];
+            var isValid = true;
+            data.forEach(function (entry) {
+                var fieldIsValid = validateField($('#' + entry).val(), entry);
+                if (!fieldIsValid) {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                swalConfirm('Are you sure', 'To take this Document In?',
+                    function () {
+                        $.ajax({
+                            url: 'api/update_customer_files/submitTempDocument.php',
+                            data: { "type": 'in', "table_id": table_id, "table_name": table_name, "temp_person": temp_person, "temp_purpose": temp_purpose, "temp_remarks": temp_remarks },
+                            type: 'post',
+                            dataType: 'json',
+                            cache: false,
+                            success: function (response) {
+                                if (response.includes('Successfully')) {
+                                    swalSuccess('success', 'Document Taken In Successfully');
+                                    getSignedDocInfoTable();
+                                    getChequeInfoTable();
+                                    getDocInfoTable();
+                                    getMortInfoTable();
+                                    getEndorsementInfoTable();
+                                    $('.closetempin').trigger('click');
+                                } else if (response.includes('Error')) {
+                                    swalError('Warning', 'Error in Document Taking Out');
+                                }
+                            }
+                        })
+                    }
+                );
+            }
+        }
+    });
+}
 
 //////////////////////////////////////////////

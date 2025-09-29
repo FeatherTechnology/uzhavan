@@ -750,6 +750,8 @@
                                                 <th> Relationship </th>
                                                 <th> Count </th>
                                                 <th> Upload</th>
+                                                <th> Availability</th>
+                                                <th> Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -786,6 +788,8 @@
                                                 <th>Cheque Count</th>
                                                 <th>Cheque Number</th>
                                                 <th>Upload</th>
+                                                <th>Availability</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -817,6 +821,8 @@
                                                 <th>Holder Name</th>
                                                 <th>Relationship</th>
                                                 <th>Upload</th>
+                                                <th>Availability</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -852,6 +858,8 @@
                                                 <th>Reg Office</th>
                                                 <th>Mortgage Value</th>
                                                 <th>Upload</th>
+                                                <th>Availability</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -885,6 +893,8 @@
                                                 <th>Key Original</th>
                                                 <th>RC Original</th>
                                                 <th>Upload</th>
+                                                <th>Availability</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -2074,3 +2084,149 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
+
+<!------------------------------------------------------------ Take document OUT Modal START --------------------------------------------------------------------->
+
+<div class="modal fade temp-take-out-modal " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<form method="POST" enctype="multipart/form-data" id="tempoutform">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="background-color: white">
+				<div class="modal-header">
+					<h5 class="modal-title" id=""> Document Take Out </h5>
+					<button type="button" class="close closetempout" data-dismiss="modal" aria-label="Close" onclick="">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="doc_name_tempout"> Document name </label>
+								<input type="text" class="form-control" id="doc_name_tempout" name="doc_name_tempout" value="" tabindex="1" readonly />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="doc_tempout_link"> Document </label>
+								<a href="" target='_blank' value="" tabindex="1">
+									<input type='text' class="form-control" id="doc_tempout_link" name="doc_tempout_link" readonly value="">
+								</a>
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempout_date"> Date </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempout_date" name="tempout_date" value="<?php echo date('d-m-Y'); ?>" tabindex="1" readonly />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempout_purpose"> Purpose </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempout_purpose" name="tempout_purpose" value="" tabindex="1" placeholder='Enter Purpose' />
+								<span class="text-danger" id="tempoutpurposeCheck" style='display:none'> Please Enter Purpose </span>
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempout_person"> Person </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempout_person" name="tempout_person" value="" tabindex="1" placeholder='Enter Person' />
+								<span class="text-danger" id="tempoutpersonCheck" style='display:none'> Please Enter Person </span>
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempout_remarks"> Remarks </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempout_remarks" name="tempout_remarks" value="" tabindex="1" placeholder='Enter Remarks' />
+								<span class="text-danger" id="tempoutremarksCheck" style='display:none'> Please Enter Remarks </span>
+							</div>
+						</div>
+						<div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-12">
+							<input type="hidden" name="table_id_tempout" id="table_id_tempout" value=''>
+							<input type="hidden" name="table_name_tempout" id="table_name_tempout" value=''>
+							<button type="button" name="tempout_submit" id="tempout_submit" data-type='take-out' class="btn btn-primary" style="margin-top: 19px;" tabindex="1">Submit</button>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary closetempout" data-dismiss="modal" tabindex='1'>Close</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<!------------------------------------------------------------------ Take document OUT Modal END ------------------------------------------------------------------------->
+
+<!-- ---------------------------------------------------------------- Take document IN Modal START ------------------------------------------------------------------------>
+
+<div class="modal fade temp-take-in-modal " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<form method="POST" enctype="multipart/form-data" id="tempinform">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content" style="background-color: white">
+				<div class="modal-header">
+					<h5 class="modal-title" id=""> Document Take In </h5>
+					<button type="button" class="close closetempin" data-dismiss="modal" aria-label="Close" onclick="">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="doc_name_tempin"> Document name </label>
+								<input type="text" class="form-control" id="doc_name_tempin" name="doc_name_tempin" value="" tabindex="1" readonly />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="doc_tempin_link"> Document </label>
+								<a href="" target='_blank' value="" tabindex="1">
+									<input type='text' class="form-control" id="doc_tempin_link" name="doc_tempin_link" readonly value="">
+								</a>
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempin_date"> Date </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempin_date" name="tempin_date" value="<?php echo date('d-m-Y'); ?>" tabindex="1" readonly />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempin_purpose"> Purpose </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempin_purpose" name="tempin_purpose" value="" tabindex="1" placeholder='Enter Purpose' />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempin_person"> Person </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempin_person" name="tempin_person" value="" tabindex="1" placeholder='Enter Person' />
+							</div>
+						</div>
+						<div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+							<div class="form-group">
+								<label for="tempin_remarks"> Remarks </label> <span class="required">&nbsp;*</span>
+								<input type="text" class="form-control" id="tempin_remarks" name="tempin_remarks" value="" tabindex="1" placeholder='Enter Remarks' />
+							</div>
+						</div>
+						<div class="col-xl-2 col-lg-2 col-md-4 col-sm-4 col-12">
+							<input type="hidden" name="req_id_tempin" id="req_id_tempin" value=''>
+							<input type="hidden" name="cus_id_tempin" id="cus_id_tempin" value=''>
+							<input type="hidden" name="table_id_tempin" id="table_id_tempin" value=''>
+							<input type="hidden" name="table_name_tempin" id="table_name_tempin" value=''>
+							<button type="button" name="tempin_submit" id="tempin_submit" data-type='take-in' class="btn btn-primary" style="margin-top: 19px;" tabindex="1">Submit</button>
+						</div>
+
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary closetempin" data-dismiss="modal" onclick="" tabindex='1'>Close</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!--------------------------------------------------------------- Take document IN Modal END --------------------------------------------------------------------------->
