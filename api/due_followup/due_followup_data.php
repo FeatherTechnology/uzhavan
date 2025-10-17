@@ -14,6 +14,12 @@ $qry_cndtn = "";
 if (isset($_POST['params']['comm_date'])) {
     $comm_date = $_POST['params']['comm_date']; // Get the comm_date from the form
 
+    $commitmentCondition = "";
+    if (!empty($comm_date) && $comm_date != 1) {
+        $commitmentCondition = " AND (commitment_date IS NOT NULL AND commitment_date != '0000-00-00')";
+    }
+
+
     if ($comm_date == '2') { //Before Date
         $qry_cndtn = "AND cm.commitment_date < '$current_date' AND (cm.commitment_date IS NOT NULL AND  cm.commitment_date != '0000-00-00') ";
     } elseif ($comm_date == '3') { //Today
@@ -54,15 +60,19 @@ $query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linen
      LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
     JOIN users u ON FIND_IN_SET(cp.line, u.line) 
-  LEFT JOIN (
+LEFT JOIN (
     SELECT c1.*
     FROM commitment c1
     INNER JOIN (
         SELECT cus_id, MAX(created_date) AS max_date
-        FROM commitment 
+        FROM commitment
+        WHERE 1=1 $commitmentCondition
         GROUP BY cus_id
-    ) c2 ON c1.cus_id = c2.cus_id AND c1.created_date = c2.max_date
-) cm ON cp.cus_id = cm.cus_id
+    ) c2 
+    ON c1.cus_id = c2.cus_id AND c1.created_date = c2.max_date
+) cm 
+ON cp.cus_id = cm.cus_id
+
 WHERE
     cs.payable_amnt > 0 AND cs.status IN (7,15,16) AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  ";
 
@@ -80,7 +90,6 @@ if (isset($_POST['search'])) {
 }
 
 $query .= "GROUP BY cp.cus_id";
-
 
 if (isset($_POST['order'])) {
     $query .= " ORDER BY " . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'];
