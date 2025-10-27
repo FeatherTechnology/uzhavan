@@ -21,6 +21,7 @@ $(document).ready(function () {
         $('#upload_edit').val('')  
         $('#upload_edit').html('');
         $('.submit_concern').show();
+        $('.con_upload_div').hide();
         try {
             const response = await $.ajax({
                 url: 'api/concern_creation_files/concern_creation_data.php',
@@ -73,6 +74,7 @@ $(document).ready(function () {
         $('#sol_remark').val('').prop('readonly', false)
         $('#upload_edit').val('')  
         $('#upload_edit').html('');
+        $('.con_upload_div').hide();
             
         $('.submit_concern').show();
 

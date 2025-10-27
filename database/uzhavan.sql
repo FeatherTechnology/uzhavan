@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql8010.site4now.net
--- Generation Time: Oct 17, 2025 at 04:32 AM
+-- Generation Time: Oct 17, 2025 at 05:51 AM
 -- Server version: 8.0.36
 -- PHP Version: 8.3.8
 
@@ -423,6 +423,57 @@ CREATE TABLE `company_creation` (
   `update_user_id` int DEFAULT NULL,
   `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `concern_creation`
+--
+
+CREATE TABLE `concern_creation` (
+  `id` int NOT NULL,
+  `raising_for` int NOT NULL,
+  `aadhar_num` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cus_id` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `cus_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `area` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `line` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `mobile` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `con_code` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `concern_date` date NOT NULL,
+  `concern_to` int NOT NULL,
+  `con_sub` int NOT NULL,
+  `con_remark` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `branch_name` int NOT NULL,
+  `assign_to` int NOT NULL,
+  `assign_role` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `sol_date` date DEFAULT NULL,
+  `communication` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `concern_upload` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `sol_remark` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `con_status` int NOT NULL DEFAULT '0',
+  `insert_login_id` int NOT NULL,
+  `update_login_id` int DEFAULT NULL,
+  `created_on` date NOT NULL,
+  `updated_on` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `concern_subject`
+--
+
+CREATE TABLE `concern_subject` (
+  `con_sub_id` int NOT NULL,
+  `concern_subject` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` int NOT NULL DEFAULT '0',
+  `insert_login_id` int DEFAULT NULL,
+  `update_login_id` int DEFAULT NULL,
+  `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_on` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1296,7 +1347,8 @@ CREATE TABLE `role` (
 --
 
 INSERT INTO `role` (`id`, `role`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Staff', 1, NULL, '2025-05-08', NULL);
+(1, 'Staff', 1, NULL, '2025-05-08', NULL),
+(2, 'Admin', 1, NULL, '2025-10-17', NULL);
 
 -- --------------------------------------------------------
 
@@ -1814,8 +1866,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`, `collection_access`, `download_access`, `screens`, `insert_login_id`, `update_login_id`, `created_on`, `updated_on`) VALUES
-(1, 'Super Admin', 'US-001', 1, 1, '', '', '', '', 'admin', '123', '1', '1,2', '1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,28,21,22,23,24,25,27,26', '1', '1', '2024-06-13', '2025-09-29'),
-(10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26', '1', NULL, '2025-01-29', NULL);
+(1, 'Super Admin', 'US-001', 2, 1, '', '', '', '', 'admin', '123', '1', '1,2', '1,2', 1, 1, '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,28,21,22,23,24,25,27,26,31', '1', '1', '2024-06-13', '2025-09-29'),
+(10, 'Test1', 'US-002', 1, 1, '', '', '', '', 'Test', '123', '', '1', '1', 2, 2, '1,4,5,9,10,11,12,13,14,15,18,19,20,21,22,23,24,26,31', '1', NULL, '2025-01-29', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1934,6 +1986,18 @@ ALTER TABLE `company_creation`
   ADD KEY `State ids` (`state`),
   ADD KEY `District ids` (`district`),
   ADD KEY `Taluk ids` (`taluk`);
+
+--
+-- Indexes for table `concern_creation`
+--
+ALTER TABLE `concern_creation`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `concern_subject`
+--
+ALTER TABLE `concern_subject`
+  ADD PRIMARY KEY (`con_sub_id`);
 
 --
 -- Indexes for table `customer_data`
@@ -2294,6 +2358,18 @@ ALTER TABLE `company_creation`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `concern_creation`
+--
+ALTER TABLE `concern_creation`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `concern_subject`
+--
+ALTER TABLE `concern_subject`
+  MODIFY `con_sub_id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `customer_data`
 --
 ALTER TABLE `customer_data`
@@ -2489,7 +2565,7 @@ ALTER TABLE `property_info`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `scheme`
