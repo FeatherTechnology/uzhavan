@@ -49,54 +49,54 @@ $(document).ready(function () {
     });
 
     /////////////////////////////////////////////////////////// Concern Subject Modal START ///////////////////////////////////////////////////////////////////////
-    $('#submit_subject').click(function (event) {
-        event.preventDefault();
-        let con_sub = $('#con_sub').val(); let id = $('#sub_id').val();
-        var data = ['con_sub']
-        var isValid = true;
-        data.forEach(function (entry) {
-            var fieldIsValid = validateField($('#' + entry).val(), entry);
-            if (!fieldIsValid) {
-                isValid = false;
-            }
-        });
-        if (con_sub != '') {
-            if (isValid) {
-                $.post('api/concern_creation_files/submit_concern_subject.php', { con_sub, id }, function (response) {
-                    if (response == '0') {
-                        swalError('Warning', 'Concern Subject Already Exists!');
-                    } else if (response == '1') {
-                        swalSuccess('Success', 'Concern Subject Updated Successfully!');
-                    } else if (response == '2') {
-                        swalSuccess('Success', 'Concern Subject Added Successfully!');
-                    }
+    // $('#submit_subject').click(function (event) {
+    //     event.preventDefault();
+    //     let con_sub = $('#con_sub').val(); let id = $('#sub_id').val();
+    //     var data = ['con_sub']
+    //     var isValid = true;
+    //     data.forEach(function (entry) {
+    //         var fieldIsValid = validateField($('#' + entry).val(), entry);
+    //         if (!fieldIsValid) {
+    //             isValid = false;
+    //         }
+    //     });
+    //     if (con_sub != '') {
+    //         if (isValid) {
+    //             $.post('api/concern_creation_files/submit_concern_subject.php', { con_sub, id }, function (response) {
+    //                 if (response == '0') {
+    //                     swalError('Warning', 'Concern Subject Already Exists!');
+    //                 } else if (response == '1') {
+    //                     swalSuccess('Success', 'Concern Subject Updated Successfully!');
+    //                 } else if (response == '2') {
+    //                     swalSuccess('Success', 'Concern Subject Added Successfully!');
+    //                 }
 
-                    getConcernSubjectTable();
-                }, 'json');
-                clearSubject(); //To Clear All Fields in Role creation.
-            }
-        }
-    });
+    //                 getConcernSubjectTable();
+    //             }, 'json');
+    //             clearSubject(); //To Clear All Fields in Role creation.
+    //         }
+    //     }
+    // });
 
-    $(document).on('click', '.subjectActionBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        $.post('api/concern_creation_files/get_subject_data.php', { id }, function (response) {
-            $('#sub_id').val(id);
-            $('#con_sub').val(response[0].concern_subject);
-        }, 'json');
-    });
+    // $(document).on('click', '.subjectActionBtn', function () {
+    //     var id = $(this).attr('value'); // Get value attribute
+    //     $.post('api/concern_creation_files/get_subject_data.php', { id }, function (response) {
+    //         $('#sub_id').val(id);
+    //         $('#con_sub').val(response[0].concern_subject);
+    //     }, 'json');
+    // });
 
-    $(document).on('click', '.subjectDeleteBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        swalConfirm('Delete', 'Do you want to Delete the Subject Creation?', deleteSubject, id);
-        return;
-    });
+    // $(document).on('click', '.subjectDeleteBtn', function () {
+    //     var id = $(this).attr('value'); // Get value attribute
+    //     swalConfirm('Delete', 'Do you want to Delete the Subject Creation?', deleteSubject, id);
+    //     return;
+    // });
     /////////////////////////////////////////////////////////// Concern Subject Modal END ///////////////////////////////////////////////////////////////////////
 
     $('#raising_for').on('change', function () {
         var raising_for = this.value;
         $('#aadhar_num').val('');
-        $('#user_name').val('');
+        $('#user_name').val('').prop('disabled', true);
         $('#cus_name').val('').prop('disabled', true);
         $('#area').val('').prop('disabled', true);
         $('#mobile1').val('').prop('disabled', true);
@@ -149,13 +149,13 @@ $(document).ready(function () {
         }
     });
 
-    // assign_to change
-    $('#assign_to').change(function () {
-        var assign_to = $(this).val();
-        if (assign_to !== '' && assign_to != 0) {
-            getConcernRole(assign_to, 'assign_role');  // 👈 sets #assign_role
+    // designation change
+    $('#designation').change(function () {
+        var designation = $(this).val();
+        if (designation !== '' && designation != 0) {
+            getAssignName(designation,'')
         } else {
-            $('#assign_role').val('');
+            $('#assign_to').val('');
         }
     })
 
@@ -178,13 +178,12 @@ $(document).ready(function () {
             concern_subject: $('#concern_subject').val(),
             con_remark: $('#con_remark').val(),
             concern_to: $('#concern_to').val(),
-            branch_name: $('#branch_name').val(),
             assign_to: $('#assign_to').val(),
-            assign_role: $('#assign_role').val()
+            designation: $('#designation').val()
         };
 
         // Required fields
-        let data = ['concern_date', 'con_remark', 'con_code', 'raising_for', 'concern_subject', 'assign_to', 'assign_role', 'concern_date', 'branch_name', 'concern_to'];
+        let data = ['concern_date', 'con_remark', 'con_code', 'raising_for', 'concern_subject', 'assign_to', 'concern_date', 'designation', 'concern_to'];
 
         if (raising_for == 1) {
             data = data.concat(['aadhar_num', 'auto_gen_cus_id', 'cus_name', 'area', 'line', 'mobile1']);
@@ -203,7 +202,7 @@ $(document).ready(function () {
 
         if (isValid) {
             $.post('api/concern_creation_files/submit_concern_creation.php', formData, function (response) {
-                if (response === '2') {
+                if (response == '2') {
                     swalSuccess('Success', 'Concern Creation Added Successfully!');
                 } else {
                     swalError('Error', 'Error Occurred!');
@@ -226,7 +225,7 @@ $(document).ready(function () {
         $('#back_btn').show();
         $('.concern_table_content').hide();
         $('#add_concern').hide();
-        $('#add_subject_btn').prop('disabled', true);
+        // $('#add_subject_btn').prop('disabled', true);
 
         try {
             const response = await $.ajax({
@@ -248,26 +247,28 @@ $(document).ready(function () {
 
 
 
-            await getConcernSubjectDropdown(data.con_sub);
+             await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
-            await getBranchName(data.branch_name);
+            await getConcernDesignation(data.assign_designation);
 
             // disable selects (use disabled, not readonly)
             $('#raising_for').val(data.raising_for).prop('disabled', true).trigger('change');
             $('#concern_subject').prop('disabled', true);
-            $('#branch_name').val(data.branch_name).prop('disabled', true);
+            $('#designation').val(data.assign_designation).prop('disabled', true);
+            $('#assign_to').prop('disabled', true)
             
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-            if (data.assign_role == 'Staff') {
-                await getStaffDropdown('assign_to', data.assign_to);
-            } else {
-                await getAssignName(data.assign_to);
+           await getAssignName(data.assign_designation,data.assign_to);
+            // if (data.assign_role == 'Staff') {
+            //     await getStaffDropdown('assign_to', data.assign_to);
+            // } else {
+            //     await getAssignName(data.assign_to);
 
-            }
-            $('#assign_to').prop('disabled', true).trigger('change');
+            // }
+            // $('#assign_to').prop('disabled', true).trigger('change');
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
         }
@@ -292,9 +293,8 @@ function swapTableAndCreation() {
         $('#back_btn').show();
         getConcernCode()
         getConcernTo()
-        getBranchName()
-        getAssignName()
-        getConcernSubjectDropdown()
+        getConcernDesignation()
+         getConcernSubjectDropdown()
 
     } else {
         $('.concern_table_content').show();
@@ -304,23 +304,23 @@ function swapTableAndCreation() {
     }
 }
 
-function clearSubject() {
-    $('#con_sub').val('');
-    $('#sub_id').val('0');
-    $('#con_sub').css('border', '1px solid #cecece');
-}
+// function clearSubject() {
+//     $('#con_sub').val('');
+//     $('#sub_id').val('0');
+//     $('#con_sub').css('border', '1px solid #cecece');
+// }
 
-function getConcernSubjectTable() {
-    $.post('api/concern_creation_files/get_subject_list.php', function (response) {
-        let concerSubColumn = [
-            "sno",
-            "concern_subject",
-            "action"
-        ]
-        appendDataToTable('#con_sub_table', response, concerSubColumn);
-        setdtable('#con_sub_table');
-    }, 'json');
-}
+// function getConcernSubjectTable() {
+//     $.post('api/concern_creation_files/get_subject_list.php', function (response) {
+//         let concerSubColumn = [
+//             "sno",
+//             "concern_subject",
+//             "action"
+//         ]
+//         appendDataToTable('#con_sub_table', response, concerSubColumn);
+//         setdtable('#con_sub_table');
+//     }, 'json');
+// }
 async function getConcernSubjectDropdown(subject_name_id) {
     try {
         const response = await $.ajax({
@@ -390,20 +390,31 @@ function getConcernCode() {
 }
 
 
-function getBranchName(branch_name_id) {
-    $.post('api/common_files/get_branch_list.php', function (response) {
-        let appendBarnchNameOption = '';
-        appendBarnchNameOption += '<option value="">Select Branch Name</option>';
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (val.id == branch_name_id) {
-                selected = 'selected';
-            }
-            appendBarnchNameOption += '<option value="' + val.id + '" ' + selected + '>' + val.branch_name + '</option>';
-        });
-        $('#branch_name').empty().append(appendBarnchNameOption);
-    }, 'json');
+function getConcernDesignation(concern_design_id) {
+
+    let assign_des = 'Director,Admin,Manager,TL,Training TL,Executive Director';
+
+    $.post(
+        'api/concern_creation_files/getConcernDesignation.php',
+        {
+            assign_des: assign_des,
+            selected_id: concern_design_id   // <-- Pass selected id
+        },
+        function (response) {
+            let html = '<option value="">Select Assign Designation</option>';
+
+            $.each(response, function (index, val) {
+                let selected = (val.id == concern_design_id) ? 'selected' : '';
+                html += `<option value="${val.id}" ${selected}>${val.designation}</option>`;
+            });
+
+            $('#designation').html(html);
+        },
+        'json'
+    );
 }
+
+
 
 
 function getConcernRole(userId, targetField) {
@@ -430,7 +441,7 @@ function getConcernTo(name_id) {
         dataType: 'json',
         cache: false
     }).done(function (response) {
-        let html = '<option value="">Select Concern To</option>';
+        let html = '<option value="">Select Concern Against</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
@@ -451,36 +462,56 @@ function getStaffDropdown(targetId, selectedId = '') {
         dataType: 'json',
         cache: false
     }).done(function (response) {
+
+        // If target field is INPUT instead of SELECT
+        if ($('#' + targetId).is('input')) {
+
+            // if only one staff
+            if (response.length == 1) {
+                $('#' + targetId).val(response[0].name);
+            }
+
+            // if selectedId is passed → find matching user
+            if (selectedId) {
+                var found = response.find(item => item.id == selectedId);
+                if (found) {
+                    $('#' + targetId).val(found.name);
+                }
+            }
+            return;
+        }
+
+        // Otherwise, handle select dropdown (old method)
         let html = '<option value="">Select User Name</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
-        $('#' + targetId).empty().append(html);
+        $('#' + targetId).html(html);
+
         if (selectedId) {
             $('#' + targetId).val(selectedId);
         }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error('getStaffDropdown failed for ' + targetId + ':', textStatus, errorThrown);
     });
 }
 
 
-function getAssignName(staff_name_id) {
-    var assign_to = 'Director,Admin,Manager';
+
+function getAssignName(staff_name_id,selectedId='') {
     return $.ajax({
         url: 'api/concern_creation_files/getStaffName.php',
         type: 'POST',
-        data: { assign_to: assign_to },
+        data: { assign_to: staff_name_id },
         dataType: 'json',
         cache: false
     }).done(function (response) {
-        let html = '<option value="">Select Assign Name</option>';
+        let html = '<option value="">Select Assign To</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
         $('#assign_to').empty().append(html);
-        if (staff_name_id) {
-            $('#assign_to').val(staff_name_id).trigger('change');
+        
+        if (selectedId) {
+            $('#assign_to').val(selectedId);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error('getAssignName failed:', textStatus, errorThrown);

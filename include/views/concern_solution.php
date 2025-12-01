@@ -13,7 +13,6 @@
                         <th>S.NO</th>
                         <th>Concern Code</th>
                         <th>Concern Date</th>
-                        <th>Branch Name</th>
                         <th>Subject</th>
                         <th>Assign To</th>
                         <th>Status</th>
@@ -36,7 +35,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Concern Creation</div>
+                        <div class="card-title">Concern For</div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -46,7 +45,7 @@
                                     <select type="text" class="form-control" id="raising_for" name="raising_for" tabindex="1">
                                         <option value="">Select Raising For</option>
                                         <option value="1">Customer</option>
-                                        <option value="2">Staff</option>
+                                        <option value="2">Myself</option>
                                     </select>
                                 </div>
                             </div>
@@ -92,9 +91,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 raise_staff" style="display: none;">
                                 <div class="form-group">
                                     <label for="user_name">User Name</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="user_name" name="user_name" tabindex="8">
-                                        <option value="">Select User Name</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="user_name" name="user_name" tabindex="8" readonly>
                                 </div>
                             </div>
 
@@ -103,7 +100,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Concern Assign</div>
+                        <div class="card-title">Concern Creation</div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -123,9 +120,9 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="concern_to">Concern To</label><span class="text-danger">*</span>
+                                    <label for="concern_to">Concern Against</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="concern_to" name="concern_to" tabindex="8">
-                                        <option value="">Select Concern To</option>
+                                        <option value="">Select Concern Against</option>
                                     </select>
                                 </div>
                             </div>
@@ -150,34 +147,36 @@
                                     <textarea class="form-control" name="con_remark" id="con_remark" placeholder="Enter Remark" tabindex="12"></textarea>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Concern Assign</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="branch_name">Branch Name</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="branch_name" name="branch_name" tabindex="13">
-                                        <option value="">Select Branch Name</option>
+                                    <label for="designation">Assign Designation</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="designation" name="designation" tabindex="14">
+                                        <option value="">Select Assign Designation</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="assign_to">Assign To</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="assign_to" name="assign_to" tabindex="14">
-                                        <option value="">Select Assign</option>
+                                        <option value="">Select Assign To</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="assign_role">Assign Role</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="assign_role" name="assign_role" tabindex="15" readonly>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
-                <div class="card solution_card"  style="display: none;">
+                <div class="card solution_card" style="display: none;">
                     <div class="card-header">
                         <div class="card-title">Concern Solution</div>
                     </div>
@@ -204,17 +203,34 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 con_upload_div" style="display: none;">
                                 <div class="form-group">
-                                    <label for="concern_upload"> Upload</label>   <span id="upload_edit"></span>
+                                    <label for="concern_upload"> Upload</label> <span id="upload_edit"></span>
                                     <input type="file" class="form-control" name="concern_upload" id="concern_upload" tabindex="26">
                                 </div>
                             </div>
-
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 location-div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="location">Location </label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="location" name="location" tabindex="8">
+                                        <option value="">Select Location</option>
+                                        <option value="1">Office</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Customer Spot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="sol_participants">Participants</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="sol_participants" id="sol_participants" placeholder="Enter Participants" tabindex="12"></textarea>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="sol_remark">Solution Remark</label><span class="text-danger">*</span>
                                     <textarea class="form-control" name="sol_remark" id="sol_remark" placeholder="Enter Remark" tabindex="12"></textarea>
                                 </div>
                             </div>
+
 
 
                         </div>

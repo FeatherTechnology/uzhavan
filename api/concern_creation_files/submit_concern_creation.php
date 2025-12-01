@@ -21,10 +21,9 @@ if ($date) {
     $con_code = $_POST['con_code'] ?? '';
     $concern_subject = $_POST['concern_subject'] ?? '';
     $con_remark = $_POST['con_remark'] ?? '';
-    $branch_name = $_POST['branch_name'] ?? '';
     $assign_to = $_POST['assign_to'] ?? '';
     $concern_to = $_POST['concern_to'] ?? '';
-    $assign_role = $_POST['assign_role'] ?? '';
+    $assign_designation = $_POST['designation'] ?? '';
     $user_id = $_SESSION['user_id'] ?? 0;
 try {
     $pdo->beginTransaction();
@@ -39,13 +38,12 @@ try {
         } else {
             $con_code = $prefix . "-101";
         }
-
     // Build query
     $qry = $pdo->query("
         INSERT INTO concern_creation
-        (raising_for, aadhar_num, cus_id, cus_name, area, line, mobile, user_name, con_code, concern_date, con_sub, concern_to,con_remark, branch_name, assign_to, assign_role, insert_login_id, created_on)
+        (raising_for, aadhar_num, cus_id, cus_name, area, line, mobile, user_name, con_code, concern_date, con_sub, concern_to,con_remark, assign_to, assign_designation, insert_login_id, created_on)
         VALUES
-        ('$raising_for', '$aadhar_num', '$cus_id', '$cus_name', '$area', '$line', '$mobile', '$user_name', '$con_code', '$converted_date','$concern_subject', '$concern_to','$con_remark', '$branch_name', '$assign_to', '$assign_role', '$user_id', NOW())
+        ('$raising_for', '$aadhar_num', '$cus_id', '$cus_name', '$area', '$line', '$mobile', '$user_name', '$con_code', '$converted_date','$concern_subject', '$concern_to','$con_remark', '$assign_to', '$assign_designation', '$user_id', NOW())
     ");
 
         if ($qry) {

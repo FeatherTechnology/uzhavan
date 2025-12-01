@@ -14,7 +14,6 @@
                         <th>S.NO</th>
                         <th>Concern Code</th>
                         <th>Concern Date</th>
-                        <th>Branch Name</th>
                         <th>Subject</th>
                         <th>Assign To</th>
                         <th>Status</th>
@@ -37,7 +36,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Concern Creation</div>
+                        <div class="card-title">Concern For</div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -47,7 +46,7 @@
                                     <select type="text" class="form-control" id="raising_for" name="raising_for" tabindex="1">
                                         <option value="">Select Raising For</option>
                                         <option value="1">Customer</option>
-                                        <option value="2">Staff</option>
+                                        <option value="2">Myself</option>
                                     </select>
                                 </div>
                             </div>
@@ -93,12 +92,62 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 raise_staff" style="display: none;">
                                 <div class="form-group">
                                     <label for="user_name">User Name</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="user_name" name="user_name" tabindex="8">
-                                        <option value="">Select User Name</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="user_name" name="user_name" tabindex="8" readonly>
                                 </div>
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Concern Creation</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="con_code"> Concern Code</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="con_code" name="con_code" tabindex="9" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="disabledInput">Concern Date</label>&nbsp;<span class="text-danger">*</span>
+                                    <input type="text" readonly class="form-control" id="concern_date" name="concern_date" tabindex='10'>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="concern_to">Concern Against</label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="concern_to" name="concern_to" tabindex="8">
+                                        <option value="">Select Concern Against</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="con_role"> Role</label>
+                                    <input type="text" class="form-control" id="con_role" name="con_role" tabindex="9" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="concern_subject">Concern Subject</label><span class="text-danger">*</span>
+                                    <input type="hidden" id="sub_name_id">
+                                    <select class="form-control" id="concern_subject" name="concern_subject" tabindex="10">
+                                        <option value="">Select Concern Subject</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="con_remark">Concern Remark</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="con_remark" id="con_remark" placeholder="Enter Remark" tabindex="12"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -111,75 +160,20 @@
 
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="con_code"> Concern Code</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="con_code" name="con_code" tabindex="9" readonly>
-                                </div>
-                            </div>
-
-                              <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="disabledInput">Concern Date</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="text" readonly class="form-control" id="concern_date" name="concern_date" tabindex='10'>
-                                    </div>
-                                </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="concern_to">Concern To</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="concern_to" name="concern_to" tabindex="8">
-                                        <option value="">Select Concern To</option>
+                                    <label for="designation">Assign Designation</label><span class="text-danger">*</span>
+                                     <select type="text" class="form-control" id="designation" name="designation" tabindex="14">
+                                        <option value="">Select Assign Designation</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="con_role"> Role</label>
-                                    <input type="text" class="form-control" id="con_role" name="con_role"  tabindex="9" readonly>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 col-md-3 col-lg-3">
-                                <div class="form-group">
-                                    <label for="concern_subject">Concern Subject</label><span class="text-danger">*</span>
-                                    <input type="hidden" id="sub_name_id">
-                                    <select class="form-control" id="concern_subject" name="concern_subject" tabindex="10">
-                                        <option value="">Select Concern Subject</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-1 col-md-1 col-lg-1 text-right" style="margin-top: 18px;">
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary modalBtnCss" id = "add_subject_btn" data-toggle="modal" data-target="#add_subject_modal" tabindex="11" onclick="getConcernSubjectTable()"><span class="icon-add"></span></button>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                    <div class="form-group">
-                                        <label for="con_remark">Concern Remark</label><span class="text-danger">*</span>
-                                        <textarea class="form-control" name="con_remark" id="con_remark" placeholder="Enter Remark" tabindex="12"></textarea>
-                                    </div>
-                                </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="branch_name">Branch Name</label><span class="text-danger">*</span>
-                                    <select type="text" class="form-control" id="branch_name" name="branch_name" tabindex="13">
-                                        <option value="">Select Branch Name</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="assign_to">Assign To</label><span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="assign_to" name="assign_to" tabindex="14">
-                                        <option value="">Select Assign</option>
+                                        <option value="">Select Assign To</option>
                                     </select>
                                 </div>
                             </div>
-                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
-                                <div class="form-group">
-                                    <label for="assign_role">Assign Role</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="assign_role" name="assign_role"  tabindex="15" readonly>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

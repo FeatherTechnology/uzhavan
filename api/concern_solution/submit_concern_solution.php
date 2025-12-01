@@ -24,7 +24,7 @@ $communication = isset($_POST['communication']) ? $_POST['communication'] : '';
 $sol_remark = isset($_POST['sol_remark']) ? $_POST['sol_remark'] : '';
 $solution_date = isset($_POST['solution_date']) ? $_POST['solution_date'] : '';
 $assign_to = isset($_POST['assign_to']) ? $_POST['assign_to'] : '';
-$assign_role = isset($_POST['assign_role']) ? $_POST['assign_role'] : '';
+$designation = isset($_POST['designation']) ? $_POST['designation'] : '';
 $concern_id = isset($_POST['concern_id']) ? $_POST['concern_id'] : '';
 
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
@@ -51,7 +51,7 @@ $qry = $pdo->query("
     UPDATE `concern_creation` 
     SET 
         `assign_to` = '$assign_to',
-        `assign_role` = '$assign_role',
+        `assign_designation` = '$designation',
         `sol_date` = '$converted_date',
         `communication` = '$communication',
         `concern_upload` = '$picture',

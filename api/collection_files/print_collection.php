@@ -2,7 +2,7 @@
 require '../../ajaxconfig.php';
 $coll_id = $_POST["coll_id"];
 
-$qry = $pdo->query("SELECT * FROM `collection` WHERE coll_code='" . strip_tags($coll_id) . "'");
+$qry = $pdo->query("SELECT cus_profile_id ,cus_id,coll_code,cus_name,payable_amt,coll_date,due_amt_track,penalty_track,coll_charge_track,insert_login_id FROM `collection` WHERE coll_code='" . strip_tags($coll_id) . "'");
 $row = $qry->fetch();
 
 extract($row); // Extracts the array values into variables
@@ -23,8 +23,10 @@ $due_amt_track = intVal($due_amt_track != '' ? $due_amt_track : 0);
 $penalty_track = intVal($penalty_track != '' ? $penalty_track : 0);
 $coll_charge_track = intVal($coll_charge_track != '' ? $coll_charge_track : 0);
 $net_received = $due_amt_track + $penalty_track + $coll_charge_track;
-$due_balance = ($due_amt - $due_amt_track) < 0 ? 0 : $due_amt - $due_amt_track;
+$due_balance = ($payable_amt - $due_amt_track) < 0 ? 0 : $payable_amt - $due_amt_track;
 $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
+$qry = $pdo->query("SELECT name from `users` where `id` = $insert_login_id ");
+$user_name = $qry->fetch()['name'];
 ?>
 
 
@@ -51,13 +53,15 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
             </b><br>
             <div class="text-wrapper-11" style="text-align:right;">Due Balance :</div>
             <div class="text-wrapper-12" style="text-align:right;">Loan Balance :</div>
+            <div class="text-wrapper-12" style="text-align:right;">User Name:</div>
+            
         </div>
         <div class="data" style="position: absolute; width: 128px; height: 278px; top: 150px; left: 158px;font-size: 12px">
             <!-- Other text-wrapper elements -->
             <b>
                 <div class="text-wrapper-13" style="margin-left: 5px;"><?php echo $coll_code; ?></div>
             </b>
-            <div class="text-wrapper-14" style="margin-left: 5px;"><?php echo date('d-m-Y H:s A', strtotime($coll_date)); ?></div>
+            <div class="text-wrapper-14" style="margin-left: 5px;"><?php echo date('d-m-Y h:i:s A', strtotime($coll_date)); ?></div>
             <div class="text-wrapper-15" style="margin-left: 5px;"><?php echo $line_name; ?></div>
             <div class="text-wrapper-16" style="margin-left: 5px;"><?php echo $cus_id; ?></div>
             <b>
@@ -73,6 +77,7 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
             </b><br>
             <div class="text-wrapper-24" style="margin-left: 5px;"><?php echo moneyFormatIndia($due_balance); ?></div>
             <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo moneyFormatIndia($loan_balance); ?></div>
+            <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo $user_name; ?></div>
         </div>
     </div>
     <img class="group" alt="Uzhavan Software" src="img/fav.png" style="position: absolute; width: 150px; height: 91px; top: 34px; left: 44px;" />
