@@ -2,6 +2,7 @@ $(document).ready(function () {
     $(document).on('click', '#add_concern, #back_btn', function () {
         swapTableAndCreation();
         $('#concern_id').val('');
+        $('.solution_card').hide();
 
     });
 
@@ -49,54 +50,54 @@ $(document).ready(function () {
     });
 
     /////////////////////////////////////////////////////////// Concern Subject Modal START ///////////////////////////////////////////////////////////////////////
-    $('#submit_subject').click(function (event) {
-        event.preventDefault();
-        let con_sub = $('#con_sub').val(); let id = $('#sub_id').val();
-        var data = ['con_sub']
-        var isValid = true;
-        data.forEach(function (entry) {
-            var fieldIsValid = validateField($('#' + entry).val(), entry);
-            if (!fieldIsValid) {
-                isValid = false;
-            }
-        });
-        if (con_sub != '') {
-            if (isValid) {
-                $.post('api/concern_creation_files/submit_concern_subject.php', { con_sub, id }, function (response) {
-                    if (response == '0') {
-                        swalError('Warning', 'Concern Subject Already Exists!');
-                    } else if (response == '1') {
-                        swalSuccess('Success', 'Concern Subject Updated Successfully!');
-                    } else if (response == '2') {
-                        swalSuccess('Success', 'Concern Subject Added Successfully!');
-                    }
+    // $('#submit_subject').click(function (event) {
+    //     event.preventDefault();
+    //     let con_sub = $('#con_sub').val(); let id = $('#sub_id').val();
+    //     var data = ['con_sub']
+    //     var isValid = true;
+    //     data.forEach(function (entry) {
+    //         var fieldIsValid = validateField($('#' + entry).val(), entry);
+    //         if (!fieldIsValid) {
+    //             isValid = false;
+    //         }
+    //     });
+    //     if (con_sub != '') {
+    //         if (isValid) {
+    //             $.post('api/concern_creation_files/submit_concern_subject.php', { con_sub, id }, function (response) {
+    //                 if (response == '0') {
+    //                     swalError('Warning', 'Concern Subject Already Exists!');
+    //                 } else if (response == '1') {
+    //                     swalSuccess('Success', 'Concern Subject Updated Successfully!');
+    //                 } else if (response == '2') {
+    //                     swalSuccess('Success', 'Concern Subject Added Successfully!');
+    //                 }
 
-                    getConcernSubjectTable();
-                }, 'json');
-                clearSubject(); //To Clear All Fields in Role creation.
-            }
-        }
-    });
+    //                 getConcernSubjectTable();
+    //             }, 'json');
+    //             clearSubject(); //To Clear All Fields in Role creation.
+    //         }
+    //     }
+    // });
 
-    $(document).on('click', '.subjectActionBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        $.post('api/concern_creation_files/get_subject_data.php', { id }, function (response) {
-            $('#sub_id').val(id);
-            $('#con_sub').val(response[0].concern_subject);
-        }, 'json');
-    });
+    // $(document).on('click', '.subjectActionBtn', function () {
+    //     var id = $(this).attr('value'); // Get value attribute
+    //     $.post('api/concern_creation_files/get_subject_data.php', { id }, function (response) {
+    //         $('#sub_id').val(id);
+    //         $('#con_sub').val(response[0].concern_subject);
+    //     }, 'json');
+    // });
 
-    $(document).on('click', '.subjectDeleteBtn', function () {
-        var id = $(this).attr('value'); // Get value attribute
-        swalConfirm('Delete', 'Do you want to Delete the Subject Creation?', deleteSubject, id);
-        return;
-    });
+    // $(document).on('click', '.subjectDeleteBtn', function () {
+    //     var id = $(this).attr('value'); // Get value attribute
+    //     swalConfirm('Delete', 'Do you want to Delete the Subject Creation?', deleteSubject, id);
+    //     return;
+    // });
     /////////////////////////////////////////////////////////// Concern Subject Modal END ///////////////////////////////////////////////////////////////////////
 
     $('#raising_for').on('change', function () {
         var raising_for = this.value;
         $('#aadhar_num').val('');
-        $('#user_name').val('');
+        $('#user_name').val('').prop('disabled', true);
         $('#cus_name').val('').prop('disabled', true);
         $('#area').val('').prop('disabled', true);
         $('#mobile1').val('').prop('disabled', true);
@@ -149,16 +150,16 @@ $(document).ready(function () {
         }
     });
 
-    // assign_to change
-    $('#assign_to').change(function () {
-        var assign_to = $(this).val();
-        if (assign_to !== '' && assign_to != 0) {
-            getConcernRole(assign_to, 'assign_role');  // 👈 sets #assign_role
+    // designation change
+    $('#designation').change(function () {
+        var designation = $(this).val();
+        if (designation !== '' && designation != 0) {
+            getAssignName(designation, '')
         } else {
-            $('#assign_role').val('');
+            $('#assign_to').val('');
         }
     })
-
+  // submit concern creation
     $('#submit_concern_creation').click(function (event) {
         event.preventDefault();
 
@@ -178,13 +179,12 @@ $(document).ready(function () {
             concern_subject: $('#concern_subject').val(),
             con_remark: $('#con_remark').val(),
             concern_to: $('#concern_to').val(),
-            branch_name: $('#branch_name').val(),
             assign_to: $('#assign_to').val(),
-            assign_role: $('#assign_role').val()
+            designation: $('#designation').val()
         };
 
         // Required fields
-        let data = ['concern_date', 'con_remark', 'con_code', 'raising_for', 'concern_subject', 'assign_to', 'assign_role', 'concern_date', 'branch_name', 'concern_to'];
+        let data = ['concern_date', 'con_remark', 'con_code', 'raising_for', 'concern_subject', 'assign_to', 'concern_date', 'designation', 'concern_to'];
 
         if (raising_for == 1) {
             data = data.concat(['aadhar_num', 'auto_gen_cus_id', 'cus_name', 'area', 'line', 'mobile1']);
@@ -203,7 +203,7 @@ $(document).ready(function () {
 
         if (isValid) {
             $.post('api/concern_creation_files/submit_concern_creation.php', formData, function (response) {
-                if (response === '2') {
+                if (response == '2') {
                     swalSuccess('Success', 'Concern Creation Added Successfully!');
                 } else {
                     swalError('Error', 'Error Occurred!');
@@ -218,15 +218,22 @@ $(document).ready(function () {
     });
 
 
-    // click handler
+    // concern view
     $(document).on('click', '.concern_details', async function () {
         var id = $(this).attr('value');
+        var con_status = $(this).attr('data-sts');
 
         $('#concern_creation_content').show();
         $('#back_btn').show();
         $('.concern_table_content').hide();
         $('#add_concern').hide();
-        $('#add_subject_btn').prop('disabled', true);
+        // concer resolved
+        if (con_status == 1) {
+            $('.solution_card').show();
+        } else {
+            $('.solution_card').hide();
+        }
+        // $('#add_subject_btn').prop('disabled', true);
 
         try {
             const response = await $.ajax({
@@ -250,36 +257,70 @@ $(document).ready(function () {
 
             await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
-            await getBranchName(data.branch_name);
+            await getConcernDesignation(data.assign_designation);
 
             // disable selects (use disabled, not readonly)
             $('#raising_for').val(data.raising_for).prop('disabled', true).trigger('change');
             $('#concern_subject').prop('disabled', true);
-            $('#branch_name').val(data.branch_name).prop('disabled', true);
-            
+            $('#designation').val(data.assign_designation).prop('disabled', true);
+            $('#assign_to').prop('disabled', true)
+
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-            if (data.assign_role == 'Staff') {
-                await getStaffDropdown('assign_to', data.assign_to);
-            } else {
-                await getAssignName(data.assign_to);
+            await getAssignName(data.assign_designation, data.assign_to);
 
+            // solution
+            $('#solution_date').val(data.sol_date).prop('readonly', true);
+            $('#con_remark').val(data.con_remark).prop('readonly', true);
+            $('#sol_remark').val(data.sol_remark).prop('readonly', true);
+            $('#location').val(data.location).prop('disabled', true);
+            $('#sol_participants').val(data.participants).prop('readonly', true);
+            $('#concern_upload').prop('disabled', true);
+            $('#communication').val(data.communication).prop('disabled', true).trigger('change');
+            if (data.concern_upload && data.concern_upload !== '') {
+                let fileUrl = 'uploads/concern_solution/' + data.concern_upload; // path to file
+                $('#upload_edit').html(
+                    `<a href="${fileUrl}" target="_blank" style="color:var(--primary-color); font-weight:500;">${data.concern_upload}</a>`
+                );
+            } else {
+                $('#upload_edit').html('');
             }
-            $('#assign_to').prop('disabled', true).trigger('change');
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
         }
     });
 
+
+    $('#communication').on('change', function () {
+        var communication = this.value;
+        if (communication == 1) {
+            $('.con_upload_div').show();
+            $('.location-div').hide();
+        } else if (communication == 2) {
+            $('.con_upload_div').hide();
+            $('.location-div').show();
+        }
+
+    });
+
+    //Concern Remove
+    $(document).on('click', '.concern_remove', function () {
+        var id = $(this).attr('value'); // Get value attribute
+        swalConfirm('Remove', 'Do you want to Remove the Concern?', deleteConcern, id);
+        return;
+    });
+
+
     /// Document End
 })
+
 $(function () {
     getConcernCreationTable()
 });
 
-
+//concern creation list
 function getConcernCreationTable() {
     serverSideTable('#concern_create', '', 'api/concern_creation_files/con_creation_list.php');
 }
@@ -292,8 +333,7 @@ function swapTableAndCreation() {
         $('#back_btn').show();
         getConcernCode()
         getConcernTo()
-        getBranchName()
-        getAssignName()
+        getConcernDesignation()
         getConcernSubjectDropdown()
 
     } else {
@@ -304,23 +344,24 @@ function swapTableAndCreation() {
     }
 }
 
-function clearSubject() {
-    $('#con_sub').val('');
-    $('#sub_id').val('0');
-    $('#con_sub').css('border', '1px solid #cecece');
-}
+// function clearSubject() {
+//     $('#con_sub').val('');
+//     $('#sub_id').val('0');
+//     $('#con_sub').css('border', '1px solid #cecece');
+// }
 
-function getConcernSubjectTable() {
-    $.post('api/concern_creation_files/get_subject_list.php', function (response) {
-        let concerSubColumn = [
-            "sno",
-            "concern_subject",
-            "action"
-        ]
-        appendDataToTable('#con_sub_table', response, concerSubColumn);
-        setdtable('#con_sub_table');
-    }, 'json');
-}
+// function getConcernSubjectTable() {
+//     $.post('api/concern_creation_files/get_subject_list.php', function (response) {
+//         let concerSubColumn = [
+//             "sno",
+//             "concern_subject",
+//             "action"
+//         ]
+//         appendDataToTable('#con_sub_table', response, concerSubColumn);
+//         setdtable('#con_sub_table');
+//     }, 'json');
+// }
+// concern subject Dropdown
 async function getConcernSubjectDropdown(subject_name_id) {
     try {
         const response = await $.ajax({
@@ -348,18 +389,19 @@ async function getConcernSubjectDropdown(subject_name_id) {
 }
 
 
-function deleteSubject(id) {
-    $.post('api/concern_creation_files/delete_subject.php', { id }, function (response) {
-        if (response == '1') {
-            swalSuccess('Success', 'Concern Subject Deleted Successfully.');
-            getConcernSubjectTable();
-        } else if (response == '0') {
-            swalError('Access Denied', 'Used in Concern Creation');
-        } else {
-            swalError('Error', 'Concern Subject Delete Failed.');
-        }
-    }, 'json');
-}
+// function deleteSubject(id) {
+//     $.post('api/concern_creation_files/delete_subject.php', { id }, function (response) {
+//         if (response == '1') {
+//             swalSuccess('Success', 'Concern Subject Deleted Successfully.');
+//             getConcernSubjectTable();
+//         } else if (response == '0') {
+//             swalError('Access Denied', 'Used in Concern Creation');
+//         } else {
+//             swalError('Error', 'Concern Subject Delete Failed.');
+//         }
+//     }, 'json');
+// }
+// customer info
 function getCustomerInfo(aadhar_num) {
     $.post('api/concern_creation_files/customer_info.php', { aadhar_num: aadhar_num }, function (response) {
         if (response.length > 0) {
@@ -374,7 +416,7 @@ function getCustomerInfo(aadhar_num) {
     }, 'json');
 }
 
-
+// concern code
 function getConcernCode() {
     $.ajax({
         url: 'api/concern_creation_files/getConcernCode.php',
@@ -389,20 +431,27 @@ function getConcernCode() {
     })
 }
 
+// concern designation
+function getConcernDesignation(concern_design_id) {
+    let assign_des = 'Director,Admin,Manager,TL,Training TL,Executive Director';
+    $.post(
+        'api/concern_creation_files/getConcernDesignation.php',
+        {
+            assign_des: assign_des,
+            selected_id: concern_design_id   // <-- Pass selected id
+        },
+        function (response) {
+            let html = '<option value="">Select Assign Designation</option>';
 
-function getBranchName(branch_name_id) {
-    $.post('api/common_files/get_branch_list.php', function (response) {
-        let appendBarnchNameOption = '';
-        appendBarnchNameOption += '<option value="">Select Branch Name</option>';
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (val.id == branch_name_id) {
-                selected = 'selected';
-            }
-            appendBarnchNameOption += '<option value="' + val.id + '" ' + selected + '>' + val.branch_name + '</option>';
-        });
-        $('#branch_name').empty().append(appendBarnchNameOption);
-    }, 'json');
+            $.each(response, function (index, val) {
+                let selected = (val.id == concern_design_id) ? 'selected' : '';
+                html += `<option value="${val.id}" ${selected}>${val.designation}</option>`;
+            });
+
+            $('#designation').html(html);
+        },
+        'json'
+    );
 }
 
 
@@ -430,7 +479,7 @@ function getConcernTo(name_id) {
         dataType: 'json',
         cache: false
     }).done(function (response) {
-        let html = '<option value="">Select Concern To</option>';
+        let html = '<option value="">Select Concern Against</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
@@ -451,40 +500,70 @@ function getStaffDropdown(targetId, selectedId = '') {
         dataType: 'json',
         cache: false
     }).done(function (response) {
+
+        // If target field is INPUT instead of SELECT
+        if ($('#' + targetId).is('input')) {
+
+            // if only one staff
+            if (response.length == 1) {
+                $('#' + targetId).val(response[0].name);
+            }
+
+            // if selectedId is passed → find matching user
+            if (selectedId) {
+                var found = response.find(item => item.id == selectedId);
+                if (found) {
+                    $('#' + targetId).val(found.name);
+                }
+            }
+            return;
+        }
+
+        // Otherwise, handle select dropdown (old method)
         let html = '<option value="">Select User Name</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
-        $('#' + targetId).empty().append(html);
+        $('#' + targetId).html(html);
+
         if (selectedId) {
             $('#' + targetId).val(selectedId);
         }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error('getStaffDropdown failed for ' + targetId + ':', textStatus, errorThrown);
     });
 }
 
 
-function getAssignName(staff_name_id) {
-    var assign_to = 'Director,Admin,Manager';
+// Assign Concern
+function getAssignName(staff_name_id, selectedId = '') {
     return $.ajax({
         url: 'api/concern_creation_files/getStaffName.php',
         type: 'POST',
-        data: { assign_to: assign_to },
+        data: { assign_to: staff_name_id },
         dataType: 'json',
         cache: false
     }).done(function (response) {
-        let html = '<option value="">Select Assign Name</option>';
+        let html = '<option value="">Select Assign To</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
         $('#assign_to').empty().append(html);
-        if (staff_name_id) {
-            $('#assign_to').val(staff_name_id).trigger('change');
+
+        if (selectedId) {
+            $('#assign_to').val(selectedId);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error('getAssignName failed:', textStatus, errorThrown);
     });
 }
 
-
+// remove concern
+function deleteConcern(id) {
+    $.post('api/concern_creation_files/remove_concern.php', { id }, function (response) {
+        if (response == 1) {
+            swalSuccess('Success', 'Concern Removed Successfully!');
+            getConcernCreationTable();
+        } else {
+            swalError('Error', 'Failed to Remove Concern');
+        }
+    }, 'json');
+}

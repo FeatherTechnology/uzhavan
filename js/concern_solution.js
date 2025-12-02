@@ -5,6 +5,8 @@ $(document).ready(function () {
         $('#back_btn').hide();
         $('.concern_table_content').show();
     });
+
+
     //////////////////////////////////////////////////////Concern Assign Start //////////////////////////////////////////////////////////
     $(document).on('click', '.concern_assign', async function () {
         var id = $(this).attr('value');
@@ -13,15 +15,21 @@ $(document).ready(function () {
         $('#back_btn').show();
         $('.concern_table_content').hide();
         $('.solution_card').hide();
-        $('#assign_to').prop('disabled', false);
-        $('#assign_role').val('')
-         $('#communication').val('').prop('disabled', false)
+        $('#assign_to').val('').prop('disabled', false);
+        $('#designation').val('').prop('disabled', false);
+        $('#communication').val('').prop('disabled', false)
+        $('#location').val('').prop('disabled', false)
         $('#concern_upload').val('').prop('disabled', false)
         $('#sol_remark').val('').prop('readonly', false)
-        $('#upload_edit').val('')  
+        $('#sol_participants').val('').prop('readonly', false)
+        $('#upload_edit').val('')
         $('#upload_edit').html('');
         $('.submit_concern').show();
         $('.con_upload_div').hide();
+        $('.location-div').hide();
+        $('#concern_solution textarea').css('border', '1px solid #cecece');
+        $('#concern_solution input').css('border', '1px solid #cecece');
+        $('#concern_solution select').css('border', '1px solid #cecece');
         try {
             const response = await $.ajax({
                 url: 'api/concern_creation_files/concern_creation_data.php',
@@ -37,24 +45,16 @@ $(document).ready(function () {
             $('#con_code').val(data.con_code).prop('readonly', true);
             $('#concern_date').val(data.concern_date).prop('readonly', true);
             $('#con_remark').val(data.con_remark).prop('readonly', true);
-
-
-
-
             await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
-            await getBranchName(data.branch_name);
-
-
             // disable selects (use disabled, not readonly)
             $('#raising_for').val(data.raising_for).prop('disabled', true).trigger('change');
             $('#concern_subject').prop('disabled', true);
-            $('#branch_name').val(data.branch_name).prop('disabled', true);
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-            await getStaffDropdown('assign_to', '');
+            await getConcernDesignation();
 
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
@@ -72,27 +72,31 @@ $(document).ready(function () {
         $('#communication').val('').prop('disabled', false)
         $('#concern_upload').val('').prop('disabled', false)
         $('#sol_remark').val('').prop('readonly', false)
-        $('#upload_edit').val('')  
+        $('#upload_edit').val('')
         $('#upload_edit').html('');
         $('.con_upload_div').hide();
-            
+        $('.location-div').hide();
+
         $('.submit_concern').show();
+        $('#concern_solution textarea').css('border', '1px solid #cecece');
+        $('#concern_solution input').css('border', '1px solid #cecece');
+        $('#concern_solution select').css('border', '1px solid #cecece');
 
-   {
-        // Get today's date
-        var today = new Date();
+        {
+            // Get today's date
+            var today = new Date();
 
-        // Extract day, month, and year
-        var day = String(today.getDate()).padStart(2, '0');
-        var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
-        var year = today.getFullYear();
+            // Extract day, month, and year
+            var day = String(today.getDate()).padStart(2, '0');
+            var month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed, so add 1
+            var year = today.getFullYear();
 
-        // Construct the date in dd-mm-yyyy format
-        var formattedDate = day + '-' + month + '-' + year;
-        // Set loan date
-        $('#solution_date').val(formattedDate);
+            // Construct the date in dd-mm-yyyy format
+            var formattedDate = day + '-' + month + '-' + year;
+            // Set loan date
+            $('#solution_date').val(formattedDate);
 
-    }
+        }
         try {
             const response = await $.ajax({
                 url: 'api/concern_creation_files/concern_creation_data.php',
@@ -113,24 +117,19 @@ $(document).ready(function () {
 
             await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
-            await getBranchName(data.branch_name);
+            await getConcernDesignation(data.assign_designation);
 
 
             // disable selects (use disabled, not readonly)
             $('#raising_for').val(data.raising_for).prop('disabled', true).trigger('change');
             $('#concern_subject').prop('disabled', true);
-            $('#branch_name').val(data.branch_name).prop('disabled', true);
+            $('#designation').val(data.assign_designation).prop('disabled', true);
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-            if (data.assign_role == 'Staff') {
-                await getStaffDropdown('assign_to', data.assign_to);
-            } else {
-                await getAssignName(data.assign_to);
-
-            }
-            $('#assign_to').prop('disabled', true).trigger('change');
+            await getAssignName(data.assign_designation, data.assign_to);
+            $('#assign_to').prop('disabled', true);
 
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
@@ -164,6 +163,8 @@ $(document).ready(function () {
             $('#solution_date').val(data.sol_date).prop('readonly', true);
             $('#con_remark').val(data.con_remark).prop('readonly', true);
             $('#sol_remark').val(data.sol_remark).prop('readonly', true);
+            $('#location').val(data.location).prop('disabled', true);
+            $('#sol_participants').val(data.participants).prop('readonly', true);
             $('#concern_upload').prop('disabled', true);
             if (data.concern_upload && data.concern_upload !== '') {
                 let fileUrl = 'uploads/concern_solution/' + data.concern_upload; // path to file
@@ -174,36 +175,29 @@ $(document).ready(function () {
                 $('#upload_edit').html('');
             }
 
-
-
             await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
-            await getBranchName(data.branch_name);
+            await getConcernDesignation(data.assign_designation);
 
 
             // disable selects (use disabled, not readonly)
             $('#raising_for').val(data.raising_for).prop('disabled', true).trigger('change');
             $('#communication').val(data.communication).prop('disabled', true).trigger('change');
             $('#concern_subject').prop('disabled', true);
-            $('#branch_name').val(data.branch_name).prop('disabled', true);
+            $('#designation').val(data.assign_designation).prop('disabled', true);
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-            if (data.assign_role == 'Staff') {
-                await getStaffDropdown('assign_to', data.assign_to);
-            } else {
-                await getAssignName(data.assign_to);
-
-            }
-            $('#assign_to').prop('disabled', true).trigger('change');
+            await getAssignName(data.assign_designation, data.assign_to);
+            $('#assign_to').prop('disabled', true);
 
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
         }
     });
     //////////////////////////////////////////////////////Concern Solution View End //////////////////////////////////////////////////////////
- 
+    // raising onchange
     $('#raising_for').on('change', function () {
         var raising_for = this.value;
         $('#aadhar_num').val('');
@@ -224,12 +218,18 @@ $(document).ready(function () {
         }
 
     });
+
+    // communication onchange
     $('#communication').on('change', function () {
         var communication = this.value;
+        $('#location').val('')
+        $('#concern_upload').val('')
         if (communication == 1) {
             $('.con_upload_div').show();
+            $('.location-div').hide();
         } else if (communication == 2) {
             $('.con_upload_div').hide();
+            $('.location-div').show();
         }
 
     });
@@ -249,6 +249,7 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Enter Valid Aadhaar Number');
         }
     });
+
     // concern_to change
     $('#concern_to').change(function () {
         var concern_to = $(this).val();
@@ -259,15 +260,16 @@ $(document).ready(function () {
         }
     });
 
-    // assign_to change
-    $('#assign_to').change(function () {
-        var assign_to = $(this).val();
-        if (assign_to !== '' && assign_to != 0) {
-            getConcernRole(assign_to, 'assign_role');  // 👈 sets #assign_role
+    // designation change
+    $('#designation').change(function () {
+        var designation = $(this).val();
+        if (designation !== '' && designation != 0) {
+            getAssignName(designation, '')
         } else {
-            $('#assign_role').val('');
+            $('#assign_to').val('');
         }
     })
+
 
     $('#submit_concern_creation').click(function (event) {
         event.preventDefault();
@@ -280,21 +282,30 @@ $(document).ready(function () {
         formData.append('solution_date', $('#solution_date').val());
         formData.append('communication', $('#communication').val());
         formData.append('sol_remark', $('#sol_remark').val());
+        formData.append('sol_participants', $('#sol_participants').val());
+        formData.append('location', $('#location').val());
         formData.append('concern_id', $('#concern_id').val());
         formData.append('assign_to', $('#assign_to').val());
-        formData.append('assign_role', $('#assign_role').val());
+        formData.append('designation', $('#designation').val());
         if (concern_upload) {
             formData.append('concern_upload', concern_upload);
         }
 
         // Conditional required fields
         let requiredFields = [];
-        if ($('#communication').val().trim() !== '') {
-            requiredFields = ['solution_date', 'sol_remark', 'communication'];
-        } else {
-            requiredFields = ['assign_to', 'assign_role'];
-        }
+        if ($('.solution_card').is(':visible')) {
 
+            // Default required when solution card is visible
+            requiredFields = ['solution_date', 'sol_remark', 'communication', 'sol_participants'];
+
+            // If communication = 2 → location also required
+            if ($('#communication').val() == 2) {
+                requiredFields.push('location'); // ADD location, do not replace
+            }
+
+        } else {
+            requiredFields = ['assign_to', 'designation'];
+        }
         // Validation
         let isValid = true;
         requiredFields.forEach(function (entry) {
@@ -346,12 +357,12 @@ $(function () {
     getConcernSolutionTable()
 });
 
-
+// concern solution list
 function getConcernSolutionTable() {
     serverSideTable('#concern_solution', '', 'api/concern_solution/concern_solution_list.php');
 }
 
-
+// concern subject
 async function getConcernSubjectDropdown(subject_name_id) {
     try {
         const response = await $.ajax({
@@ -377,6 +388,7 @@ async function getConcernSubjectDropdown(subject_name_id) {
         throw error;
     }
 }
+// concern customer info
 function getCustomerInfo(aadhar_num) {
     $.post('api/concern_creation_files/customer_info.php', { aadhar_num: aadhar_num }, function (response) {
         if (response.length > 0) {
@@ -390,22 +402,31 @@ function getCustomerInfo(aadhar_num) {
         }
     }, 'json');
 }
-function getBranchName(branch_name_id) {
-    $.post('api/common_files/get_branch_list.php', function (response) {
-        let appendBarnchNameOption = '';
-        appendBarnchNameOption += '<option value="">Select Branch Name</option>';
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (val.id == branch_name_id) {
-                selected = 'selected';
-            }
-            appendBarnchNameOption += '<option value="' + val.id + '" ' + selected + '>' + val.branch_name + '</option>';
-        });
-        $('#branch_name').empty().append(appendBarnchNameOption);
-    }, 'json');
+// concern Designation
+function getConcernDesignation(concern_design_id) {
+
+    let assign_des = 'OA,Staff,Trainee';
+    $.post(
+        'api/concern_creation_files/getConcernDesignation.php',
+        {
+            assign_des: assign_des,
+            selected_id: concern_design_id   // <-- Pass selected id
+        },
+        function (response) {
+            let html = '<option value="">Select Assign Designation</option>';
+
+            $.each(response, function (index, val) {
+                let selected = (val.id == concern_design_id) ? 'selected' : '';
+                html += `<option value="${val.id}" ${selected}>${val.designation}</option>`;
+            });
+
+            $('#designation').html(html);
+        },
+        'json'
+    );
 }
 
-
+// concern Role
 function getConcernRole(userId, targetField) {
     $.ajax({
         url: 'api/concern_creation_files/getConcernRole.php',
@@ -423,6 +444,7 @@ function getConcernRole(userId, targetField) {
     });
 }
 
+// concern To
 function getConcernTo(name_id) {
     return $.ajax({
         url: 'api/accounts_files/accounts/user_list.php',
@@ -444,6 +466,7 @@ function getConcernTo(name_id) {
     });
 }
 
+// concern staff
 function getStaffDropdown(targetId, selectedId = '') {
     return $.ajax({
         url: 'api/concern_creation_files/getStaffName.php',
@@ -464,23 +487,23 @@ function getStaffDropdown(targetId, selectedId = '') {
     });
 }
 
-
-function getAssignName(staff_name_id) {
-    var assign_to = 'Director,Admin,Manager';
+// concern Assign
+function getAssignName(staff_name_id, selectedId = '') {
     return $.ajax({
         url: 'api/concern_creation_files/getStaffName.php',
         type: 'POST',
-        data: { assign_to: assign_to },
+        data: { assign_to: staff_name_id },
         dataType: 'json',
         cache: false
     }).done(function (response) {
-        let html = '<option value="">Select Assign Name</option>';
+        let html = '<option value="">Select Assign To</option>';
         $.each(response, function (index, val) {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
         $('#assign_to').empty().append(html);
-        if (staff_name_id) {
-            $('#assign_to').val(staff_name_id).trigger('change');
+
+        if (selectedId) {
+            $('#assign_to').val(selectedId);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error('getAssignName failed:', textStatus, errorThrown);

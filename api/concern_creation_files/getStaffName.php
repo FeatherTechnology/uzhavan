@@ -1,24 +1,26 @@
 <?php
 require '../../ajaxconfig.php';
-
+@session_start();
+$user_id = $_SESSION['user_id'];
 $result = [];
 
 if (isset($_POST['assign_to']) && !empty($_POST['assign_to'])) {
-    // multiple roles passed (ex: Director,Admin,Manager)
-    $roles = explode(',', $_POST['assign_to']); // split into array
+
+    // multiple designation passed (ex: Director,Admin,Manager)
+    $designation = $_POST['assign_to']; 
+    $con = "d.id = '$designation'"; 
+
 } else {
-    // default: only Staff
-    $roles = ['Staff'];
+    // default: only current user
+    $con = "u.id = '$user_id'"; 
 }
 
-$placeholders = rtrim(str_repeat('?,', count($roles)), ','); 
-$qry = $pdo->prepare("
+$qry = $pdo->query("
     SELECT u.id, u.name
     FROM users u
-    JOIN role r ON u.role = r.id
-    WHERE r.role IN ($placeholders)
+    JOIN designation d ON u.designation = d.id
+    WHERE $con
 ");
-$qry->execute($roles);
 
 if ($qry->rowCount() > 0) {
     $result = $qry->fetchAll(PDO::FETCH_ASSOC);
@@ -26,3 +28,4 @@ if ($qry->rowCount() > 0) {
 
 $pdo = null;
 echo json_encode($result);
+

@@ -57,7 +57,7 @@
                                             <input type="text" class="form-control" id="user_id" name="user_id" tabindex="2" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 col-md-3 col-lg-3">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group">
                                             <label for="role">Role</label><span class="text-danger">*</span>
                                             <input type="hidden" id="role_name_id">
@@ -66,11 +66,11 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 col-md-1 col-lg-1 text-right" style="margin-top: 18px;">
+                                    <!-- <div class="col-sm-1 col-md-1 col-lg-1 text-right" style="margin-top: 18px;">
                                         <div class="form-group">
                                             <button type="button" class="btn btn-primary modalBtnCss" data-toggle="modal" data-target="#add_role_modal" tabindex="4" onclick="getRoleTable()"><span class="icon-add"></span></button>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-sm-3 col-md-3 col-lg-3">
                                         <div class="form-group">
                                             <label for="designation">Designation</label><span class="text-danger">*</span>
