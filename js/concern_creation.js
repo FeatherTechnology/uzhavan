@@ -2,6 +2,7 @@ $(document).ready(function () {
     $(document).on('click', '#add_concern, #back_btn', function () {
         swapTableAndCreation();
         $('#concern_id').val('');
+        $('.solution_card').hide();
 
     });
 
@@ -153,12 +154,12 @@ $(document).ready(function () {
     $('#designation').change(function () {
         var designation = $(this).val();
         if (designation !== '' && designation != 0) {
-            getAssignName(designation,'')
+            getAssignName(designation, '')
         } else {
             $('#assign_to').val('');
         }
     })
-
+  // submit concern creation
     $('#submit_concern_creation').click(function (event) {
         event.preventDefault();
 
@@ -217,14 +218,21 @@ $(document).ready(function () {
     });
 
 
-    // click handler
+    // concern view
     $(document).on('click', '.concern_details', async function () {
         var id = $(this).attr('value');
+        var con_status = $(this).attr('data-sts');
 
         $('#concern_creation_content').show();
         $('#back_btn').show();
         $('.concern_table_content').hide();
         $('#add_concern').hide();
+        // concer resolved
+        if (con_status == 1) {
+            $('.solution_card').show();
+        } else {
+            $('.solution_card').hide();
+        }
         // $('#add_subject_btn').prop('disabled', true);
 
         try {
@@ -247,7 +255,7 @@ $(document).ready(function () {
 
 
 
-             await getConcernSubjectDropdown(data.con_sub);
+            await getConcernSubjectDropdown(data.con_sub);
             await getConcernTo(data.concern_to);
             await getConcernDesignation(data.assign_designation);
 
@@ -256,31 +264,63 @@ $(document).ready(function () {
             $('#concern_subject').prop('disabled', true);
             $('#designation').val(data.assign_designation).prop('disabled', true);
             $('#assign_to').prop('disabled', true)
-            
+
             $('#concern_to').prop('disabled', true).trigger('change');
             $('#user_name').prop('disabled', true);
             await getCustomerInfo(data.aadhar_num);
             await getStaffDropdown('user_name', data.user_name);
-           await getAssignName(data.assign_designation,data.assign_to);
-            // if (data.assign_role == 'Staff') {
-            //     await getStaffDropdown('assign_to', data.assign_to);
-            // } else {
-            //     await getAssignName(data.assign_to);
+            await getAssignName(data.assign_designation, data.assign_to);
 
-            // }
-            // $('#assign_to').prop('disabled', true).trigger('change');
+            // solution
+            $('#solution_date').val(data.sol_date).prop('readonly', true);
+            $('#con_remark').val(data.con_remark).prop('readonly', true);
+            $('#sol_remark').val(data.sol_remark).prop('readonly', true);
+            $('#location').val(data.location).prop('disabled', true);
+            $('#sol_participants').val(data.participants).prop('readonly', true);
+            $('#concern_upload').prop('disabled', true);
+            $('#communication').val(data.communication).prop('disabled', true).trigger('change');
+            if (data.concern_upload && data.concern_upload !== '') {
+                let fileUrl = 'uploads/concern_solution/' + data.concern_upload; // path to file
+                $('#upload_edit').html(
+                    `<a href="${fileUrl}" target="_blank" style="color:var(--primary-color); font-weight:500;">${data.concern_upload}</a>`
+                );
+            } else {
+                $('#upload_edit').html('');
+            }
         } catch (error) {
             console.error("Error loading user data or dropdowns:", error);
         }
     });
 
+
+    $('#communication').on('change', function () {
+        var communication = this.value;
+        if (communication == 1) {
+            $('.con_upload_div').show();
+            $('.location-div').hide();
+        } else if (communication == 2) {
+            $('.con_upload_div').hide();
+            $('.location-div').show();
+        }
+
+    });
+
+    //Concern Remove
+    $(document).on('click', '.concern_remove', function () {
+        var id = $(this).attr('value'); // Get value attribute
+        swalConfirm('Remove', 'Do you want to Remove the Concern?', deleteConcern, id);
+        return;
+    });
+
+
     /// Document End
 })
+
 $(function () {
     getConcernCreationTable()
 });
 
-
+//concern creation list
 function getConcernCreationTable() {
     serverSideTable('#concern_create', '', 'api/concern_creation_files/con_creation_list.php');
 }
@@ -294,7 +334,7 @@ function swapTableAndCreation() {
         getConcernCode()
         getConcernTo()
         getConcernDesignation()
-         getConcernSubjectDropdown()
+        getConcernSubjectDropdown()
 
     } else {
         $('.concern_table_content').show();
@@ -321,6 +361,7 @@ function swapTableAndCreation() {
 //         setdtable('#con_sub_table');
 //     }, 'json');
 // }
+// concern subject Dropdown
 async function getConcernSubjectDropdown(subject_name_id) {
     try {
         const response = await $.ajax({
@@ -348,18 +389,19 @@ async function getConcernSubjectDropdown(subject_name_id) {
 }
 
 
-function deleteSubject(id) {
-    $.post('api/concern_creation_files/delete_subject.php', { id }, function (response) {
-        if (response == '1') {
-            swalSuccess('Success', 'Concern Subject Deleted Successfully.');
-            getConcernSubjectTable();
-        } else if (response == '0') {
-            swalError('Access Denied', 'Used in Concern Creation');
-        } else {
-            swalError('Error', 'Concern Subject Delete Failed.');
-        }
-    }, 'json');
-}
+// function deleteSubject(id) {
+//     $.post('api/concern_creation_files/delete_subject.php', { id }, function (response) {
+//         if (response == '1') {
+//             swalSuccess('Success', 'Concern Subject Deleted Successfully.');
+//             getConcernSubjectTable();
+//         } else if (response == '0') {
+//             swalError('Access Denied', 'Used in Concern Creation');
+//         } else {
+//             swalError('Error', 'Concern Subject Delete Failed.');
+//         }
+//     }, 'json');
+// }
+// customer info
 function getCustomerInfo(aadhar_num) {
     $.post('api/concern_creation_files/customer_info.php', { aadhar_num: aadhar_num }, function (response) {
         if (response.length > 0) {
@@ -374,7 +416,7 @@ function getCustomerInfo(aadhar_num) {
     }, 'json');
 }
 
-
+// concern code
 function getConcernCode() {
     $.ajax({
         url: 'api/concern_creation_files/getConcernCode.php',
@@ -389,11 +431,9 @@ function getConcernCode() {
     })
 }
 
-
+// concern designation
 function getConcernDesignation(concern_design_id) {
-
     let assign_des = 'Director,Admin,Manager,TL,Training TL,Executive Director';
-
     $.post(
         'api/concern_creation_files/getConcernDesignation.php',
         {
@@ -413,8 +453,6 @@ function getConcernDesignation(concern_design_id) {
         'json'
     );
 }
-
-
 
 
 function getConcernRole(userId, targetField) {
@@ -495,8 +533,8 @@ function getStaffDropdown(targetId, selectedId = '') {
 }
 
 
-
-function getAssignName(staff_name_id,selectedId='') {
+// Assign Concern
+function getAssignName(staff_name_id, selectedId = '') {
     return $.ajax({
         url: 'api/concern_creation_files/getStaffName.php',
         type: 'POST',
@@ -509,7 +547,7 @@ function getAssignName(staff_name_id,selectedId='') {
             html += '<option value="' + val.id + '">' + val.name + '</option>';
         });
         $('#assign_to').empty().append(html);
-        
+
         if (selectedId) {
             $('#assign_to').val(selectedId);
         }
@@ -518,4 +556,14 @@ function getAssignName(staff_name_id,selectedId='') {
     });
 }
 
-
+// remove concern
+function deleteConcern(id) {
+    $.post('api/concern_creation_files/remove_concern.php', { id }, function (response) {
+        if (response == 1) {
+            swalSuccess('Success', 'Concern Removed Successfully!');
+            getConcernCreationTable();
+        } else {
+            swalError('Error', 'Failed to Remove Concern');
+        }
+    }, 'json');
+}

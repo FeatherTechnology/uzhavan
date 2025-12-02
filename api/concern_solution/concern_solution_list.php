@@ -13,7 +13,7 @@ $column = array(
     'cc.con_status',
     'cc.id'
 );
-$query = "SELECT cc.id, cc.con_code, cc.concern_date, cs.concern_subject,u.name, cc.con_status ,d.designation FROM concern_creation cc LEFT JOIN concern_subject cs ON cc.con_sub = cs.con_sub_id LEFT JOIN users u ON cc.assign_to = u.id LEFT JOIN designation d ON u.designation = d.id WHERE  cc.assign_to = '" . strip_tags($user_id) . "' ";
+$query = "SELECT cc.id, cc.con_code, cc.concern_date, cs.concern_subject,u.name, cc.con_status ,d.designation FROM concern_creation cc LEFT JOIN concern_subject cs ON cc.con_sub = cs.con_sub_id LEFT JOIN users u ON cc.assign_to = u.id LEFT JOIN designation d ON u.designation = d.id WHERE  cc.assign_to = '" . strip_tags($user_id) . "' AND cc.con_status != 2";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {

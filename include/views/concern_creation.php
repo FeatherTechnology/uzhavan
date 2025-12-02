@@ -177,6 +177,66 @@
                         </div>
                     </div>
                 </div>
+                <div class="card solution_card" style="display: none;">
+                    <div class="card-header">
+                        <div class="card-title">Concern Solution</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="disabledInput">Solution Date</label>&nbsp;<span class="text-danger">*</span>
+                                    <input type="text" readonly class="form-control" id="solution_date" name="solution_date" tabindex='10'>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="communication">Communication </label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="communication" name="communication" tabindex="8">
+                                        <option value="">Select Communication</option>
+                                        <option value="1">Phone</option>
+                                        <option value="2">Direct</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 con_upload_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="concern_upload"> Upload</label> <span id="upload_edit"></span>
+                                    <input type="file" class="form-control" name="concern_upload" id="concern_upload" tabindex="26">
+                                </div>
+                            </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 location-div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="location">Location </label><span class="text-danger">*</span>
+                                    <select type="text" class="form-control" id="location" name="location" tabindex="8">
+                                        <option value="">Select Location</option>
+                                        <option value="1">Office</option>
+                                        <option value="2">On Spot</option>
+                                        <option value="3">Customer Spot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="sol_participants">Participants</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="sol_participants" id="sol_participants" placeholder="Enter Participants" tabindex="12"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <label for="sol_remark">Solution Remark</label><span class="text-danger">*</span>
+                                    <textarea class="form-control" name="sol_remark" id="sol_remark" placeholder="Enter Remark" tabindex="12"></textarea>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12 submit_concern">
                 <div class="text-right">

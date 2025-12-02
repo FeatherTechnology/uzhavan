@@ -13,7 +13,7 @@ $column = array(
     'cc.con_status',
     'cc.id'
 );
-$query = "SELECT cc.id, cc.con_code, cc.concern_date,cs.concern_subject,u.name, cc.con_status FROM concern_creation cc LEFT JOIN concern_subject cs ON cc.con_sub = cs.con_sub_id LEFT JOIN users u ON cc.assign_to = u.id  WHERE  cc.insert_login_id = '" . strip_tags($user_id) . "' ";
+$query = "SELECT cc.id, cc.con_code, cc.concern_date,cs.concern_subject,u.name, cc.con_status FROM concern_creation cc LEFT JOIN concern_subject cs ON cc.con_sub = cs.con_sub_id LEFT JOIN users u ON cc.assign_to = u.id  WHERE  cc.insert_login_id = '" . strip_tags($user_id) . "' AND cc.con_status != 2";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
@@ -58,7 +58,15 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['concern_subject']) ? $row['concern_subject'] : '';
     $sub_array[] = isset($row['name']) ? $row['name'] : '';
     $sub_array[] = isset($concern_status[$row['con_status']]) ? $concern_status[$row['con_status']] : '';
-      $action = "<a href='#' class='concern_details' value='" . $row['id'] . "'><button class='btn btn-primary'>View</button></a>";
+    $action = "<div class='dropdown'>
+                <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>
+                <div class='dropdown-content'>";
+    $action .= "<a href='#' class='concern_details' value='" . $row['id'] . "' data-sts='" . $row['con_status'] . "' title='View'>View</a>";
+    if ($row['con_status'] == 1) {
+        $action .= "<a href='#' class='concern_remove' value='" . $row['id'] . "' title='Concern Remove'>Remove</a>";
+    }
+    $action .= "</div></div>";
+    // $action = "<a href='#' class='concern_details' value='" . $row['id'] . "' data-sts='" . $row['con_status'] . "'><button class='btn btn-primary'>View</button></a>";
     $sub_array[] = $action;
 
     $data[] = $sub_array;

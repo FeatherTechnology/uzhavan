@@ -25,6 +25,8 @@ $sol_remark = isset($_POST['sol_remark']) ? $_POST['sol_remark'] : '';
 $solution_date = isset($_POST['solution_date']) ? $_POST['solution_date'] : '';
 $assign_to = isset($_POST['assign_to']) ? $_POST['assign_to'] : '';
 $designation = isset($_POST['designation']) ? $_POST['designation'] : '';
+$sol_participants = isset($_POST['sol_participants']) ? $_POST['sol_participants'] : '';
+$location = isset($_POST['location']) ? $_POST['location'] : '';
 $concern_id = isset($_POST['concern_id']) ? $_POST['concern_id'] : '';
 
 $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
@@ -55,6 +57,8 @@ $qry = $pdo->query("
         `sol_date` = '$converted_date',
         `communication` = '$communication',
         `concern_upload` = '$picture',
+        `location` = '$location',
+        `participants` = '$sol_participants',
         `sol_remark` = '$sol_remark',
         `con_status` = '$status',
         `update_login_id` = '$user_id',
