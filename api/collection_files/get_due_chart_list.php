@@ -41,7 +41,7 @@ function moneyFormatIndia($num)
     //If Due method is Monthly, Calculate penalty by checking the month has ended or not
     $due_start_from = $loanFrom['due_startdate'];
     $maturity_month = $loanFrom['maturity_date'];
-
+    $maturity_month_obj = new DateTime($maturity_month);
 
     if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') {
         //If Due method is Monthly, Calculate penalty by checking the month has ended or not
@@ -255,7 +255,7 @@ function moneyFormatIndia($num)
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
             //Query For Weekly.
-          
+
             $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
@@ -676,7 +676,15 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
         }
 
         $currentMonth = date('Y-m-d');
+        $startTime = '00:00:00'; //Set starting time of clock
+        $endTime = '23:59:59'; //set end time of clock
+        $currentMonth = $currentMonth . ' ' . $endTime;
+        $start_date = $due_start_from . ' ' . $startTime;
         if ($loanFrom['due_method'] == 'Monthly' || $loanFrom['scheme_due_method'] == '1') {
+            $maturity_month_last_date = (clone $maturity_month_obj)->modify('last day of this month')->format('Y-m-d');
+            $maturity_month = (clone $maturity_month_obj)->modify('+1 month')->format('Y-m-01');
+            $maturity_month = $maturity_month . ' ' . $startTime;
+            $last_date = $maturity_month_last_date . ' ' . $endTime;
             //Query for Monthly.
             $run = $pdo->query("SELECT c.coll_code, c.due_amt,c.tot_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track,c.princ_amt_track,c.int_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
             FROM `collection` c
@@ -684,36 +692,84 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
             LEFT JOIN users u ON c.insert_login_id = u.id
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
-            AND (
-                    (MONTH(c.coll_date) > MONTH('$maturity_month') AND Year(c.coll_date) > Year('$maturity_month') AND MONTH(c.coll_date) <= MONTH('$currentMonth') AND Year(c.coll_date) <= Year('$currentMonth') AND MONTH(c.coll_date) != '0000-00-00' ) OR
-                    (MONTH(c.trans_date) > MONTH('$maturity_month') AND Year(c.trans_date) > Year('$maturity_month') AND MONTH(c.trans_date) <= MONTH('$currentMonth') AND Year(c.trans_date) <= Year('$currentMonth') AND MONTH(c.trans_date) != '0000-00-00' ) 
-                ) ");
+            AND 
+            (
+                (c.coll_date BETWEEN '$maturity_month' AND '$currentMonth') OR (c.trans_date BETWEEN '$maturity_month' AND '$currentMonth' AND c.trans_date != '0000-00-00')
+            ) 
+            AND 
+            (
+                (c.trans_date > '$last_date' AND c.trans_date != '0000-00-00 00:00:00')
+                OR 
+                (c.coll_date > '$last_date' AND c.coll_date != '0000-00-00 00:00:00')
+            ) 
+            AND NOT (
+                (c.coll_date BETWEEN '$start_date' AND '$last_date') 
+                OR 
+                (c.trans_date BETWEEN '$start_date' AND '$last_date')
+            )");
         } else
         if ($loanFrom['scheme_due_method'] == '2') {
             //Query For Weekly.
+            $maturity_month_last_date = (clone $maturity_month_obj)->modify('last day of this week')->format('Y-m-d');
+            $maturity_month = (clone $maturity_month_obj)->modify('+1 week')->format('Y-m-d');
+            $maturity_month = $maturity_month . ' ' . $startTime;
+            $last_date = $maturity_month_last_date . ' ' . $endTime;
             $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
             LEFT JOIN users u ON c.insert_login_id = u.id
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
-            AND (
-                (DATE(c.coll_date) > DATE('$maturity_month') AND Year(c.coll_date) > Year('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND Year(c.coll_date) <= Year('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
-                (DATE(c.trans_date) > DATE('$maturity_month') AND Year(c.trans_date) > Year('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND Year(c.trans_date) <= Year('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' )
+           AND 
+                (
+                    (c.coll_date BETWEEN '$maturity_month' AND '$currentMonth')
+                    OR 
+                    (c.trans_date BETWEEN '$maturity_month' AND '$currentMonth' AND c.trans_date != '0000-00-00')
+                ) 
+            AND 
+                (
+                    (c.trans_date > '$last_date' AND c.trans_date != '0000-00-00 00:00:00')
+                    OR 
+                    (c.coll_date > '$last_date' AND c.coll_date != '0000-00-00 00:00:00')
+                ) 
+            AND NOT 
+                (
+                    (c.coll_date BETWEEN '$start_date' AND '$last_date') 
+                    OR 
+                    (c.trans_date BETWEEN '$start_date' AND '$last_date')
                 ) ");
         } else
         if ($loanFrom['scheme_due_method'] == '3') {
             //Query For Day.
+
+            $maturity_month_last_date = (clone $maturity_month_obj)->format('Y-m-d');
+            $maturity_month = (clone $maturity_month_obj)->modify('+1 day')->format('Y-m-d');
+            $maturity_month = $maturity_month . ' ' . $startTime;
+            $last_date = $maturity_month_last_date . ' ' . $endTime;
             $run = $pdo->query("SELECT c.coll_code, c.due_amt, c.pending_amt, c.payable_amt, c.coll_date, c.trans_date, c.due_amt_track, c.bal_amt, c.coll_charge_track, c.pre_close_waiver, lelc.due_startdate, lelc.maturity_date, lelc.due_method, u.name, r.role
             FROM `collection` c
             LEFT JOIN loan_entry_loan_calculation lelc ON c.cus_profile_id = lelc.cus_profile_id
             LEFT JOIN users u ON c.insert_login_id = u.id
             LEFT JOIN role r ON u.role = r.id
             WHERE c.`cus_profile_id` = '$cp_id' AND (c.due_amt_track != '' or c.pre_close_waiver!='')
-            AND (
-                    (DATE(c.coll_date) > DATE('$maturity_month') AND Year(c.coll_date) > Year('$maturity_month') AND DATE(c.coll_date) <= DATE('$currentMonth') AND Year(c.coll_date) <= Year('$currentMonth') AND DATE(c.coll_date) != '0000-00-00' ) OR
-                    (DATE(c.trans_date) > DATE('$maturity_month') AND Year(c.trans_date) > Year('$maturity_month') AND DATE(c.trans_date) <= DATE('$currentMonth') AND Year(c.trans_date) <= Year('$currentMonth') AND DATE(c.trans_date) != '0000-00-00' )
-                ) ");
+            AND 
+                (
+                    (c.coll_date BETWEEN '$maturity_month' AND '$currentMonth') 
+                    OR
+                    (c.trans_date BETWEEN '$maturity_month' AND '$currentMonth' AND c.trans_date != '0000-00-00')
+                ) 
+            AND 
+                (
+                    (c.trans_date > '$last_date' AND c.trans_date != '0000-00-00 00:00:00')
+                    OR 
+                    (c.coll_date > '$last_date' AND c.coll_date != '0000-00-00 00:00:00')
+                ) 
+            AND NOT 
+                (
+                    (c.coll_date BETWEEN '$start_date' AND '$last_date') 
+                    OR 
+                    (c.trans_date BETWEEN '$start_date' AND '$last_date')
+                )  ");
         }
 
         if ($run->rowCount() > 0) {
@@ -723,7 +779,7 @@ WHERE c.cus_profile_id = $cp_id AND (c.due_amt_track != '' OR c.pre_close_waiver
                 $collectionAmnt = intVal($row['due_amt_track']);
                 $due_amt_track = intVal($row['due_amt_track']);
                 $waiver = intVal($row['pre_close_waiver']);
-                $bal_amt = $bal_amt - $due_amt_track - $waiver;
+                $bal_amt = $row['bal_amt'] - $due_amt_track - $waiver;
             ?>
                 <tr>
                     <td></td>
@@ -1080,11 +1136,11 @@ function calculateOthers($loan_arr, $response, $date, $pdo)
                 }
             }
 
-            if ($response['payable'] > $response['balance']) {
-                //if payable is greater than balance then change it as balance amt coz dont collect more than balance
-                //this case will occur when collection status becoms OD
-                $response['payable'] = $response['balance'];
-            }
+            // if ($response['payable'] > $response['balance']) {
+            //     //if payable is greater than balance then change it as balance amt coz dont collect more than balance
+            //     //this case will occur when collection status becoms OD
+            //     $response['payable'] = $response['balance'];
+            // }
 
             //in this calculate till date interest when month are crossed for current month
             $response['till_date_int'] = getTillDateInterest($loan_arr, $response, $pdo, 'from01', $date);
@@ -1203,13 +1259,12 @@ WHERE c.cus_profile_id = '$cp_id'  AND (
 
             //Payable amount will be pending amount added with current month due amount
             $response['payable'] = $response['due_amt'] + $response['pending'];
-        
-            if ($response['payable'] > $response['balance']) {
-                //if payable is greater than balance then change it as balance amt coz dont collect more than balance
-                //this case will occur when collection status becoms OD
-                $response['payable'] = $response['balance'];
-            }
 
+            // if ($response['payable'] > $response['balance']) {
+            //     //if payable is greater than balance then change it as balance amt coz dont collect more than balance
+            //     //this case will occur when collection status becoms OD
+            //     $response['payable'] = $response['balance'];
+            // }
         } else {
             //If still current month is not ended, then pending will be same due amt // pending will be 0 if due date not exceeded
             $response['pending'] = 0; // $response['due_amt'] - $response['total_paid'] - $response['pre_closure'] ;
@@ -1310,11 +1365,11 @@ WHERE c.cus_profile_id = '$cp_id'  AND (
 
             //Payable amount will be pending amount added with current month due amount
             $response['payable'] = $response['due_amt'] + $response['pending'];
-            if ($response['payable'] > $response['balance']) {
-                //if payable is greater than balance then change it as balance amt coz dont collect more than balance
-                //this case will occur when collection status becoms OD
-                $response['payable'] = $response['balance'];
-            }
+            // if ($response['payable'] > $response['balance']) {
+            //     //if payable is greater than balance then change it as balance amt coz dont collect more than balance
+            //     //this case will occur when collection status becoms OD
+            //     $response['payable'] = $response['balance'];
+            // }
         } else {
             //If still current month is not ended, then pending will be same due amt// pending will be 0 if due date not exceeded
             $response['pending'] = 0; //$response['due_amt'] - $response['total_paid'] - $response['pre_closure'] ;

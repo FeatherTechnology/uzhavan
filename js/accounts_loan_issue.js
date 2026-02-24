@@ -35,6 +35,7 @@ $(document).ready(function () {
                 $('#balance_amount').val(0);
             }
         }
+        $('#transaction_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
     });
 
     $('#submit_accounts_loan_issue').click(function (event) {
@@ -56,12 +57,15 @@ $(document).ready(function () {
             'chequeValue': $('#chequeValue').val().replace(/,/g, ''),
             'chequeRemark': $('#chequeRemark').val(),
             'transaction_id': $('#transaction_id').val(),
+            'transaction_date': $('#trans_date').val(),
             'transaction_value': $('#transaction_value').val().replace(/,/g, ''),
             'transaction_remark': $('#transaction_remark').val(),
             'bal_amount': $('#balance_amount').val().replace(/,/g, ''),
             'issue_date': $('#issue_date').val(),
             'issue_person': $('#issue_person').val(),
             'issue_relationship': $('#issue_relationship').val(),
+            'bank_clr_trans_amnt': $('#bank_clr_trans_amnt').val(),
+            'bank_clr_bank_id': $('#bank_clr_bank_id').val(),
         }
         if (isFormDataValid(loanIssue)) {
             $.post('api/accounts_files/loan_issue_files/submit_accounts_loan_issue.php', loanIssue, function (response) {
@@ -82,6 +86,61 @@ $(document).ready(function () {
         swalConfirm('Move', 'Are you sure to move to Loan Issue?', moveToLoanIssue, cus_prof_id);
         return;
     });
+
+    $('#bank_names').change(function () {
+        $('#transaction_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+    });
+
+    //Transaction id validation
+    $("#transaction_id").keydown(function () { //clear transaction date if changes in trans id becuase if by chance changing trans id after gets trans date means it take while a time to reflect new date in mean time able to submit with old date.  
+        $('#trans_date').val('');
+    });
+
+    $("#transaction_id").blur(async function () {
+        let bankId = $('#bank_names').val();
+        if (!bankId) {
+            swalError("Kindly select Bank Name!");
+            return;
+        }
+
+        let paymentMode = $('#payment_mode').val();
+        let transactionValue = '';
+        if (paymentMode == '3') {
+            transactionValue = $('#chequeValue').val() != '' ? $('#chequeValue').val().replace(/,/g, '') : 0;
+        } else if (paymentMode == '2') {
+            transactionValue = $('#transaction_value').val() != '' ? $('#transaction_value').val().replace(/,/g, '') : 0;
+        }
+
+        if (!transactionValue) {
+            swalError("Kindly Fill Value!");
+            return;
+        }
+
+        let transId = $('#transaction_id').val();
+        let response = await checkBankTransactionDetails('debit', bankId, transId, transactionValue);
+        if (!response.status) {
+            swalError(response.message);
+            $('#transaction_id').val('');
+            return;
+        }
+
+        let alertStatus = response.data.alert_status;
+        if (alertStatus) {
+            swalError(response.data.alert);
+            $('#transaction_id').val('');
+        } else {
+            let date = response.data.trans_date; // yyyy-mm-dd
+
+            if (date) {
+                let parts = date.split('-');  // [yyyy, mm, dd]
+                let formattedDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+                $('#trans_date').val(formattedDate);
+            }
+            $('#bank_clr_bank_id').val(response.data.id);
+            $('#bank_clr_trans_amnt').val(response.data.transaction_amount);
+        }
+    });
+
 
 
 });
@@ -413,9 +472,14 @@ function paymentType() {
         } else if (payment_mode == '3') {
             $('.balance').show();
             $('.checque').show();
+
+            // Show only Transaction ID & Date
+            $('.transaction').hide();
+            $('#transaction_id').closest('.transaction').show();
+            $('#trans_date').closest('.transaction').show();
+
             $('#chequeValue').val('');
             $('#chequeValue').attr('readonly', false);
-            $('.transaction').hide();
         } else {
             $('.balance').hide();
             $('.checque').hide();
@@ -433,10 +497,15 @@ function paymentType() {
             $('#balance_amount').val('0');
         } else if (payment_mode == '3') {
             $('.checque').show();
+
+            // Show only Transaction ID & Date
+            $('.transaction').hide();
+            $('#transaction_id').closest('.transaction').show();
+            $('#trans_date').closest('.transaction').show();
+
             $('#chequeValue').val(netcash);
             $('#chequeValue').attr('readonly', true);
             $('#balance_amount').val('0');
-            $('.transaction').hide();
         } else {
             $('.balance').hide();
             $('.checque').hide();

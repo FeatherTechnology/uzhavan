@@ -266,9 +266,8 @@ function setdtable(table_id) {
 	// Fetch user access and initialize DataTable based on it
 	getUserAccess(function (downloadAccess) {
 		let buttons = [];
-
 		// Add Excel button if download access is 1
-		if (downloadAccess === 1) {
+		if (downloadAccess == 1) {
 			buttons.push({
 				extend: 'excel',
 				title: "Export Data"
@@ -340,9 +339,8 @@ function serverSideTable(tableSelector, params, apiUrl) {
 	// Fetch user access and initialize DataTable based on it
 	getUserAccess(function (downloadAccess) {
 		let buttons = [];
-
 		// Add Excel button if download access is 1
-		if (downloadAccess === 1) {
+		if (downloadAccess == 1) {
 			buttons.push({
 				extend: 'excel',
 				title: "Branch List"
@@ -403,20 +401,20 @@ function swalSuccess(title, text) {
 	})
 }
 function swalSuccessOk(title, text, callback) {
-    Swal.fire({
-        icon: 'success',
-        title: title,
-        text: text,
-        showConfirmButton: true,
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#7CA5B8',
-        allowOutsideClick: false,
-        allowEscapeKey: false
-    }).then((result) => {
-        if (result.isConfirmed && typeof callback === "function") {
-            callback(); // ✅ run only after OK
-        }
-    });
+	Swal.fire({
+		icon: 'success',
+		title: title,
+		text: text,
+		showConfirmButton: true,
+		confirmButtonText: 'OK',
+		confirmButtonColor: '#7CA5B8',
+		allowOutsideClick: false,
+		allowEscapeKey: false
+	}).then((result) => {
+		if (result.isConfirmed && typeof callback === "function") {
+			callback(); // ✅ run only after OK
+		}
+	});
 }
 
 
@@ -615,6 +613,34 @@ function validateMultiSelectField(fieldId, choicesInstance) {
 	}
 }
 
+// function moneyFormatIndia(num) {
+// 	var isNegative = false;
+// 	if (num < 0) {
+// 		isNegative = true;
+// 		num = Math.abs(num);
+// 	}
+
+// 	var explrestunits = "";
+// 	if (num.toString().length > 3) {
+// 		var lastthree = num.toString().substr(num.toString().length - 3);
+// 		var restunits = num.toString().substr(0, num.toString().length - 3);
+// 		restunits = (restunits.length % 2 == 1) ? "0" + restunits : restunits;
+// 		var expunit = restunits.match(/.{1,2}/g);
+// 		for (var i = 0; i < expunit.length; i++) {
+// 			if (i == 0) {
+// 				explrestunits += parseInt(expunit[i]) + ",";
+// 			} else {
+// 				explrestunits += expunit[i] + ",";
+// 			}
+// 		}
+// 		var thecash = explrestunits + lastthree;
+// 	} else {
+// 		var thecash = num;
+// 	}
+
+// 	return isNegative ? "-" + thecash : thecash;
+// }
+
 function moneyFormatIndia(num) {
 	var isNegative = false;
 	if (num < 0) {
@@ -622,10 +648,16 @@ function moneyFormatIndia(num) {
 		num = Math.abs(num);
 	}
 
+	// 🔹 Split decimal part (minimal addition)
+	num = num.toString();
+	var parts = num.split('.');
+	var intPart = parts[0];
+	var decPart = parts.length > 1 ? '.' + parts[1] : '';
+
 	var explrestunits = "";
-	if (num.toString().length > 3) {
-		var lastthree = num.toString().substr(num.toString().length - 3);
-		var restunits = num.toString().substr(0, num.toString().length - 3);
+	if (intPart.length > 3) {
+		var lastthree = intPart.substr(intPart.length - 3);
+		var restunits = intPart.substr(0, intPart.length - 3);
 		restunits = (restunits.length % 2 == 1) ? "0" + restunits : restunits;
 		var expunit = restunits.match(/.{1,2}/g);
 		for (var i = 0; i < expunit.length; i++) {
@@ -635,10 +667,20 @@ function moneyFormatIndia(num) {
 				explrestunits += expunit[i] + ",";
 			}
 		}
-		var thecash = explrestunits + lastthree;
+		var thecash = explrestunits + lastthree + decPart;
 	} else {
-		var thecash = num;
+		var thecash = intPart + decPart;
 	}
 
 	return isNegative ? "-" + thecash : thecash;
 }
+
+
+  function checkBankTransactionDetails(crdrType, bankId, transId, amount) {
+            return $.post('api/accounts_files/accounts/getBankTransactionDetails.php', {
+                crdrType,
+                bankId,
+                transId,
+                amount
+            }, null, 'json');
+        }

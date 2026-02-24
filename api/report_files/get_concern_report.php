@@ -77,7 +77,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['con_remark']) ? $row['con_remark'] : '';
     $sub_array[] = isset($row['name']) ? $row['name'] : '';
     $sub_array[] = isset($row['sol_date']) ? date('d-m-Y', strtotime($row['sol_date'])) : '';
-    $sub_array[] = isset($comm_arr[$row['con_status']]) ? $comm_arr[$row['con_status']] : ''; 
+    $sub_array[] = isset($comm_arr[$row['communication']]) ? $comm_arr[$row['communication']] : ''; 
     if (!empty($row['concern_upload'])) {
         $filePath = 'uploads/concern_solution/' . $row['concern_upload'];
         $sub_array[] = '<a href="' . $filePath . '" target="_blank">' . $row['concern_upload'] . '</a>';

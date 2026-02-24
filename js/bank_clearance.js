@@ -17,127 +17,137 @@ $(document).ready(function () {
             $(this).val('');
         }
     });
+    $.post('api/common_files/check_user_screen_access.php', function (response) {
 
-    $('#view_btn').click(function () {
-        let bank_id = $('#bank_name').val(); let from_date = $('#from_date').val(); let to_date = $('#to_date').val();
-        if (bank_id == '' || from_date == '' || to_date == '') {
-            swalError('Warning', 'Kindly fill the Mandatory Fields');
-            return;
-        } else {
-            $.ajax({
-                url: 'api/accounts_files/bank_clearance_files/bank_clearance_stmt.php',
-                data: { 'bank_id': bank_id, 'from_date': from_date, 'to_date': to_date },
-                type: 'post',
-                cache: false,
-                success: function (response) {
-                    if (response.includes('Given Date Has No Statements!')) {
-                        swalError('Alert', 'Kindly try with other date!');
-                        $('.bank_statement_table_content').hide();
-                        return false;
-                    } else {
-                        $('.bank_statement_table_content').show();
-                        $('#bank_statement_table').empty();
-                        $('#bank_statement_table').html(response);
-                    }
-                }
-            }).then(function () {
-                clrcatClickEvent();
-                getUnclearTotal();
-            })
-        }
-    })
+        if (response.length > 0) {
 
-    $('#bank_name_form').change(function () {
-        let accNo = $('#bank_name_form :selected').attr('data-id');
-        $('#acc_no').val(accNo);
-    });
+            let access = response[0].bank_cl_up_access;
 
-    /////////////////////////////////////////////////////////// Transaction Details START ///////////////////////////////////////////////////////////////////////
-    $('#submit_bank_clearance').click(function (event) {
-        event.preventDefault();
-        let bcData = {
-            bank_id: $('#bank_name_form').val(),
-            acc_no: $('#acc_no').val(),
-            transaction_date: $('#transaction_date').val(),
-            transaction_id: $('#transaction_id').val(),
-            narration: $('#narration').val(),
-            cr_dr: $('#cr_dr').val(),
-            amount: $('#amount').val(),
-            balance: $('#balance').val()
-        };
-        if (isFormDataValid(bcData)) {
-            $.post('api/accounts_files/bank_clearance_files/submit_bank_clearance.php', bcData, function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Transaction details Added Successfully!');
-                    $('#reset_btn').trigger('click'); //To Clear All Fields in Transaction Details.
-                } else {
-                    swalError('Error', 'Failed to Insert!');
-                }
-            }, 'json');
-
-        } else {
-            swalError('Warning', 'Kindly Fill the Mandatory Fields!')
-        }
-    });
-    /////////////////////////////////////////////////////////// Transaction Details END ///////////////////////////////////////////////////////////////////////
-
-    $('#download_bank_stmt').click(function () {
-        window.location.href = 'uploads/excel_format/bank_statement_format.xlsx';
-    });
-
-
-    $("#submit_stmt_upload").click(function () {
-        var bank_id = $('#bank_id_upload').val();
-        if (bank_id != '') { //allows only if bank id selected
-            $('#bank_id_uploadCheck').hide();
-            var file_data = $('#file').prop('files')[0];
-            var bank_id = $('#bank_id_upload').val();
-            var bcstmt = new FormData();
-            bcstmt.append('file', file_data);
-            bcstmt.append('bank_id', bank_id);
-
-            if (file.files.length == 0) { //if no file selected
-                swalError('Warning', 'Please Select File!');
-                return false;
+            if (access == '1') {
+                $('.add_bc_btn').show();
             } else {
-                $.ajax({
-                    url: 'api/accounts_files/bank_clearance_files/checkExcelforOverwrite.php',
-                    data: bcstmt,
-                    type: 'post',
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response == 0) {
-                            submitUpload();
-                        } else if (response == 1) {
-                            Swal.fire({
-                                title: 'Your Statement Has existing transaction Dates!',
-                                text: 'Do you want to overwrite?',
-                                icon: 'question',
-                                showConfirmButton: true,
-                                showCancelButton: true,
-                                confirmButtonColor: '#009688',
-                                cancelButtonColor: '#cc4444',
-                                cancelButtonText: 'No',
-                                confirmButtonText: 'Yes'
-                            }).then(function (result) {
-                                if (result.isConfirmed) {
-                                    removeAndSubmitUpload();
-                                }
-                            })
-                        } else {
-                            swalError('Error', 'Error occured when uploading');
-                            return false;
-                        }
-                    }
-                })
+                $('.add_bc_btn').hide();
             }
-        } else {
-            swalError('Warning', 'Kindly Select Mandatory Fields!')
-            return false;
+
+        }
+
+    }, 'json');
+
+$('#view_btn').click(function () {
+
+    let bank_id = $('#bank_name').val();
+
+    if (bank_id == '') {
+        swalError('Warning', 'Kindly fill the Mandatory Fields');
+        return;
+    }
+
+    $.ajax({
+        url: 'api/accounts_files/bank_clearance_files/bank_clearance_stmt.php',
+        type: 'POST',
+        data: { bank_id: bank_id },
+        dataType: 'json',
+        success: function (response) {
+
+            if (response.status == 'empty') {
+
+                swalError('Alert', response.message);
+                $('.bank_statement_table_content').hide();
+                return;
+
+            }
+
+            if (response.status == 'success') {
+
+                $('.bank_statement_table_content').show();
+
+                appendDataToTable('#bank_statement_table', response.data, [
+                    'sno',
+                    'trans_date',
+                    'narration',
+                    'trans_id',
+                    'credit',
+                    'debit',
+                    'balance',
+                    'transaction_amount'
+                ]);
+
+                setdtable('#bank_statement_table');
+            }
+
         }
     });
+
+});
+
+
+$('#bank_name_form').change(function () {
+    let accNo = $('#bank_name_form :selected').attr('data-id');
+    $('#acc_no').val(accNo);
+});
+
+/////////////////////////////////////////////////////////// Transaction Details START ///////////////////////////////////////////////////////////////////////
+$('#submit_bank_clearance').click(function (event) {
+    event.preventDefault();
+
+    var bank_short_name = $('#bank_name_form option:selected').data('short-name') || '';
+    let bcData = {
+        bank_id: $('#bank_name_form').val(),
+        acc_no: $('#acc_no').val(),
+        transaction_date: $('#transaction_date').val(),
+        trans_time: $('#trans_time').val(),
+        narration: $('#narration').val(),
+        cr_dr: $('#cr_dr').val(),
+        amount: $('#amount').val(),
+        balance: $('#balance').val(),
+        bank_short_name: bank_short_name
+    };
+
+    if (isFormDataValid(bcData)) {
+        $.post('api/accounts_files/bank_clearance_files/submit_bank_clearance.php', bcData, function (response) {
+            // response is already JSON object
+            if (response.status == 'success') {
+
+                swalSuccess('Success', 'Submitted Successfully');
+                $('#bank_clearance_form')[0].reset();
+
+            } else {
+
+                swalError('Error', response.message || 'Error Occurred while submitting');
+            }
+        }, 'json');
+
+    } else {
+        swalError('Warning', 'Kindly Fill the Mandatory Fields!')
+    }
+});
+/////////////////////////////////////////////////////////// Transaction Details END ///////////////////////////////////////////////////////////////////////
+
+$('#download_bank_stmt').click(function () {
+    window.location.href = 'uploads/excel_format/bank_statement_format.xlsx';
+});
+
+
+$("#submit_stmt_upload").click(function () {
+
+    var bank_id = $('#bank_id_upload').val();
+
+    if (bank_id == '') {
+        swalError('Warning', 'Kindly Select Mandatory Fields!');
+        return false;
+    }
+
+    var fileInput = $('#file')[0]; // get DOM element
+
+    if (!fileInput || fileInput.files.length == 0) {
+        swalError('Warning', 'Please Select File!');
+        return false;
+    }
+
+    // file exists
+    submitUpload();
+});
+
 
 }); //Document END.
 
@@ -165,10 +175,10 @@ function swapTableAndCreation() {
 }
 
 function getBankName() {
-    $.post('api/common_files/bank_name_list.php', function (response) {
+    $.post('api/accounts_files/bank_clearance_files/getUserBasedbank.php', function (response) {
         var bankName = '<option value="">Select Bank Name</option>';
         $.each(response, function (index, value) {
-            bankName += '<option value="' + value.id + '" data-id="' + value.account_number + '">' + value.bank_name + '</option>';
+            bankName += '<option value="' + value.id + '" data-id="' + value.account_number + '" data-short-name="' + value.bank_short_name + '">' + value.bank_name + '</option>';
         });
         $('#bank_name').html(bankName);
         $('#bank_name_form').html(bankName);
@@ -191,45 +201,56 @@ function submitUpload() {
 
     var file_data = $('#file').prop('files')[0];
     var bank_id = $('#bank_id_upload').val();
-    var area = new FormData();
-    area.append('file', file_data);
-    area.append('bank_id', bank_id);
+    var bank_short_name = $('#bank_id_upload option:selected').data('short-name') || '';
+
+    var bcstmt = new FormData();
+    bcstmt.append('file', file_data);
+    bcstmt.append('bank_id', bank_id);
+    bcstmt.append('bank_short_name', bank_short_name);
 
     $.ajax({
         url: 'api/accounts_files/bank_clearance_files/submitUploadedBankStmt.php',
         type: 'POST',
-        data: area,
+        data: bcstmt,
         contentType: false,
-        cache: false,
         processData: false,
+        cache: false,
+        dataType: 'json', // ✅ IMPORTANT
+
         beforeSend: function () {
-            $('#file').attr("disabled", true);
-            $('#submit_stmt_upload').attr("disabled", true);
+            $('#file').prop("disabled", true);
+            $('#submit_stmt_upload').prop("disabled", true);
         },
+
         success: function (data) {
-            if (data == 0) {
+
+            if (data.status == 'success') {
+
                 $("#file").val('');
-                Swal.fire({
-                    title: 'Statement Uploaded!',
-                    icon: 'success',
-                    showConfirmButton: true,
-                    confirmButtonColor: '#009688',
-                }).then(function (result) {
-                    if (result.isConfirmed) {
-                        // getBankClearanceTable();
-                    }
-                })
-            } else if (data > 0) {
+                swalSuccess('Success', data.message);
+
+            } else if (data.status == 'balance_mismatch') {
+
                 $("#file").val('');
-                swalError('Warning', 'File Not Uploaded!')
+                swalError('Warning', data.message);
+
+            } else {
+
+                swalError('Error', data.message || 'Upload failed');
             }
         },
+
+        error: function () {
+            swalError('Error', 'Server Error Occurred');
+        },
+
         complete: function () {
-            $('#file').attr("disabled", false);
-            $('#submit_stmt_upload').attr("disabled", false);
+            $('#file').prop("disabled", false);
+            $('#submit_stmt_upload').prop("disabled", false);
         }
     });
 }
+
 
 //remove entries and submit uploaded excel file if table has transaction dates of excel file
 function removeAndSubmitUpload() {

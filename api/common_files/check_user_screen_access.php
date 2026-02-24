@@ -4,7 +4,7 @@ require "../../ajaxconfig.php";
 $user_id = $_SESSION['user_id'];
 
 $result =array();
-$qry = $pdo->query("SELECT screens FROM `users` WHERE id = '$user_id' ");
+$qry = $pdo->query("SELECT screens,bank_cl_up_access FROM `users` WHERE id = '$user_id' ");
 if($qry->rowCount()>0){
     $result = $qry->fetchAll(PDO::FETCH_ASSOC);
 }

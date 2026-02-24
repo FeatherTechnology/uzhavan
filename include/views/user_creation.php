@@ -184,6 +184,25 @@
                                             </select>
                                         </div>
                                     </div>
+                                     <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="bank_access">Bank Access</label>
+                                            <input type="hidden" id="bank_access_edit_it">
+                                            <select class="form-control" id="bank_access" name="bank_access" tabindex="19" multiple>
+                                                <option value="">Select Bank Access</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="bank_cl_up_access">Bank Clearance Upload Access</label>
+                                            <select class="form-control" id="bank_cl_up_access" name="bank_cl_up_access" tabindex="18" >
+                                                <option value="">Select Bank Clearance Upload Access</option>
+                                                <option value="1">YES</option>
+                                                <option value="2">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="col-sm-4 col-md-4 col-lg-4">
                                         <div class="form-group">
                                             <label for="collection_access">Collection Access</label><span class="text-danger">*</span>
@@ -205,6 +224,8 @@
                                             </select>
                                         </div>
                                     </div>
+                                    
+                                     
                                 </div>
                             </div>
                         </div>
@@ -216,7 +237,6 @@
                                 <h5 class="card-title">Screen Mapping <span class="text-danger">*</span></h5>
                             </div>
                             <div class="card-body" id="dynamic-menus">
-
                             </div>
                         </div>
                         <!--- ---------------------- Screen Mapping END  ----------------------------- -->

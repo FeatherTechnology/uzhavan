@@ -18,6 +18,12 @@ const loan_category = new Choices('#loan_category', {
     noChoicesText: 'Select Loan Category',
     allowHTML: true
 });
+//Bank Access Multi select initialization
+const bank_access = new Choices('#bank_access', {
+    removeItemButton: true,
+    noChoicesText: 'Select Bank Access',
+    allowHTML: true
+});
 
 $(document).ready(function () {
 
@@ -143,12 +149,14 @@ $(document).ready(function () {
             line_name: $('#line_name').val(),
 
             loan_category: $('#loan_category').val(),
+            bank_access: $('#bank_access').val(),
+            bank_cl_up_access: $('#bank_cl_up_access').val(),
             collection_access: $('#collection_access').val(),
             download_access: $('#download_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
-        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access','download_access']
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access','download_access','bank_cl_up_access']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -208,6 +216,7 @@ $(document).ready(function () {
             $('#confirm_password').val(response[0].password);
             $('#collection_access').val(response[0].collection_access);
             $('#download_access').val(response[0].download_access);
+            $('#bank_cl_up_access').val(response[0].bank_cl_up_access);
 
             setTimeout(() => {
                 getUserID(id)
@@ -216,6 +225,7 @@ $(document).ready(function () {
                 getBranchName(response[0].branch);
                 getLineName(response[0].branch);
                 getLoanCategoryName(response[0].loan_category);
+                getBankAccess(response[0].bank_access);
             }, 1000);
 
         }, 'json');
@@ -336,6 +346,7 @@ function swapTableAndCreation() {
         getBranchName('');
         getLineName('');
         getLoanCategoryName('');
+        getBankAccess('');
         getMenuSubMenuList(userid);
     } else {
         $('.user_creation_table_content').show();
@@ -617,6 +628,38 @@ function getLoanCategoryName(loan_cat_edit_it) {
     }, 'json');
 }
 
+function getBankAccess(bank_access_edit_it) {
+
+    // ✅ If null or undefined make it empty string
+    bank_access_edit_it = bank_access_edit_it || '';
+
+    $.post('api/common_files/bank_name_list.php', function (response) {
+
+        bank_access.clearStore();
+
+        let items = [];
+
+        $.each(response, function (index, val) {
+
+            let selected = false;
+
+            // ✅ Check safely inside string
+            if (bank_access_edit_it.includes(val.id)) {
+                selected = true;
+            }
+
+            items.push({
+                value: val.id,
+                label: val.bank_name,
+                selected: selected
+            });
+
+        });
+
+        bank_access.setChoices(items, 'value', 'label', true);
+
+    }, 'json');
+}
 
 function deleteUser(id) {
     $.post('api/user_creation_files/delete_user.php', { id }, function (response) {
