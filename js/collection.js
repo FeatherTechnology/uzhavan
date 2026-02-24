@@ -45,6 +45,7 @@ $(document).ready(function () {
         $('#trans_id').val('')
         $('#trans_date').val('')
         $('#cheque_no').val('')
+         $('#bank_clr_bank_id, #bank_clr_trans_amnt').val('');
         if (collection_mode == '2') { //Cheque
             $('.cheque').show();
             $('.transaction').show();
@@ -280,7 +281,7 @@ $(document).ready(function () {
         swalConfirm(
             "Move",
             "Are you sure to move to Error?",
-            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+            () => moveToNext(cus_sts_id, cus_sts, cp_id)
         );
         return;
 
@@ -293,7 +294,7 @@ $(document).ready(function () {
         swalConfirm(
             "Move",
             "Are you sure to move to Legal?",
-            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+            () => moveToNext(cus_sts_id, cus_sts, cp_id)
         );
         return;
 
@@ -306,12 +307,12 @@ $(document).ready(function () {
         swalConfirm(
             "Move",
             "Are you sure to return to Sub Status?",
-            () => moveToNext(cus_sts_id, cus_sts,cp_id)
+            () => moveToNext(cus_sts_id, cus_sts, cp_id)
         );
         return;
 
     })
-    function moveToNext(cus_sts_id, cus_sts,cp_id) {
+    function moveToNext(cus_sts_id, cus_sts, cp_id) {
         let cusid = $('#cus_id').val();
         $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
             if (response == '0') {
@@ -534,6 +535,9 @@ $(document).ready(function () {
 
         var total_paid_track = parseInt(due_amt_track) + parseInt(princ_amt_track) + parseInt(int_amt_track) + parseInt(penalty_track) + parseInt(coll_charge_track);
         $('#total_paid_track').val(moneyFormatIndia(total_paid_track));
+        
+            $('#trans_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+        
     });
 
     $('#pre_close_waiver , #penalty_waiver , #coll_charge_waiver').blur(function () {
@@ -544,6 +548,7 @@ $(document).ready(function () {
 
         var total_waiver = parseInt(pre_close_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
         $('#total_waiver').val(moneyFormatIndia(total_waiver));
+        
     });
 
     $(document).on('click', '.due-chart', function () {
@@ -615,6 +620,48 @@ $(document).ready(function () {
     $('#collection_mode').on('change', function () {
         resetValidation();
     });
+
+    $('#bank_id').change(function () {
+        $('#trans_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+    });
+
+    //Transaction id validation
+    $("#trans_id").keydown(function () { //clear transaction date if changes in trans id becuase if by chance changing trans id after gets trans date means it take while a time to reflect new date in mean time able to submit with old date.  
+        $('#trans_date').val('');
+    });
+
+    $("#trans_id").blur(async function () {
+        let bankId = $('#bank_id').val();
+        if (!bankId) {
+            swalError("Kindly select Bank Name!");
+            return;
+        }
+
+        let totalPaidTrack = $('#total_paid_track').val() != '' ? $('#total_paid_track').val().replace(/,/g, '') : 0;
+        if (!totalPaidTrack) {
+            swalError("Kindly Fill Collection Track!");
+            return;
+        }
+
+        let transId = $('#trans_id').val();
+        let response = await checkBankTransactionDetails('credit', bankId, transId, totalPaidTrack);
+        if (!response.status) {
+            swalError(response.message);
+            $('#trans_id').val('');
+            return;
+        }
+
+        let alertStatus = response.data.alert_status;
+        if (alertStatus) {
+            swalError(response.data.alert);
+            $('#trans_id').val('');
+        } else {
+            $('#trans_date').val(response.data.trans_date);
+            $('#bank_clr_bank_id').val(response.data.id);
+            $('#bank_clr_trans_amnt').val(response.data.transaction_amount);
+        }
+
+    });
     $('#submit_collection').click(function (event) {
         event.preventDefault();
         $(this).attr('disabled', true);
@@ -654,7 +701,10 @@ $(document).ready(function () {
             'bank_id': $('#bank_id').val(),
             'cheque_no': $('#cheque_no').val(),
             'trans_id': $('#trans_id').val(),
-            'trans_date': $('#trans_date').val()
+            'trans_date': $('#trans_date').val(),
+            'bank_clr_trans_amnt': $('#bank_clr_trans_amnt').val(),
+            'bank_clr_bank_id': $('#bank_clr_bank_id').val(),
+
         };
 
         if (isFormDataValid(collData)) {
@@ -847,7 +897,7 @@ function getChequeList() {
     })
 }
 
-function OnLoadFunctions(cus_id,callback) {
+function OnLoadFunctions(cus_id, callback) {
     //To get loan sub Status
     var pending_arr = [];
     var od_arr = [];
@@ -961,7 +1011,7 @@ function isFormDataValid(collData) {
         $('#penalty_track').css('border', '1px solid #cecece');
         $('#coll_charge_track').css('border', '1px solid #cecece');
     }
-  if (!validateField(collData['collection_method'], 'collection_method')) {
+    if (!validateField(collData['collection_method'], 'collection_method')) {
         isValid = false;
     }
     // Validate collection_mode

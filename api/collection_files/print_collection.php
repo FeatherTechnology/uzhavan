@@ -61,7 +61,7 @@ $user_name = $qry->fetch()['name'];
             <b>
                 <div class="text-wrapper-13" style="margin-left: 5px;"><?php echo $coll_code; ?></div>
             </b>
-            <div class="text-wrapper-14" style="margin-left: 5px;"><?php echo date('d-m-Y h:i:s A', strtotime($coll_date)); ?></div>
+            <div class="text-wrapper-14" style="margin-left:5px; white-space:nowrap;"><?php echo date('d-m-Y h:i:s A', strtotime($coll_date)); ?></div>
             <div class="text-wrapper-15" style="margin-left: 5px;"><?php echo $line_name; ?></div>
             <div class="text-wrapper-16" style="margin-left: 5px;"><?php echo $cus_id; ?></div>
             <b>

@@ -122,7 +122,7 @@ class bulkUploadClass
         $dataArray['gender'] = $this->arrayItemChecker($genderArray, $dataArray['gender']);
         $collection_methodArray = ['Byself' => '1', 'On Spot' => '2', 'Cheque Collection' => '3', 'ECS' => '4'];
         $dataArray['collection_method'] = $this->arrayItemChecker($collection_methodArray, $dataArray['collection_method']);
-        $howToKnowArray = ['Customer Reference' => '1', 'Advertisement' => '2', 'Promotion activity' => '3', 'Agent Reference' => '4', 'Staff Reference' => '5', 'Other Reference' => '6', 'Renewal' => '7'];
+        $howToKnowArray = ['Customer Reference' => '1', 'Advertisement' => '2', 'Promotion Activity' => '3', 'Agent Reference' => '4', 'Staff Reference' => '5', 'Other Reference' => '6', 'Renewal' => '7'];
         $dataArray['how_to_know'] = $this->arrayItemChecker($howToKnowArray, $dataArray['how_to_know']);
         if (!empty($dataArray['first_loan_date'])) {
             $dataArray['first_loan_date'] = $this->dateFormatChecker($dataArray['first_loan_date']);

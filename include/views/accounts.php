@@ -151,23 +151,23 @@ function moneyFormatIndia($num1) {
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-lg-3"></div>
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
                         <div class="form-group">
                             <input type="radio" id="coll_hand_cash" name="coll_cash_type" value='1'/>&emsp;<label class='radio-style'>Hand Cash</label>&emsp;
                         </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    </div> -->
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
                         <div class="form-group">
                             <input type="radio" id="coll_bank_cash" name="coll_cash_type" value='2'/>&emsp;<label class='radio-style'>Bank Cash</label>&emsp;
                         </div>
-                    </div>
-                    <div class="col-sm-2 col-md-2 col-lg-2">
+                    </div> -->
+                    <!-- <div class="col-sm-2 col-md-2 col-lg-2">
                         <div class="form-group">
                             <select class="form-control" name="coll_bank_name" id="coll_bank_name" disabled>
                                 <option value="">Select Bank</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row table-responsive">
@@ -199,7 +199,7 @@ function moneyFormatIndia($num1) {
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
-
+<!-- 
                         <div class="row">
                             <div class="col-sm-3 col-md-3 col-lg-3"></div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
@@ -219,7 +219,7 @@ function moneyFormatIndia($num1) {
                                     </select>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row table-responsive">
                             <table id="accounts_loanissue_table" class="table custom-table">
@@ -420,18 +420,25 @@ function moneyFormatIndia($num1) {
                                     <textarea class="form-control" name="description" id="description" tabindex="11"></textarea>
                                 </div>
                             </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 exp_trans_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="expenses_trans_id">Transaction ID</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" name="expenses_trans_id" id="expenses_trans_id" tabindex="12">
+                                </div>
+                            </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 exp_trans_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="expenses_trans_date">Transaction Date</label><span class="text-danger">*</span>
+                                    <input type="date" class="form-control" name="expenses_trans_date" id="expenses_trans_date" tabindex="13" readonly>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="expenses_amnt">Amount</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="expenses_amnt" id="expenses_amnt" tabindex="12">
+                                    <input type="number" class="form-control" name="expenses_amnt" id="expenses_amnt" tabindex="14">
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 exp_trans_div" style="display: none;">
-                                <div class="form-group">
-                                    <label for="expenses_trans_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="expenses_trans_id" id="expenses_trans_id" tabindex="13">
-                                </div>
-                            </div>
+                           
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <button name="submit_expenses_creation" id="submit_expenses_creation" class="btn btn-primary" tabindex="14" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
@@ -558,7 +565,13 @@ function moneyFormatIndia($num1) {
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_trans_div" style="display: none;">
                                 <div class="form-group">
                                     <label for="other_trans_id">Transaction ID</label><span class="text-danger">*</span>
-                                    <input type="number" class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
+                                    <input type="text" class="form-control" name="other_trans_id" id="other_trans_id" tabindex="10" >
+                                </div>
+                            </div>
+                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_trans_div" style="display: none;">
+                                <div class="form-group">
+                                    <label for="other_trans_date">Transaction Date</label><span class="text-danger">*</span>
+                                    <input type="date" class="form-control" name="other_trans_date" id="other_trans_date" tabindex="11" readonly>
                                 </div>
                             </div>
                             <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 other_user_name_div" style="display: none;">

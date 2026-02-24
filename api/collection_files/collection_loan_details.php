@@ -137,7 +137,7 @@ function calculateOthers($loan_arr, $response, $pdo)
         // Create a DateTime object from the given date
         $maturity_month = new DateTime($maturity_month);
         // Subtract one month from the date
-        $maturity_month->modify('-1 month');
+        // $maturity_month->modify('-1 month');
         // Format the date as a string
         $maturity_month = $maturity_month->format('Y-m');
 

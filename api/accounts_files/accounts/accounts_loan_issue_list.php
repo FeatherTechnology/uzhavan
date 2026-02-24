@@ -3,7 +3,7 @@ require "../../../ajaxconfig.php";
 
 $loan_issue_list_arr = array();
 $cash_type = $_POST['cash_type'];
-$bank_id = $_POST['bank_id'];
+// $bank_id = $_POST['bank_id'];
 
 if ($cash_type == '1') {
     $cndtn = "and li.payment_mode = '1' ";

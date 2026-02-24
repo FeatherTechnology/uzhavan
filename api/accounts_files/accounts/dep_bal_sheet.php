@@ -196,7 +196,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -401,7 +401,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -606,7 +606,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -811,7 +811,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -1016,7 +1016,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -1221,7 +1221,7 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
             if ($row['ctype'] != 'Hand Cash') {
                 $bnameqry = $pdo->query("SELECT bank_short_name,account_number from bank_creation where id = '" . $row['ctype'] . "' ");
                 $bnamerun = $bnameqry->fetch();
-                $bname = $bnamerun['short_name'] . ' - ' . substr($bnamerun['acc_no'], -5);
+                $bname = $bnamerun['bank_short_name'] . ' - ' . substr($bnamerun['account_number'], -5);
 
                 $tabBody .= "<td>" . $bname . "</td>";
             } else {
@@ -1252,35 +1252,35 @@ if ($IDEtype == 1 and $IDEview_type == 1 and $IDE_name_id == '') { //Deposit wit
 }
 
 //Format number in Indian Format
-function moneyFormatIndia($num1){
-    if ($num1 < 0) {
-        $num = str_replace("-", "", $num1);
-    } else {
-        $num = $num1;
-    }
-    $explrestunits = "";
-    if (strlen($num) > 3) {
-        $lastthree = substr($num, strlen($num) - 3, strlen($num));
-        $restunits = substr($num, 0, strlen($num) - 3);
-        $restunits = (strlen($restunits) % 2 == 1) ? "0" . $restunits : $restunits;
-        $expunit = str_split($restunits, 2);
-        for ($i = 0; $i < sizeof($expunit); $i++) {
-            if ($i == 0) {
-                $explrestunits .= (int) $expunit[$i] . ",";
-            } else {
-                $explrestunits .= $expunit[$i] . ",";
-            }
-        }
-        $thecash = $explrestunits . $lastthree;
-    } else {
-        $thecash = $num;
+function moneyFormatIndia($num)
+{
+    // 🔹 FIX: handle -0 / 0 / 0.00
+    if ((float)$num == 0) {
+        return '0';
     }
 
-    if ($num1 < 0 && $num1 != '') {
-        $thecash = "-" . $thecash;
+    $isNegative = false;
+    if ($num < 0) {
+        $isNegative = true;
+        $num = abs($num);
     }
 
-    return $thecash;
+    $numStr = (string)$num;
+    $parts = explode('.', $numStr);
+    $intPart = $parts[0];
+    $decPart = isset($parts[1]) ? '.' . $parts[1] : '';
+
+    $len = strlen($intPart);
+    if ($len <= 3) {
+        $formatted = $intPart;
+    } else {
+        $lastThree = substr($intPart, -3);
+        $rest = substr($intPart, 0, -3);
+        $rest = preg_replace("/\B(?=(\d{2})+(?!\d))/", ",", $rest);
+        $formatted = $rest . "," . $lastThree;
+    }
+
+    return ($isNegative ? '-' : '') . $formatted . $decPart;
 }
 
 if ($opening_bal != '') {

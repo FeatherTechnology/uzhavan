@@ -38,8 +38,36 @@ $bank_id = $_POST['bank_id'];
 $cheque_no = $_POST['cheque_no'];
 $trans_id = $_POST['trans_id'];
 $trans_date = ($_POST['trans_date'] != '') ? $_POST['trans_date'] : '0000-00-00';
-try {
+$bank_clr_bank_id = $_POST['bank_clr_bank_id'];
+$bank_clr_trans_amnt = $_POST['bank_clr_trans_amnt'];
 
+
+try {
+    if (!empty($bank_clr_bank_id)) {
+        // Deduct paid amount
+        $bank_clr_trans_amnt -= $total_paid_track;
+
+        // Prevent negative balance
+        if ($bank_clr_trans_amnt < 0) {
+            $bank_clr_trans_amnt = 0;
+        }
+
+        $clr_sts = ($bank_clr_trans_amnt == 0) ? 1 : 0; //1 - cleared, 0 - uncleared
+        $query = $pdo->prepare("UPDATE bank_clearance SET transaction_amount = ?, clr_status = ? WHERE id = ? ");
+
+        $query->execute([$bank_clr_trans_amnt, $clr_sts, $bank_clr_bank_id]);
+
+        $historyStmt = $pdo->prepare("INSERT INTO cleared_bank_stmt_history
+            (bank_stmt_id, transaction_amount, type, screens, insert_login_id, created_date)
+            VALUES
+            (:bank_stmt_id, :amt, 1, 'Collection', :user_id, NOW()) ");
+
+        $historyStmt->execute([
+            ':bank_stmt_id' => $bank_clr_bank_id,
+            ':amt' => $total_paid_track,
+            ':user_id' => $user_id
+        ]);
+    }
     // Begin transaction
     $pdo->beginTransaction();
 
@@ -56,7 +84,7 @@ try {
         $collection_id = $myStr . "-101";
     }
 
-    $qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`,`collection_method`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`, `insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_method','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','" . $collection_date . ' ' . date('H:i:s') . "','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
+    $qry = $pdo->query("INSERT INTO `collection`( `coll_code`, `cus_profile_id`, `cus_id`, `cus_name`, `branch`, `area`, `line`, `loan_category`, `coll_status`, `coll_sub_status`, `tot_amt`, `paid_amt`, `bal_amt`, `due_amt`, `pending_amt`, `payable_amt`, `penalty`, `coll_charge`,`collection_method`, `coll_mode`, `bank_id`, `cheque_no`, `trans_id`, `trans_date`, `coll_date`, `due_amt_track`, `princ_amt_track`, `int_amt_track`, `penalty_track`, `coll_charge_track`, `total_paid_track`, `pre_close_waiver`, `penalty_waiver`, `coll_charge_waiver`, `total_waiver`,`insert_login_id`, `created_date`) VALUES ('$collection_id','$cp_id','$cus_id','$cus_name','$branch_id','$area_id','$line_id','$loan_category_id','$status','$sub_status','$tot_amt','$paid_amt','$bal_amt','$due_amt','$pending_amt','$payable_amt','$penalty','$coll_charge','$collection_method','$collection_mode','$bank_id','$cheque_no','$trans_id','$trans_date','" . $collection_date . ' ' . date('H:i:s') . "','$due_amt_track','$princ_amt_track','$int_amt_track','$penalty_track','$coll_charge_track','$total_paid_track','$pre_close_waiver','$penalty_waiver','$coll_charge_waiver','$total_waiver','$user_id',current_timestamp )");
     $cur_day = date('j'); // Day of the month without leading zeros
 
     if ($cur_day >= 1 && $cur_day <= 10) {

@@ -57,6 +57,6 @@ $cmpqry = $pdo->query("SELECT COALESCE(SUM(due_amt_track), 0) AS total_due_paid 
 $cmp = $cmpqry->fetch()['total_due_paid'];
 $paid_status = ($cmp > 0) ? '1' : '2'; //1  => YES, 2 => NO.
 
-$query = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_sts',`payable_amnt` = '$payable_amnts', `bal_amnt`='$bal_amt',`last_paid_date`= '$lpd', `current_month_paid`='$paid_status', `insert_login_id`='$userid', `created_on`=NOW() WHERE `cus_profile_id`='$cp_id' ");
+$query = $pdo->query("UPDATE `customer_status` SET `coll_status`='$sub_sts',`payable_amnt` = '$payable_amnts', `bal_amnt`='$bal_amt',`last_paid_date`= '$lpd', `current_month_paid`='$paid_status', `insert_login_id`='$userid', `updated_on`=NOW() WHERE `cus_profile_id`='$cp_id' ");
 
 echo json_encode($query ? 1 : 2);

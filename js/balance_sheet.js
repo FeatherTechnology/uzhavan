@@ -133,16 +133,16 @@ function getBalSheetTotal() {
     $('#balance_sheet_table tbody tr').not('tr:nth-child(18)').each(function () {
         var credit = $(this).find('td:nth-child(2)').text().replace(/,/g, ''); // credit amount
         var debit = $(this).find('td:nth-child(3)').text().replace(/,/g, ''); // debit amount
-        credit_total += parseInt(credit) || 0;
-        debit_total += parseInt(debit) || 0;
+        credit_total += parseFloat(credit) || 0;
+        debit_total += parseFloat(debit) || 0;
     });
 
     let close = credit_total - debit_total;
     debit_total = debit_total + close;
-    credit_total = moneyFormatIndia(credit_total);
-    debit_total = moneyFormatIndia(debit_total);
+    credit_total = moneyFormatIndia(credit_total.toFixed(2));
+    debit_total = moneyFormatIndia(debit_total.toFixed(2));
 
-    $('#balance_sheet_table tbody tr:nth-child(16) td:nth-child(3)').text(moneyFormatIndia(close));
+    $('#balance_sheet_table tbody tr:nth-child(16) td:nth-child(3)').text(moneyFormatIndia(close.toFixed(2)));
     $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
     $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
 }

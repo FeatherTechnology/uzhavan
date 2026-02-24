@@ -41,6 +41,8 @@
         <input type="hidden" id="due_period_upd">
         <input type="hidden" id="doc_charge_upd">
         <input type="hidden" id="proc_fees_upd">
+        <input type="hidden" name="bank_clr_bank_id" id="bank_clr_bank_id">
+        <input type="hidden" name="bank_clr_trans_amnt" id="bank_clr_trans_amnt">
         <div class="row gutters">
             <input type="hidden" id="aadhar_num">
             <div class="col-12">
@@ -505,6 +507,13 @@
                                     <label for="disabledInput">Transaction ID</label><span class="text-danger">*</span>
                                     <input type="text" class="form-control" id="transaction_id" name="transaction_id" tabindex="40">
                                     <span class="text-danger" style="display: none;" id="transact_id"> Please Enter Transaction ID </span>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
+                                <div class="form-group">
+                                    <label for="disabledInput">Transaction Date</label><span class="text-danger">*</span>
+                                    <input type="text" class="form-control" id="trans_date" name="trans_date" readonly tabindex="41">
+                                    <span class="text-danger" style="display: none;" id="transact_date"> Please Enter Transaction Date </span>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">

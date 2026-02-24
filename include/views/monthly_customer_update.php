@@ -11,10 +11,10 @@ function logMessage($message)
 }
 
 // 3. Prevent script from running on non-1st days
-if (date('d') !== '1') {
-    logMessage("Not the 1st of the month. Script exited.");
-    exit;
-}
+// if (date('d') !== '1') {
+//     logMessage("Not the 1st of the month. Script exited.");
+//     exit;
+// }
 logMessage(" Script started at " . date('h:i:s A'));
 
 include_once(__DIR__ . '/../../ajaxconfig.php');
@@ -36,10 +36,9 @@ $chunks = array_chunk($customer_profile_id, 2);
 foreach ($chunks as $chunk) {
     foreach ($chunk as $cp_id) {
         logMessage("Processing cp_id: $cp_id");
-
         $postData = ['cpID' => $cp_id];
 
-        $ch = curl_init('http://spfeather-002-site7.ktempurl.com/api/collection_files/resetCustomerStatus.php');
+        $ch = curl_init('http://localhost/uzhavan/api/collection_files/resetCustomerStatus.php');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         $responseJSON = curl_exec($ch);
@@ -62,7 +61,7 @@ foreach ($chunks as $chunk) {
         $bal_amt = $response['balance'];
         $payable = $response['payable'];
 
-        $ch2 = curl_init('http://spfeather-002-site7.ktempurl.com/api/collection_files/updateCustomerStatus.php');
+        $ch2 = curl_init('http://localhost/uzhavan/api/collection_files/updateCustomerStatus.php');
         curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch2, CURLOPT_POSTFIELDS, [
             'cp_id' => $cp_id,

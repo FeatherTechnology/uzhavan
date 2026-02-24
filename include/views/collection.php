@@ -170,6 +170,8 @@
                 <input type="hidden" name="cp_id" id="cp_id">
                 <input type="hidden" name="status" id="status">
                 <input type="hidden" name="sub_status" id="sub_status">
+                <input type="hidden" name="bank_clr_bank_id" id="bank_clr_bank_id">
+                <input type="hidden" name="bank_clr_trans_amnt" id="bank_clr_trans_amnt">
 
                 <div class="card-body">
                     <div class="row">
@@ -332,7 +334,7 @@
                                         <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
                                         <select type="text" class="form-control" id="collection_method" name="collection_method" tabindex="45">
                                             <option value="">Select Collection Format</option>
-                                            <option value="1"selected>BySelf</option>
+                                            <option value="1" selected>BySelf</option>
                                             <option value="2">On Spot</option>
                                         </select>
                                     </div>
@@ -376,7 +378,7 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 transaction" style="display:none">
                                     <div class="form-group">
                                         <label for="disabledInput">Transaction Date</label>&nbsp;<span class="text-danger">*</span>
-                                        <input type="date" class="form-control" id="trans_date" name="trans_date" value='' tabindex='32'>
+                                        <input type="date" class="form-control" id="trans_date" name="trans_date" value='' readonly tabindex='32'>
                                     </div>
                                 </div>
                             </div>
