@@ -24,7 +24,9 @@ class bulkUploadClass
 
     public function fetchAllRowData($Row)
     {
+        
         $dataArray = array(
+          
             'aadhar_num' => isset($Row[1]) ? $Row[1] : "",
             'cus_name' => isset($Row[2]) ? $Row[2] : "",
             'gender' => isset($Row[3]) ? $Row[3] : "",
@@ -176,17 +178,22 @@ class bulkUploadClass
 
         return $dataArray;
     }
-    function dateFormatChecker($checkdate)
+     function dateFormatChecker($checkdate)
     {
         // Attempt to create a DateTime object from the provided date
         $dateTime = DateTime::createFromFormat('Y-m-d', $checkdate);
 
         // Check if the date is in the correct format
-        if ($dateTime && $dateTime->format('Y-m-d') === $checkdate) {
+        if ($dateTime !== false && $dateTime->format('Y-m-d') === $checkdate) {
             // Date is in the correct format, no need to change anything
             return $checkdate;
+        } else if ($checkdate == '' || preg_match("/^[A-Za-z\s]$/", $checkdate)) {
+            return 'Invalid Date';
+        } else {
+            // Date is not in the correct format, reformat it
+            $formattedDor = date('Y-m-d', strtotime($checkdate));
+            return $formattedDor;
         }
-        return 'Invalid Date';
     }
     function arrayItemChecker($arrayList, $arrayItem)
     {

@@ -6,7 +6,7 @@ $bank_id = $_POST['bankId'] ?? '';
 $trans_id = $_POST['transId'] ?? '';
 $amount = floatval($_POST['amount'] ?? 0);
 
-$qry = $pdo->prepare("SELECT id, bank_id, DATE(trans_date) AS trans_date, credit, debit, transaction_amount FROM bank_clearance WHERE bank_id = ? AND trans_id = ? AND $cr_dr_type !='' AND clr_status = '0' ");
+$qry = $pdo->prepare("SELECT id, bank_id, DATE(trans_date) AS trans_date, credit, debit, transaction_amount FROM bank_clearance WHERE bank_id = ? AND trans_id = ? AND $cr_dr_type > 0 AND clr_status = '0' ");
 $qry->execute([$bank_id, $trans_id]);
 $row = $qry->fetch(PDO::FETCH_ASSOC);
 

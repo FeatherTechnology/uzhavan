@@ -45,7 +45,7 @@ $(document).ready(function () {
         $('#trans_id').val('')
         $('#trans_date').val('')
         $('#cheque_no').val('')
-         $('#bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+        $('#bank_clr_bank_id, #bank_clr_trans_amnt').val('');
         if (collection_mode == '2') { //Cheque
             $('.cheque').show();
             $('.transaction').show();
@@ -535,9 +535,9 @@ $(document).ready(function () {
 
         var total_paid_track = parseInt(due_amt_track) + parseInt(princ_amt_track) + parseInt(int_amt_track) + parseInt(penalty_track) + parseInt(coll_charge_track);
         $('#total_paid_track').val(moneyFormatIndia(total_paid_track));
-        
-            $('#trans_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
-        
+
+        $('#trans_id, #trans_date, #bank_clr_bank_id, #bank_clr_trans_amnt').val('');
+
     });
 
     $('#pre_close_waiver , #penalty_waiver , #coll_charge_waiver').blur(function () {
@@ -548,7 +548,7 @@ $(document).ready(function () {
 
         var total_waiver = parseInt(pre_close_waiver) + parseInt(penalty_waiver) + parseInt(coll_charge_waiver);
         $('#total_waiver').val(moneyFormatIndia(total_waiver));
-        
+
     });
 
     $(document).on('click', '.due-chart', function () {
@@ -862,7 +862,7 @@ function getPersonalInfo(cusId, sts) {
 
 function getBankNames() {
     $.ajax({
-        url: 'api/common_files/bank_name_list.php',
+        url: 'api/accounts_files/bank_clearance_files/getUserBasedbank.php',
         data: {},
         dataType: 'json',
         type: 'post',
@@ -992,21 +992,22 @@ function resetValidation() {
 function isFormDataValid(collData) {
     let isValid = true;
 
-    // Check if all three fields are empty
-    const allThreeFieldsEmpty = !collData['due_amt_track'] && !collData['penalty_track'] && !collData['coll_charge_track'];
+    let due = parseFloat(collData['due_amt_track']) || 0;
+    let penalty = parseFloat(collData['penalty_track']) || 0;
+    let fine = parseFloat(collData['coll_charge_track']) || 0;
+    let waiver = parseFloat(collData['total_waiver']) || 0;
 
-    if (allThreeFieldsEmpty) {
-        if (!validateField(collData['due_amt_track'], 'due_amt_track')) {
-            isValid = false;
-        }
-        if (!validateField(collData['penalty_track'], 'penalty_track')) {
-            isValid = false;
-        }
-        if (!validateField(collData['coll_charge_track'], 'coll_charge_track')) {
-            isValid = false;
-        }
+    // Check if all four fields are empty
+    if (due == 0 && penalty == 0 && fine == 0 && waiver == 0) {
+
+        validateField(collData['due_amt_track'], 'due_amt_track');
+        validateField(collData['penalty_track'], 'penalty_track');
+        validateField(collData['coll_charge_track'], 'coll_charge_track');
+
+        isValid = false;
+
     } else {
-        // Reset border color for the fields if any one of them is filled
+        // reset border if valid
         $('#due_amt_track').css('border', '1px solid #cecece');
         $('#penalty_track').css('border', '1px solid #cecece');
         $('#coll_charge_track').css('border', '1px solid #cecece');

@@ -129,6 +129,10 @@ function moneyFormatIndia($num1) {
                     <label for="collection" class="selector-item_label">Collection</label>
                 </div>
                 <div class="selector-item">
+                    <input type="radio" id="waiver" name="accounts_type" class="selector-item_radio" value="5">
+                    <label for="waiver" class="selector-item_label">Waiver</label>
+                </div>
+                <div class="selector-item">
                     <input type="radio" id="loan_issued" name="accounts_type" class="selector-item_radio" value="2">
                     <label for="loan_issued" class="selector-item_label">Loan Issued</label>
                 </div>
@@ -180,6 +184,53 @@ function moneyFormatIndia($num1) {
                                 <th>Branch</th>
                                 <th>No of Bills</th>
                                 <th>Collection Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <!----------------------------- COLLECTION CARD END ------------------------------>
+        <!----------------------------- COLLECTION CARD START ------------------------------>
+        <div class="card" id="waiver_card" style="display: none;">
+            <div class="card-header">
+                <h3 class="card-title">Waiver List</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-lg-3"></div>
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        <div class="form-group">
+                            <input type="radio" id="coll_hand_cash" name="coll_cash_type" value='1'/>&emsp;<label class='radio-style'>Hand Cash</label>&emsp;
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        <div class="form-group">
+                            <input type="radio" id="coll_bank_cash" name="coll_cash_type" value='2'/>&emsp;<label class='radio-style'>Bank Cash</label>&emsp;
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-sm-2 col-md-2 col-lg-2">
+                        <div class="form-group">
+                            <select class="form-control" name="coll_bank_name" id="coll_bank_name" disabled>
+                                <option value="">Select Bank</option>
+                            </select>
+                        </div>
+                    </div> -->
+                </div>
+
+                <div class="row table-responsive">
+                    <table id="accounts_waiver_table" class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th width=25>S.NO</th>
+                                <th>User</th>
+                                <th>Line</th>
+                                <th>Branch</th>
+                                <th>No of Bills</th>
+                                <th>Waiver Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

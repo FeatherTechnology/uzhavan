@@ -4,7 +4,7 @@
         <input type="button" class="toggle-button" data-toggle='modal' data-target='#dayModal' value='Day Wise'>
         <input type="button" class="toggle-button" value='Today'>
         <input type="button" class="toggle-button" data-toggle='modal' data-target='#monthModal' value='Month Wise'>
-        <select type="text" class="toggle-button" id='by_user' name='by_user'>
+        <select type="text" class="toggle-button" id='by_user' name='by_user' style="display: none;">
             <option value=''>Select User</option>
         </select>
     </div> <br>
@@ -40,6 +40,11 @@
                                     </tr>
                                     <tr>
                                         <td><b>Due Collection</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Waiver</b></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -100,6 +105,26 @@
                                     </tr>
                                     <tr>
                                         <td><b>Total Expenses</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Previous Uncleared</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Current Uncleared</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Circular Collection</b></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Circular Waiver</b></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -203,7 +228,7 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Total Benefit</b></td>
+                                        <td><b>Net Benefit</b></td>
                                         <td colspan="2"></td>
                                     </tr>
                                 </tbody>

@@ -12,6 +12,12 @@ if ($c_cr_h_qry->rowCount() > 0) {
 } else {
     $c_cr_h = 0;
 }
+$cw_cr_h_qry = $pdo->query("SELECT SUM(waiver_amount) AS coll_cr_amnt FROM accounts_waiver_entry WHERE coll_mode = 1 AND DATE(created_on) = '$current_date'   "); //Hand Cash
+if ($cw_cr_h_qry->rowCount() > 0) {
+    $c_w_cr_h = $cw_cr_h_qry->fetch()['coll_cr_amnt'];
+} else {
+    $c_w_cr_h = 0;
+}
 
 // $c_cr_b_qry = $pdo->query("SELECT SUM(collection_amnt) AS coll_cr_amnt FROM accounts_collect_entry WHERE coll_mode = 2 AND DATE(created_on) = '$current_date'  "); //Hand Cash
 // if ($c_cr_b_qry->rowCount() > 0) {
@@ -20,11 +26,11 @@ if ($c_cr_h_qry->rowCount() > 0) {
 //     $c_cr_b = 0;
 // }
 // Loan Issue
-$s_cr_h_qry = $pdo->query("SELECT COALESCE(SUM(cash),0) AS settlr_cr_amnt FROM loan_issue WHERE DATE(created_on) = '$current_date' "); //Hand Cash
-if ($s_cr_h_qry->rowCount() > 0) {
-    $s_cr_h = $s_cr_h_qry->fetch()['settlr_cr_amnt'];
+$s_db_h_qry = $pdo->query("SELECT COALESCE(SUM(cash),0) AS settlr_cr_amnt FROM loan_issue WHERE DATE(created_on) = '$current_date' "); //Hand Cash
+if ($s_db_h_qry->rowCount() > 0) {
+    $s_db_h = $s_db_h_qry->fetch()['settlr_cr_amnt'];
 } else {
-    $s_cr_h = 0;
+    $s_db_h = 0;
 }
 // $s_cr_b_qry = $pdo->query("SELECT COALESCE(SUM(cheque_val) + SUM(transaction_val),0) AS settlr_br_amnt FROM loan_issue WHERE DATE(created_on) = '$current_date'"); //Hand Cash
 // if ($s_cr_b_qry->rowCount() > 0) {
@@ -94,11 +100,10 @@ $bank_qry = $pdo->query("
 ");
 
 $total_balance = $bank_qry->fetch()['total_balance'] ?? 0;
-$hand_cr = intval($c_cr_h) + intval($ot_cr_h);
-$hand_dr = intval($e_dr_h) + intval($ot_dr_h) + intval($s_cr_h);
+$hand_cr = intval($c_cr_h) + intval($ot_cr_h) + intval($c_w_cr_h);
+$hand_dr = intval($e_dr_h) + intval($ot_dr_h) + intval($s_db_h);
 // $bank_cr = intval($c_cr_b) + intval($ot_cr_b);
 // $bank_dr = intval($e_dr_b) + intval($ot_dr_b) + intval($s_cr_b);
-
 $closing_data[0]['hand_cash'] = intval($hand_cr) - intval($hand_dr);
 $closing_data[0]['bank_cash'] = ($total_balance);
 $closing_data[0]['closing_balance'] = $closing_data[0]['hand_cash'] + $closing_data[0]['bank_cash'];

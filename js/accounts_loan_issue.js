@@ -515,7 +515,7 @@ function paymentType() {
     }
 }
 function getBankName() {
-    $.post('api/common_files/bank_name_list.php', function (response) {
+    $.post('api/accounts_files/bank_clearance_files/getUserBasedbank.php', function (response) {
         let appendBankOption = "<option value=''>Select Bank Name</option>";
         $.each(response, function (index, val) {
             let selected = '';
