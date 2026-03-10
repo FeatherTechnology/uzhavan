@@ -42,7 +42,7 @@ try {
     /* ================= BANK TRANSACTION MODE ================= */
     if (!empty($bank_id)) {
         $type = ($cat_type == '1') ? 'CR' : 'DB';
-
+        $sts = ($cat_type == '1') ? 'Credit' : 'Debit';
         $categories = [
             '1' => 'Deposit',
             '2' => 'Investment',
@@ -74,6 +74,7 @@ try {
             WHERE bank_id = :bank_id 
             AND trans_id = :trans_id 
             AND transaction_amount > 0
+            AND $sts > 0 
             LIMIT 1
         ");
 

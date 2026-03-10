@@ -18,6 +18,7 @@ $(document).ready(function () {
         'accounts': 'accounts',
         'bank_clearance': 'accounts',
         'balance_sheet': 'accounts',
+        'hand_cash_balance_sheet': 'accounts',
         'accounts_loan_issue': 'accounts',
         'update_customer': 'update',
         'concern_creation': 'concern',
@@ -31,6 +32,7 @@ $(document).ready(function () {
         'closed_report': 'reports',
         'ledger_view_report': 'reports',
         'concern_report': 'reports',
+        'cleared_report': 'reports',
         'bulk_upload': 'bulk_upload'
     };
 

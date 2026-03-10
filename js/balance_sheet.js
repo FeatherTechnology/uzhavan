@@ -85,6 +85,8 @@ function getOpeningBal(type, from_date, to_date, month) {
     $.post('api/accounts_files/balance_sheet_files/bs_opening_bal.php', args, function (response) {
         if (response.length > 0) {
             $('#balance_sheet_table tbody tr:first td:nth-child(2)').text(moneyFormatIndia(response[0]['opening_balance']));
+            $('#balance_sheet_table tbody tr:nth-child(17) td:nth-child(2)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_credit']) || 0)));
+            $('#balance_sheet_table tbody tr:nth-child(17) td:nth-child(3)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_debit']) || 0)));
         }
     }, 'json');
 }
@@ -101,24 +103,30 @@ function getBalSheetDetails(type, from_date, to_date, month) {
 
     $.post('api/accounts_files/balance_sheet_files/balance_sheet_details.php', args, function (response) {
         $('#balance_sheet_table tbody tr:nth-child(3) td:nth-child(2)').text(moneyFormatIndia(response[0]['due']));
-        $('#balance_sheet_table tbody tr:nth-child(4) td:nth-child(2)').text(moneyFormatIndia(response[0]['penalty']));
-        $('#balance_sheet_table tbody tr:nth-child(5) td:nth-child(2)').text(moneyFormatIndia(response[0]['fine']));
+        $('#balance_sheet_table tbody tr:nth-child(4) td:nth-child(2)').text(moneyFormatIndia(response[0]['waiver']));
+        $('#balance_sheet_table tbody tr:nth-child(5) td:nth-child(2)').text(moneyFormatIndia(response[0]['penalty']));
+        $('#balance_sheet_table tbody tr:nth-child(6) td:nth-child(2)').text(moneyFormatIndia(response[0]['fine']));
 
-        $('#balance_sheet_table tbody tr:nth-child(7) td:nth-child(2)').text(moneyFormatIndia(response[0]['invcr']));
-        $('#balance_sheet_table tbody tr:nth-child(8) td:nth-child(2)').text(moneyFormatIndia(response[0]['depcr']));
-        $('#balance_sheet_table tbody tr:nth-child(9) td:nth-child(2)').text(moneyFormatIndia(response[0]['elcr']));
-        $('#balance_sheet_table tbody tr:nth-child(10) td:nth-child(2)').text(moneyFormatIndia(response[0]['exccr']));
-        $('#balance_sheet_table tbody tr:nth-child(11) td:nth-child(2)').text(moneyFormatIndia(response[0]['contracr']));
-        $('#balance_sheet_table tbody tr:nth-child(12) td:nth-child(2)').text(moneyFormatIndia(response[0]['oicr']));
+        $('#balance_sheet_table tbody tr:nth-child(8) td:nth-child(2)').text(moneyFormatIndia(response[0]['invcr']));
+        $('#balance_sheet_table tbody tr:nth-child(9) td:nth-child(2)').text(moneyFormatIndia(response[0]['depcr']));
+        $('#balance_sheet_table tbody tr:nth-child(10) td:nth-child(2)').text(moneyFormatIndia(response[0]['elcr']));
+        $('#balance_sheet_table tbody tr:nth-child(11) td:nth-child(2)').text(moneyFormatIndia(response[0]['exccr']));
+        $('#balance_sheet_table tbody tr:nth-child(12) td:nth-child(2)').text(moneyFormatIndia(response[0]['contracr']));
+        $('#balance_sheet_table tbody tr:nth-child(13) td:nth-child(2)').text(moneyFormatIndia(response[0]['oicr']));
 
-        $('#balance_sheet_table tbody tr:nth-child(7) td:nth-child(3)').text(moneyFormatIndia(response[0]['invdr']));
-        $('#balance_sheet_table tbody tr:nth-child(8) td:nth-child(3)').text(moneyFormatIndia(response[0]['depdr']));
-        $('#balance_sheet_table tbody tr:nth-child(9) td:nth-child(3)').text(moneyFormatIndia(response[0]['eldr']));
-        $('#balance_sheet_table tbody tr:nth-child(10) td:nth-child(3)').text(moneyFormatIndia(response[0]['excdr']));
-        $('#balance_sheet_table tbody tr:nth-child(11) td:nth-child(3)').text(moneyFormatIndia(response[0]['contradr']));
+        $('#balance_sheet_table tbody tr:nth-child(8) td:nth-child(3)').text(moneyFormatIndia(response[0]['invdr']));
+        $('#balance_sheet_table tbody tr:nth-child(9) td:nth-child(3)').text(moneyFormatIndia(response[0]['depdr']));
+        $('#balance_sheet_table tbody tr:nth-child(10) td:nth-child(3)').text(moneyFormatIndia(response[0]['eldr']));
+        $('#balance_sheet_table tbody tr:nth-child(11) td:nth-child(3)').text(moneyFormatIndia(response[0]['excdr']));
+        $('#balance_sheet_table tbody tr:nth-child(12) td:nth-child(3)').text(moneyFormatIndia(response[0]['contradr']));
 
-        $('#balance_sheet_table tbody tr:nth-child(14) td:nth-child(3)').text(moneyFormatIndia(response[0]['advdr']));
-        $('#balance_sheet_table tbody tr:nth-child(15) td:nth-child(3)').text(moneyFormatIndia(response[0]['expdr']));
+        $('#balance_sheet_table tbody tr:nth-child(15) td:nth-child(3)').text(moneyFormatIndia(response[0]['advdr']));
+        $('#balance_sheet_table tbody tr:nth-child(16) td:nth-child(3)').text(moneyFormatIndia(response[0]['expdr']));
+
+        $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(2)').text(moneyFormatIndia(response[0]['current_uncleared_credit']));
+        $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(moneyFormatIndia(response[0]['current_uncleared_debit'] || 0));
+         $('#balance_sheet_table tbody tr:nth-child(19) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_debit'] || 0));
+         $('#balance_sheet_table tbody tr:nth-child(20) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_waiver'] || 0));
 
     }, 'json').then(function () {
         setTimeout(() => {
@@ -130,7 +138,7 @@ function getBalSheetDetails(type, from_date, to_date, month) {
 function getBalSheetTotal() {
     var credit_total = 0;
     var debit_total = 0;
-    $('#balance_sheet_table tbody tr').not('tr:nth-child(18)').each(function () {
+    $('#balance_sheet_table tbody tr').not('tr:nth-child(23)').each(function () {
         var credit = $(this).find('td:nth-child(2)').text().replace(/,/g, ''); // credit amount
         var debit = $(this).find('td:nth-child(3)').text().replace(/,/g, ''); // debit amount
         credit_total += parseFloat(credit) || 0;
@@ -142,9 +150,9 @@ function getBalSheetTotal() {
     credit_total = moneyFormatIndia(credit_total.toFixed(2));
     debit_total = moneyFormatIndia(debit_total.toFixed(2));
 
-    $('#balance_sheet_table tbody tr:nth-child(16) td:nth-child(3)').text(moneyFormatIndia(close.toFixed(2)));
-    $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
-    $('#balance_sheet_table tbody tr:nth-child(18) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
+    $('#balance_sheet_table tbody tr:nth-child(21) td:nth-child(3)').text(moneyFormatIndia(close.toFixed(2)));
+    $('#balance_sheet_table tbody tr:nth-child(23) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
+    $('#balance_sheet_table tbody tr:nth-child(23) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
 }
 
 function getNetBenefitDetails(type, from_date, to_date, month) {

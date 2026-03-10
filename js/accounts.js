@@ -2,19 +2,23 @@ $(document).ready(function () {
     $('input[name=accounts_type]').click(function () {
         let accountsType = $(this).val();
         if (accountsType == '1') { //Collection List
-            $('#coll_card').show(); $('#loan_issued_card').hide(); $('#expenses_card').hide(); $('#other_transaction_card').hide();
+            $('#coll_card').show(); $('#loan_issued_card').hide(); $('#expenses_card').hide(); $('#other_transaction_card').hide();$('#waiver_card').hide(); 
             // getBankName('#coll_bank_name');
             getCollectionList();
         } else if (accountsType == '2') { //Loan Issued
-            $('#coll_card').hide(); $('#loan_issued_card').show(); $('#expenses_card').hide(); $('#other_transaction_card').hide();
+            $('#coll_card').hide(); $('#loan_issued_card').show(); $('#expenses_card').hide(); $('#other_transaction_card').hide();$('#waiver_card').hide(); 
             // getBankName('#issue_bank_name');
             getLoanIssueList();
         } else if (accountsType == '3') { //Expenses
-            $('#coll_card').hide(); $('#loan_issued_card').hide(); $('#expenses_card').show(); $('#other_transaction_card').hide();
+            $('#coll_card').hide(); $('#loan_issued_card').hide(); $('#expenses_card').show(); $('#other_transaction_card').hide();$('#waiver_card').hide(); 
             expensesTable('#accounts_expenses_table');
         } else if (accountsType == '4') { //Other Transaction
-            $('#coll_card').hide(); $('#loan_issued_card').hide(); $('#expenses_card').hide(); $('#other_transaction_card').show();
+            $('#coll_card').hide(); $('#loan_issued_card').hide(); $('#expenses_card').hide();$('#waiver_card').hide(); $('#other_transaction_card').show();
             otherTransTable('#accounts_other_trans_table');
+        }
+        else if (accountsType == '5') { //Waiver
+            $('#coll_card').hide(); $('#loan_issued_card').hide(); $('#expenses_card').hide(); $('#other_transaction_card').hide(); $('#waiver_card').show();
+            getWaiverList();
         }
     });
 
@@ -48,6 +52,20 @@ $(document).ready(function () {
             'bank_id': $('#coll_bank_name :selected').val()
         };
         swalConfirm('Collect', `Do you want to collect Money from ${collectTableRowVal.username}?`, submitCollect, collectTableRowVal);
+    });
+    $(document).on('click', '.collect-waiver', function (event) {
+        event.preventDefault();
+        let collectTableRowVal = {
+            'username': $(this).closest('tr').find('td:nth-child(2)').text(),
+            'id': $(this).attr('value'),
+            'line': $(this).closest('tr').find('td:nth-child(3)').text(),
+            'branch': $(this).closest('tr').find('td:nth-child(4)').text(),
+            'no_of_bills': $(this).closest('tr').find('td:nth-child(5)').text(),
+            'collected_amnt': $(this).closest('tr').find('td:nth-child(6)').text(),
+            'cash_type': 1,// Hand Cash
+            'bank_id': $('#coll_bank_name :selected').val()
+        };
+        swalConfirm('Collect', `Do you want to collect Money from ${collectTableRowVal.username}?`, submitWaiver, collectTableRowVal);
     });
 
     // $("input[name='issue_cash_type']").click(function(){
@@ -130,11 +148,11 @@ $(document).ready(function () {
                 return;
             }
 
-            // Check if cash mode is 2 (Bank Transaction) and expenses amount is greater than bank cash balance
-            if (collMode == '2' && expensesAmount > bank_cash_balance) {
-                swalError('Warning', 'Insufficient Bank cash balance.');
-                return;
-            }
+            // // Check if cash mode is 2 (Bank Transaction) and expenses amount is greater than bank cash balance
+            // if (collMode == '2' && expensesAmount > bank_cash_balance) {
+            //     swalError('Warning', 'Insufficient Bank cash balance.');
+            //     return;
+            // }
 
             // Proceed if the balance check passes
             if (expensesFormValid(expensesData)) {
@@ -327,7 +345,7 @@ $(document).ready(function () {
             'other_amnt': $('#other_amnt').val(),
             'other_remark': $('#other_remark').val()
         }
-        let otherAmount = otherTransData.other_amnt;
+       let otherAmount = parseFloat(otherTransData.other_amnt) || 0;
         let collMode = otherTransData.coll_mode;
         let catType = otherTransData.cat_type; // 1 = Credit, 2 = Debit
         let transCategory = parseInt(otherTransData.trans_category);
@@ -368,6 +386,7 @@ $(document).ready(function () {
                     }
                 }
             } else if (transCategory <= 2) {
+                console.log(totalCredit, totalDebit, otherAmount);  
                 if (catType == '2' && totalCredit < totalDebit + otherAmount) {
                     const formattedBalance = moneyFormatIndia(Math.abs(balance));
                     swalError('Warning', 'You may only debit up to: ' + formattedBalance);
@@ -382,10 +401,10 @@ $(document).ready(function () {
                         swalError('Warning', 'Insufficient hand cash balance.');
                         return;
                     }
-                    if (collMode == '2' && otherAmount > bank_cash_balance) {
-                        swalError('Warning', 'Insufficient bank cash balance.');
-                        return;
-                    }
+                    // if (collMode == '2' && otherAmount > bank_cash_balance) {
+                    //     swalError('Warning', 'Insufficient bank cash balance.');
+                    //     return;
+                    // }
                 }
                 //    Proceed if all validations pass
                 if (otherTransFormValid(otherTransData)) {
@@ -508,12 +527,40 @@ function getCollectionList() {
         setdtable('#accounts_collection_table');
     }, 'json');
 }
+function getWaiverList() {
+    let cash_type = 1;
+    // let bank_id = $('#coll_bank_name :selected').val();
+    $.post('api/accounts_files/accounts/accounts_waiver_list.php', { cash_type }, function (response) {
+        let columnMapping = [
+            'sno',
+            'name',
+            'linename',
+            'branch_name',
+            'no_of_bills',
+            'total_amount',
+            'action'
+        ];
+        appendDataToTable('#accounts_waiver_table', response, columnMapping);
+        setdtable('#accounts_waiver_table');
+    }, 'json');
+}
 
 function submitCollect(values) {
     $.post('api/accounts_files/accounts/submit_collect.php', values, function (response) {
         if (response == '1') {
             swalSuccess('Success', `Successfully collected ₹${(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
             getCollectionList();
+            getClosingBal();
+        } else {
+            swalError('Error', 'Something went wrong.');
+        }
+    }, 'json');
+}
+function submitWaiver(values) {
+    $.post('api/accounts_files/accounts/submit_waiver.php', values, function (response) {
+        if (response == '1') {
+            swalSuccess('Success', `Successfully collected ₹${(values.collected_amnt)} for ${values.no_of_bills} bills from ${values.username}.`);
+            getWaiverList();
             getClosingBal();
         } else {
             swalError('Error', 'Something went wrong.');
@@ -539,7 +586,7 @@ function getLoanIssueList() {
 }
 
 function getBankName(dropdowndId) {
-    $.post('api/common_files/bank_name_list.php', function (response) {
+    $.post('api/accounts_files/bank_clearance_files/getUserBasedbank.php', function (response) {
         var bankName = '<option value="">Select Bank Name</option>';
         $.each(response, function (index, value) {
             bankName += '<option value="' + value.id + '" data-id="' + value.account_number + '">' + value.bank_name + '</option>';

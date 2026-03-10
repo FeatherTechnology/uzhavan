@@ -34,7 +34,8 @@ if ($type == 'today') {
 
 $result = array();
 
-$qry = $pdo->query("SELECT COALESCE(SUM(lelc.interest_amnt),0) AS benefit, COALESCE(SUM(lelc.doc_charge_calculate),0) AS doc_charges, COALESCE(SUM(lelc.processing_fees_calculate),0) AS proc_charges FROM `loan_issue` li JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id WHERE lelc.due_type ='EMI' AND $lelcwhere "); //Benefit Amount 
+$qry = $pdo->query("SELECT COALESCE(SUM(lelc.interest_amnt),0) AS benefit, COALESCE(SUM(lelc.doc_charge_calculate),0) AS doc_charges, COALESCE(SUM(lelc.processing_fees_calculate),0) AS proc_charges FROM `loan_issue` li JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id WHERE
+  $lelcwhere "); //Benefit Amount 
 if ($qry->rowCount() > 0) {
     $row = $qry->fetch(PDO::FETCH_ASSOC);
     $benefit = $row['benefit'];

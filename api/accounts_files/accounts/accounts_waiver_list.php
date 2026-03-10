@@ -20,33 +20,33 @@ $qry = $pdo->query("WITH first_query AS (
         (
             SELECT COUNT(*) 
             FROM collection nbc 
-            WHERE $cndtn 
+            WHERE $cndtn  AND nbc.total_waiver > 0
             AND nbc.insert_login_id = u.id 
             AND nbc.coll_date > COALESCE(
-                (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
+                (SELECT created_on FROM accounts_waiver_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
                 '1970-01-01 00:00:00'
             ) 
             AND nbc.coll_date <= NOW()
         ) as no_of_bills,
-        SUM(c.total_paid_track) AS total_amount, 
+        SUM(c.total_waiver) AS total_amount, 
         '1' AS type
     FROM `collection` c 
     JOIN line_name_creation lnc ON c.line = lnc.id 
     JOIN branch_creation bc ON c.branch = bc.id 
     JOIN users u ON FIND_IN_SET(c.line, u.line) 
     LEFT JOIN (
-        SELECT ace.user_id, ace.collection_amnt 
-        FROM `accounts_collect_entry` ace 
+        SELECT ace.user_id, ace.waiver_amount 
+        FROM `accounts_waiver_entry` ace 
         ORDER BY id DESC 
         LIMIT 1
     ) AS last_collection ON c.insert_login_id = last_collection.user_id 
     WHERE $cndtn 
     AND c.coll_date > COALESCE(
-        (SELECT created_on FROM accounts_collect_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
+        (SELECT created_on FROM accounts_waiver_entry WHERE user_id = u.id AND $cndtn ORDER BY id DESC LIMIT 1), 
         '1970-01-01 00:00:00'
     ) 
     AND c.coll_date <= NOW()
-    AND c.insert_login_id = u.id  AND c.total_paid_track > 0
+    AND c.insert_login_id = u.id AND c.total_waiver > 0
     GROUP BY u.id
 ),
 second_query AS (
@@ -56,9 +56,9 @@ second_query AS (
         GROUP_CONCAT(DISTINCT ac.line) AS linename,
         GROUP_CONCAT(DISTINCT ac.branch) AS branch_name,
         SUM(ac.no_of_bills) AS no_of_bills,  
-        SUM(ac.collection_amnt) AS total_amount,
+        SUM(ac.waiver_amount) AS total_amount,
         '2' as type
-    FROM `accounts_collect_entry` ac
+    FROM `accounts_waiver_entry` ac
     JOIN users us ON ac.user_id = us.id
     WHERE $cndtn 
     AND DATE(ac.created_on) = CURDATE()
@@ -74,12 +74,12 @@ FROM (
     UNION ALL
     SELECT * FROM second_query
 ) AS subqry 
-ORDER BY userid ASC; ");
+ORDER BY userid ASC;");
 if ($qry->rowCount() > 0) {
     while ($data = $qry->fetch(PDO::FETCH_ASSOC)) {
         $disabled = ($data['type'] == 2) ? 'disabled' : ''; // 1 - disabled; 2 - enabled;
         $data['total_amount'] = moneyFormatIndia($data['total_amount']);
-        $data['action'] = "<a href='#' class='collect-money' value='" . $data['userid'] . "'><button class='btn btn-primary' " . $disabled . ">Collect</button></a> ";
+        $data['action'] = "<a href='#' class='collect-waiver' value='" . $data['userid'] . "'><button class='btn btn-primary' " . $disabled . ">Collect</button></a> ";
         $collection_list_arr[] = $data;
     }
 }
