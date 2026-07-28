@@ -155,7 +155,7 @@ $(document).ready(function () {
             swalError('Warning', 'Kindly Fill the Personal Info');
             return false;
         }
-        var data = ['fam_name', 'fam_relationship', 'fam_live', 'fam_aadhar', 'fam_mobile']
+        var data = ['fam_name', 'fam_relationship', 'fam_live','fam_mobile']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -299,6 +299,7 @@ $(document).ready(function () {
         //Validation
         let cus_profile_id = $('#customer_profile_id').val();
         let cus_id = $('#auto_gen_cus_id').val();
+        let bank_upload = $('#bank_upload')[0].files[0]; let bnk_upload = $('#bnk_upload').val();
         let bank_name = $('#bank_name').val(); let branch_name = $('#branch_name').val(); let acc_holder_name = $('#acc_holder_name').val(); let acc_number = $('#acc_number').val(); let ifsc_code = $('#ifsc_code').val(); let bank_id = $('#bank_id').val();
         if (cus_profile_id == '') {
             swalError('Warning', 'Kindly Fill the Personal Info');
@@ -313,13 +314,34 @@ $(document).ready(function () {
             }
         });
         if (isValid) {
-            $.post('api/loan_entry/submit_bank.php', { cus_id, bank_name, branch_name, acc_holder_name, acc_number, ifsc_code, bank_id, cus_profile_id }, function (response) {
-                if (response == '1') {
-                    swalSuccess('Success', 'Bank Info Added Successfully!');
-                } else {
-                    swalSuccess('Success', 'Bank Info Updated Successfully!')
+
+            var formData = new FormData();
+
+            formData.append("cus_id", cus_id);
+            formData.append("cus_profile_id", cus_profile_id);
+            formData.append("bank_upload", bank_upload);
+            formData.append("bnk_upload", bnk_upload);
+            formData.append("bank_name", bank_name);
+            formData.append("branch_name", branch_name);
+            formData.append("acc_holder_name", acc_holder_name);
+            formData.append("acc_number", acc_number);
+            formData.append("ifsc_code", ifsc_code);
+            formData.append("bank_id", bank_id);
+
+            $.ajax({
+                url: "api/loan_entry/submit_bank.php",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response == '1') {
+                        swalSuccess('Success', 'Bank Info Added Successfully!');
+                    } else {
+                        swalSuccess('Success', 'Bank Info Updated Successfully!');
+                    }
+                    getBankTable();
                 }
-                getBankTable();
             });
         }
     })
@@ -333,6 +355,7 @@ $(document).ready(function () {
             $('#acc_holder_name').val(response[0].acc_holder_name);
             $('#acc_number').val(response[0].acc_number);
             $('#ifsc_code').val(response[0].ifsc_code);
+            $('#bnk_upload').val(response[0].upload);
         }, 'json');
     });
 
@@ -850,11 +873,70 @@ $(document).ready(function () {
         }
     });
 
+    
+    
+    $('#add_cus_label').click(function () {
+        getFeedbackAccess();
+    });
+
+    // $('.feedbackEditBtn').click(function () {
+    $(document).on('click', '.feedbackEditBtn', function () {
+        let id = $(this).attr('value');
+        console.log("id",id);
+        $.post('api/loan_entry/get_feedback_name.php', {id:id }, function (response) {
+            $('#feedbackname').val(response[0].feedback_name);
+            $('#fedbackname_id').val(response[0].id);
+    }, 'json'); 
+    });
+
+    $(document).on('click', '.feedbackNameDeleteBtn', function () {
+        let id = $(this).attr('value');
+        swalConfirm('Delete', 'Are you sure you want to delete this  Feedback Name ?', deleteFeedbackName, id);
+       
+    });
+
+    $('#submit_feedback_lable').click(function () {
+        event.preventDefault();
+        //Validation
+        let feedbackname = $('#feedbackname').val();
+        let fedbackname_id = $('#fedbackname_id').val();
+        if (feedbackname == '') {
+            swalError('Warning', 'Kindly Fill the Feedback Name');
+            return false;
+        }
+        var data = ['feedbackname']
+        var isValid = true;
+        data.forEach(function (entry) {
+            var fieldIsValid = validateField($('#' + entry).val(), entry);
+            if (!fieldIsValid) {
+                isValid = false;
+            }
+        });
+        if (isValid) {
+            $.post('api/loan_entry/submit_feedback_name.php', { feedbackname, fedbackname_id }, function (response) {
+                if (response == '1') {
+                    swalSuccess('Success', 'FeedBack Name Added Successfully!');
+                } else if (response == '2') {
+                    swalSuccess('Success', 'FeedBack Name Updated Successfully!')
+                } else if(response == '3'){
+                     swalError('Warning', 'Feedback name already exists');
+                }
+                 else {
+                    swalError('Error', 'Error Occurred!')
+                }
+                getFeedBackLabelList();
+                $("#feedbackname").val('');
+                $("#fedbackname_id").val('');
+            });
+        }
+    })
+
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
 
 //On Load function 
 $(function () {
     getcusUpdateTable();
+    nameFormatter('#cus_name');
 });
 
 function getcusUpdateTable() {
@@ -1246,6 +1328,7 @@ function getBankTable() {
             'acc_holder_name',
             'acc_number',
             'ifsc_code',
+            'upload',
             'action'
         ];
         appendDataToTable('#bank_creation_table', response, columnMapping);
@@ -1267,6 +1350,7 @@ function getBankInfoTable() {
             'acc_holder_name',
             'acc_number',
             'ifsc_code',
+            'upload',
         ];
         appendDataToTable('#bank_info', response, columnMapping);
         setdtable('#bank_info');
@@ -1589,11 +1673,11 @@ function fingerprintTable() {
     }
 }
 
-function getLoanCount(cus_id) {
+function getLoanCount(cus_id,profile_id) {
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
-        data: { cus_id: cus_id },
+        data: { cus_id: cus_id , profile_id:profile_id},
         dataType: 'json',
         cache: false,
         success: function (response) {
@@ -1674,6 +1758,8 @@ async function editCustmerProfile(id, cus_id) {
         $('#guarantor_name').val(data.guarantor_name).trigger('change');
 
         $('#area').trigger('change');
+        let cus_id = $('#auto_gen_cus_id').val();
+        getLoanCount(cus_id,id);
 
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {
@@ -1682,8 +1768,6 @@ async function editCustmerProfile(id, cus_id) {
             $('#data_checking_div').show();
             checkAdditionalRenewal(data.cus_id);
             $('.loan_count_div').show();
-            let cus_id = $('#auto_gen_cus_id').val();
-            getLoanCount(cus_id);
         } else {
             $('.cus_status_div').hide();
             $('#checking_hide').hide();
@@ -3198,6 +3282,81 @@ function setTempDocumentEvents() {
                 );
             }
         }
+    });
+}
+
+function getFeedbackAccess() {
+    $.post(
+        'api/user_creation_files/user_creation_data.php',
+        {id:''},
+        function(response) {
+
+            if (response.length > 0) {
+                let screens = response[0].screens;
+                // Convert to array
+                let screenArray = screens.split(',');
+
+                if (screenArray.includes('10')) {
+                    console.log('jjj');
+                    $('#add_cus_feedback').show();
+                } else {
+                    console.log('gggg');
+                    $('#add_cus_feedback').hide();
+                }
+                getFeedBackTable();
+                getFeedbackName();
+            }
+        },
+        'json'
+    );
+}
+
+function getFeedbackName() {
+    $.ajax({
+        url: 'api/loan_entry/getFeedbackName.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            $("#feedback_label") .empty() .append("<option value=''>Select Feedback Label</option>");
+            for (var i = 0; i < data.length; i++) {
+                var feedback_name = data[i]["feedback_name"];
+                var id = data[i]["id"];
+                $("#feedback_label").append( "<option value='" + id + "'>" + feedback_name + "</option>"
+                );
+            }
+
+        }
+    });
+}
+
+function getFeedBackLabelList() {
+  $.post('api/loan_entry/get_feedback_name_list.php', { }, function (response) {
+        var columnMapping = [
+            'sno',
+            'feedback_name',
+            'action'
+        ];
+        appendDataToTable('#cus_feedbackListTable', response, columnMapping);
+        setdtable('#cus_feedbackListTable');
+        
+    }, 'json')
+}
+
+function deleteFeedbackName(id) {
+    $.post('api/loan_entry/delete_feedback_name.php', { id : id }, function (response) {
+        if (response == '0') {
+            swalError('Warning', 'Feedback Name already used');
+        } else if (response == '1') {
+            swalSuccess('Success', 'FeedBack Name Deleted Successfully!')
+        } else if(response == '2'){
+            swalError('Warning', 'Feedback name Delete failed');
+        }
+        else {
+            swalError('Error', 'Error Occurred!')
+        }
+        getFeedBackLabelList();
+        $("#feedbackname").val('');
+        $("#fedbackname_id").val('');
     });
 }
 

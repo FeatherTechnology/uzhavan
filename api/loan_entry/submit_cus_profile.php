@@ -68,7 +68,8 @@ $commitment = $_POST['commitment'];
 $monthly_due_capacity = $_POST['monthly_due_capacity'];
 $user_id = $_SESSION['user_id'];
 $customer_profile_id = $_POST['customer_profile_id'];
-$date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
+$date = DateTime::createFromFormat('Y-m-d', $first_loan_date);
+
 if ($date) {
     $converted_date = $date->format('Y-m-d');
 } else {
