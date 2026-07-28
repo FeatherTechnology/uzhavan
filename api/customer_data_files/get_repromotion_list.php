@@ -69,18 +69,45 @@ $order = '';
 if (isset($_POST['order'])) {
     $order = ' ORDER BY ' . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'] . ' ';
 }
+$branchCondition = '';
+$lineCondition = '';
+
+// Branch Filter
+if (!empty($_POST['branch'])) {
+    $branch = $_POST['branch'];
+    if (!is_array($branch)) {
+        $branch = explode(',', $branch);
+    }
+    $branch = array_map('intval', $branch);
+    if (!empty($branch)) {
+        $branchCondition = " AND ac.branch_id IN (" . implode(',', $branch) . ")";
+    }
+}
+
+// Line Filter
+if (!empty($_POST['line'])) {
+    $line = $_POST['line'];
+    if (!is_array($line)) {
+        $line = explode(',', $line);
+    }
+    $line = array_map('intval', $line);
+    if (!empty($line)) {
+        $lineCondition = " AND ac.line_id IN (" . implode(',', $line) . ")";
+    }
+}
 $qry = "SELECT 
                 cp.id, cp.cus_id, cp.aadhar_num, cp.cus_data,cp.cus_name, anc.areaname, lnc.linename, 
                 bc.branch_name, cp.mobile1, cs.status as c_sts, cs.sub_status as c_substs, pc.status as followup_sts ,pc.created_on as created,cp.created_on as cus_created,pc.follow_date,cs.updated_on
                 FROM customer_profile cp 
-                LEFT JOIN line_name_creation lnc ON cp.line = lnc.id 
                 LEFT JOIN area_name_creation anc ON cp.area = anc.id 
-                LEFT JOIN area_creation ac ON cp.line = ac.line_id 
+                LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
+                LEFT JOIN area_creation ac ON acan.area_creation_id = ac.id
+                LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
                 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id 
                 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id  
                 INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id
                 LEFT JOIN promotion_customer pc ON cp.cus_id = pc.cus_id  AND pc.created_on = (SELECT MAX(pc1.created_on) FROM promotion_customer pc1 WHERE pc1.cus_id = cp.cus_id)
-                WHERE cs.status IN (5, 6, 13, 14) $whereCondition ";
+                WHERE cs.status IN (5, 6, 13, 14) $whereCondition  $branchCondition $lineCondition";
 
 
 if ($_POST['followUpSts']) {

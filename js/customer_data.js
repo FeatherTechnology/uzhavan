@@ -1,4 +1,14 @@
 
+const branchChoices = new Choices('#branch_name', {
+    removeItemButton: true,
+    noChoicesText: 'No branches available',
+    allowHTML: true,
+});
+const lineChoices = new Choices('#line', {
+    removeItemButton: true,
+    noChoicesText: 'No line available',
+    allowHTML: true,
+});
 $(document).ready(function () {
     $('.new_table_content').show();
     $('.existing_table_content').hide();
@@ -18,14 +28,19 @@ $(document).ready(function () {
             $('.filter_card').show();
             $('.repromotion_table_content').hide();
             showPromotionList('api/customer_data_files/get_existing_promotion.php', 'existing_list_table', '14');
+            getBranchDropdown()
+             getLineDropdown()
         } else if (customerDataType == 'repromotion_list') {
             $('.new_table_content').hide();
             $('.existing_table_content').hide();
             $('.repromotion_table_content').show();
             $('.filter_card').show();
             showPromotionList('api/customer_data_files/get_repromotion_list.php', 'repromotion_list_table', '15');
+              getBranchDropdown()
+             getLineDropdown()
         }
     });
+   
     $('#followup_search').click(function (event) {
         event.preventDefault();
 
@@ -319,6 +334,8 @@ function showPromotionList(url, tableid, colNo) {
     let dateType = $('#date_type').val();
     let followUpFromDate = $('#follow_up_fromdate').val();
     let followUpToDate = $('#follow_up_todate').val();
+    let branch = $("#branch_name").val();
+    let line = $("#line").val();
 
     let table = $(`#${tableid}`).DataTable();
     table.destroy();
@@ -339,6 +356,8 @@ function showPromotionList(url, tableid, colNo) {
                 data.dateType = dateType;
                 data.followUpFromDate = followUpFromDate;
                 data.followUpToDate = followUpToDate;
+                data.branch = branch;
+                data.line = line;
             }
         },
         dom: 'lBfrtip',
@@ -916,3 +935,45 @@ function getDocumentHistoryTable(cus_id) {
     }, 'json');
 }
 //////////////////////////////////////////////////////////////// Document History END //////////////////////////////////////////////////////////////////////
+function getBranchDropdown() {
+    let branch_id = $('#branch_name').val();
+    let branch_name2 = $('#branch_name2').val();
+    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
+        branchChoices.clearStore();
+        $.each(response, function (index, val) {
+            let selected = '';
+            if (branch_name2.includes(val.id)) {
+                selected = 'selected';
+            }
+            let items = [
+                {
+                    value: val.id,
+                    label: val.branch_name,
+                    selected: selected,
+                }
+            ];
+            branchChoices.setChoices(items); // Add choices
+
+        });
+    }, 'json');
+}
+
+function getLineDropdown() {
+    lineChoices.clearStore();
+    $.ajax({
+        url: 'api/due_followup/get_line_dropdown.php',
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            let items = [];
+            $.each(response, function (index, val) {
+                items.push({
+                    value: val.id,
+                    label: val.linename
+                });
+            });
+            lineChoices.setChoices(items, 'value', 'label', true);
+        }
+    });
+}
+

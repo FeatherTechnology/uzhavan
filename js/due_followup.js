@@ -3,13 +3,31 @@ const subStatusMultiselect = new Choices('#sub_status_mapping', {
     noChoicesText: 'Select Customer Status',
     allowHTML: true
 });
-
+const branchChoices = new Choices('#branch_name', {
+    removeItemButton: true,
+    noChoicesText: 'No branches available',
+    allowHTML: true,
+});
+const lineChoices = new Choices('#line', {
+    removeItemButton: true,
+    noChoicesText: 'No line available',
+    allowHTML: true,
+});
+//Loan Category Multi select initialization
+const loan_category = new Choices('#loan_cat', {
+    removeItemButton: true,
+    noChoicesText: 'Select Loan Category',
+    allowHTML: true
+});
 $(document).ready(function () {
 
     $('#show_due_followup').click(function () {
         let cusSts = $("#sub_status_mapping").val();
         let comm_date = $("#comm_date").val();
-        OnLoadFunctions(cusSts, comm_date);
+       let branch = $("#branch_name").val();
+       let line = $("#line").val();
+       let loan_cat = $("#loan_cat").val();
+       OnLoadFunctions (cusSts, comm_date,branch,line,loan_cat);
     });
 
     $(document).on('click', '.loan_list', function () {
@@ -24,12 +42,15 @@ $(document).ready(function () {
         $('#back_btn').hide();
         $('.loan_list_div').hide();
         $('.due_list_div').show();
-        getSubStsMapping(); // Call Customer status dropdown.
+        // getSubStsMapping(); // Call Customer status dropdown.
         let cusSts = $("#sub_status_mapping").val();
         let commDate = $("#comm_date").val();
+        let branch = $("#branch_name").val();
+       let line = $("#line").val();
+       let loan_cat = $("#loan_cat").val();
 
         if (cusSts != '') {
-            OnLoadFunctions(cusSts, commDate);
+            OnLoadFunctions(cusSts, commDate,branch,line,loan_cat);
         }
     });
 
@@ -476,10 +497,13 @@ $(document).ready(function () {
 
 $(function () {
     getSubStsMapping(); //Call Customer status dropdown.
+    getBranchDropdown();
+    getLineDropdown()
+    getLoanCatName();
 });
 
 function getSubStsMapping() {
-    let subStatus = ['Legal','Error','OD', 'Pending', 'Current'];
+    let subStatus = ['Legal', 'Error', 'OD', 'Pending', 'Current'];
     let editSubStatus = $('#customer_status').val() || '';
     subStatusMultiselect.clearChoices();
     $.each(subStatus, function (index, val) {
@@ -496,17 +520,25 @@ function getSubStsMapping() {
 }
 
 
-function OnLoadFunctions(cusSts, comm_date) {
+function OnLoadFunctions (cusSts, comm_date,branch,line,loan_cat) {
     if (!cusSts || cusSts.length === 0) {
         swalError('Warning!', 'Select Customer Status.');
         return;
     }
     let params = {
         cusSts: cusSts,
-        comm_date: comm_date
+        comm_date: comm_date,
+        branch: branch,
+        line:line,
+        loan_cat:loan_cat
     };
 
     serverSideTable('#due_followup_table', params, 'api/due_followup/due_followup_data.php');
+    // Run after every draw (first load, pagination, search, sort)
+    $('#due_followup_table').on('draw.dt', function () {
+         promotionChartColor('due_followup_table', 14);
+    });
+  
 }
 //Loan List
 function getLoanListTable(cus_id) {
@@ -516,6 +548,7 @@ function getLoanListTable(cus_id) {
             'loan_id',
             'loan_category',
             'loan_date',
+            'due_day_display',
             'loan_amount',
             'collection_method',
             'c_sts',
@@ -1187,7 +1220,7 @@ function loanCalculationEdit(id) {
         $('#due_period_upd').val(response[0].due_period);
         $('#doc_charge_upd').val(response[0].doc_charge);
         $('#proc_fees_upd').val(response[0].processing_fees);
-       $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
+        $('#loan_amnt_calc').val(moneyFormatIndia(response[0].loan_amnt));
         $('#principal_amnt_calc').val(moneyFormatIndia(response[0].principal_amnt));
         $('#interest_amnt_calc').val(moneyFormatIndia(response[0].interest_amnt));
         $('#total_amnt_calc').val(moneyFormatIndia(response[0].total_amnt));
@@ -1338,3 +1371,106 @@ function emptyholderFields() {
     $('#relationship').val('');
 }
 //////////////////////////////////////////////////////////////// Commitement END //////////////////////////////////////////////////////////////////////
+function getBranchDropdown() {
+    let branch_id = $('#branch_name').val();
+    let branch_name2 = $('#branch_name2').val();
+    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
+        branchChoices.clearStore();
+        $.each(response, function (index, val) {
+            let selected = '';
+            if (branch_name2.includes(val.id)) {
+                selected = 'selected';
+            }
+            let items = [
+                {
+                    value: val.id,
+                    label: val.branch_name,
+                    selected: selected,
+                }
+            ];
+            branchChoices.setChoices(items); // Add choices
+
+        });
+    }, 'json');
+}
+
+function getLineDropdown() {
+    lineChoices.clearStore();
+    $.ajax({
+        url: 'api/due_followup/get_line_dropdown.php',
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            let items = [];
+            $.each(response, function (index, val) {
+                items.push({
+                    value: val.id,
+                    label: val.linename
+                });
+            });
+            lineChoices.setChoices(items, 'value', 'label', true);
+        }
+    });
+}
+
+function getLoanCatName() {
+    let loan_cat_edit_it = $('#loan_cat_edit_it').val()
+    $.post('api/common_files/get_loan_category_creation.php', function (response) {
+        loan_category.clearStore();
+        $.each(response, function (index, val) {
+            let selected = '';
+            if (loan_cat_edit_it.includes(val.id)) {
+                selected = 'selected';
+            }
+            let items = [
+                {
+                    value: val.id,
+                    label: val.loan_category,
+                    selected: selected
+                }
+            ];
+            loan_category.setChoices(items);
+            loan_category.init();
+        });
+    }, 'json');
+}
+
+function promotionChartColor(tableid, colNo) {
+
+    $(`#${tableid} tbody tr`).not('th').each(function () {
+        var element = $(this).find(`td:eq(${colNo})`); // Get the text content of the 15th td element (Follow date)
+        let tddate = element.text();
+        let datecorrection = tddate.split("-").reverse().join("-").replaceAll(/\s/g, ''); // Correct the date format
+        let values = new Date(datecorrection); // Create a Date object from the corrected date
+        values.setHours(0, 0, 0, 0); // Set the time to midnight for accurate date comparison
+
+        let curDate = new Date(); // Get the current date
+        curDate.setHours(0, 0, 0, 0); // Set the time to midnight for accurate date comparison
+
+        let colors = {
+            'past': 'FireBrick',
+            'current': 'DarkGreen',
+            'future': 'CornflowerBlue'
+        }; // Define colors for different date types
+
+        if (tddate != '' && values != 'Invalid Date') { // Check if the extracted date and the created Date object are valid
+
+            if (values < curDate) { // Compare the extracted date with the current date
+                element.css({
+                    'background-color': colors.past,
+                    'color': 'white'
+                }); // Apply styling for past dates
+            } else if (values > curDate) {
+                element.css({
+                    'background-color': colors.future,
+                    'color': 'white'
+                }); // Apply styling for future dates
+            } else {
+                element.css({
+                    'background-color': colors.current,
+                    'color': 'white'
+                }); // Apply styling for the current date
+            }
+        }
+    });
+}

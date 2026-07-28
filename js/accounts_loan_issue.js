@@ -113,6 +113,7 @@ $(document).ready(function () {
 
         if (!transactionValue) {
             swalError("Kindly Fill Value!");
+            $('#transaction_id').val('');
             return;
         }
 

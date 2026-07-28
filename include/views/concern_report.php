@@ -13,14 +13,14 @@
                         <thead>
                             <tr>
                                 <th>S.NO</th>
-                                <th>Concern ID</th>
-                                <th>Concern Date</th>
-                                <th>Raised By</th>
-                                <th>Name</th>
-                                <th>Concern Subject</th>
-                                <th>Concern Remark</th>
-                                <th>Assign To</th>
-                                <th>Solution Date</th>
+                                <th>Staff ID</th>
+                                <th>Staff Name</th>
+                                <th>Staff Type</th>
+                                <th>Gender</th>
+                                <th>Place</th>
+                                <th>Mobile</th>
+                                <th>Email ID</th>
+                                <th>Joining Date</th>
                                 <th>Communication</th>
                                 <th>Upload</th>
                                 <th>Location</th>
