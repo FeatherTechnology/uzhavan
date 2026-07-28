@@ -24,6 +24,28 @@
                             <option value="5">To Follow</option>
                         </select>
                     </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                          <label for="branch_name">Branch</label>
+                            <input type="hidden" id="branch_name2">
+                            <select class="" id="branch_name" name="branch_name" multiple>
+                                <option value=''>Select Branch name</option>
+                            </select>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                          <label for="line">Line</label>
+                            <input type="hidden" id="line_name">
+                            <select class="" id="line" name="line" multiple>
+                                <option value=''>Select Line</option>
+                            </select>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                          <label for="loan_category">Loan Category</label>
+                            <input type="hidden" id="loan_cat_edit_it">
+                            <select class="" id="loan_cat" name="loan_cat" multiple>
+                                <option value=''>Select Loan Category</option>
+                            </select>
+                    </div>
+                 
 
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                         <button type="button" class="btn btn-primary" id="show_due_followup" style="margin-top:20px;">Proceed</button>
@@ -81,6 +103,7 @@
                                         <th>Loan ID</th>
                                         <th>Loan Category</th>
                                         <th>Loan Date</th>
+                                        <th>Date/Day</th>
                                         <th>Loan Amount</th>
                                         <th>Collection Format</th>
                                         <th>Status</th>
@@ -1132,7 +1155,7 @@
                                     <input type="date" class="form-control" id="maturity_date_calc" name="maturity_date_calc" tabindex="24" readonly>
                                 </div>
                             </div>
-                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="collection_method">Collection Format</label>&nbsp;<span class="text-danger">*</span>
                                     <select type="text" class="form-control" id="collection_method" name="collection_method" disabled tabindex="45">

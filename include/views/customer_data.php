@@ -8,11 +8,13 @@
         position: relative;
         top: -10px;
     }
+
     /* Target both search boxes */
-#existing_list_table_search, 
-#repromotion_list_table_search {
-  padding: 7px 12px !important; /* more padding */
-}
+    #existing_list_table_search,
+    #repromotion_list_table_search {
+        padding: 7px 12px !important;
+        /* more padding */
+    }
 </style>
 <div id="customer_data_content">
     <div class="radio-container promo-screen">
@@ -68,12 +70,30 @@
                         <input type="date" class="form-control" name="follow_up_todate" id="follow_up_todate">
                     </div>
                 </div>
-                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12" style="margin-top:20px">
-                    <div class="form-group">
-                        <button class="btn btn-primary" name="followup_search" id="followup_search">Search</button>
-                    </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <label for="branch_name">Branch</label>
+                    <input type="hidden" id="branch_name2">
+                    <select class="" id="branch_name" name="branch_name" multiple>
+                        <option value=''>Select Branch name</option>
+                    </select>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <label for="line">Line</label>
+                    <input type="hidden" id="line_name">
+                    <select class="" id="line" name="line" multiple>
+                        <option value=''>Select Line</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 d-flex justify-content-end">
+                    <button class="btn btn-primary" name="followup_search" id="followup_search">
+                        Search
+                    </button>
                 </div>
             </div>
+
         </div>
     </div>
     <!--New Promotion List Start-->

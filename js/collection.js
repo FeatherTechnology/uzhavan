@@ -219,15 +219,20 @@ $(document).ready(function () {
                     }
                 });
 
-
                 $('#coll_charge_track').on('blur', function () {
-                    var collChargeValue = parseInt($(this).val());
-                    var responseCollCharge = parseInt(response['coll_charge']);
-                    // Compare the input value with the response collection charge
+                    let value = $(this).val();
+                    if (value === '') {
+                        return; // Don't validate if the field is empty
+                    }
+                    let collChargeValue = Number(value);
+                    let responseCollCharge = Number(response.coll_charge);
+                    if (isNaN(collChargeValue) || isNaN(responseCollCharge)) {
+                        return;
+                    }
                     if (collChargeValue > responseCollCharge) {
                         alert("Enter a Lesser Value");
-                        $(this).val("");  // Clear the input field
-                        $('#total_paid_track').val("");  // Clear the total paid field
+                        $(this).val('');
+                        $('#total_paid_track').val('');
                     }
                 });
 
