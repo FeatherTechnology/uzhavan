@@ -23,7 +23,7 @@ if (isset($_POST['cus_id'])) {
     if ($stmt->rowCount() > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $response['loan_count'] = $row['loan_count']+1;
+        $response['loan_count'] = (int)$row['loan_count'] + 1;
         $response['first_loan_date'] = $row['first_loan_date'] ? date('Y-m-d', strtotime($row['first_loan_date'])) : '';
         if (!empty($row['first_loan_date'])) {
 
@@ -41,33 +41,9 @@ if (isset($_POST['cus_id'])) {
 
             $response['travel'] = '';
         }
-        // Get the first loan issue date where balance = 0
-        $result = $pdo->query("SELECT created_on FROM `loan_issue` WHERE cus_id = '$cus_id' AND balance_amount = 0 ORDER BY created_on LIMIT 1");
-        $res = $result->fetch();
 
-        if ($res && !empty($res['created_on'])) {
-            $first_loan_date = date('d-m-Y', strtotime($res['created_on']));
-            $response['first_loan'] = $first_loan_date;
-
-            $now = new DateTime();
-            $custom = new DateTime($res['created_on']);
-
-            $diff = $custom->diff($now);
-
-            $years = $diff->y;
-            $months = $diff->m;
-
-            $response['travel'] = $years . ' Years, ' . $months . ' Months';
-        } else {
-            $response['first_loan'] = '';
-            $response['travel'] = '';
-        }
     } else {
-        // $response['loan_count'] = '';
-        // $response['first_loan_date'] = '';
-        // $response['first_loan'] = '';
-        // $response['travel'] = '';
-
+        
         $stmt = $pdo->prepare("  SELECT cp.id, cp.cus_id, cp.loan_count, cp.first_loan_date
                 FROM customer_profile cp
                 WHERE cp.id = ? ");

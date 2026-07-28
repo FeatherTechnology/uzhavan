@@ -1003,10 +1003,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme_month_day" style="display:none">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 month_days_div" style="display:none">
                                 <div class="form-group">
-                                    <label for="scheme_month_day_calc">Day</label><span class="text-danger">*</span>
-                                    <select class="form-control to_clear" id="scheme_month_day_calc" name="scheme_month_day_calc" tabindex="7">
+                                    <label for="month_dates">Day</label><span class="text-danger">*</span>
+                                    <select class="form-control to_clear" id="month_dates" name="month_dates" tabindex="7">
                                         <option value="">Select Day</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -1178,7 +1178,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_startdate_calc">Due Start Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="due_startdate_calc" name="due_startdate_calc" tabindex="23">
+                                    <input type="text" class="form-control" id="due_startdate_calc" name="due_startdate_calc" placeholder="dd/mm/yyyy" tabindex="23">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

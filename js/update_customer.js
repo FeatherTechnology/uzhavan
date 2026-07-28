@@ -1758,8 +1758,7 @@ async function editCustmerProfile(id, cus_id) {
         $('#guarantor_name').val(data.guarantor_name).trigger('change');
 
         $('#area').trigger('change');
-        let cus_id = $('#auto_gen_cus_id').val();
-        getLoanCount(cus_id,id);
+        getLoanCount(data.cus_id,id);
 
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {

@@ -574,7 +574,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
                                 <div class="form-group">
                                     <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" placeholder="First Loan Date" tabindex="35" >
+                                    <input type="date" class="form-control" id="first_loan_date" name="first_loan_date" placeholder="First Loan Date" tabindex="35" >
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
@@ -1002,6 +1002,45 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 month_days_div" style="display:none">
+                                <div class="form-group">
+                                    <label for="month_dates">Day</label><span class="text-danger">*</span>
+                                    <select class="form-control to_clear" id="month_dates" name="month_dates" tabindex="7">
+                                        <option value="">Select Day</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                    </select>
+                                </div>
+                            </div>
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme_day" style="display:none">
                             <div class="form-group">
                                 <label for="scheme_day_calc">Day</label><span class="text-danger">*</span>
@@ -1139,7 +1178,7 @@
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                             <div class="form-group">
                                 <label for="due_startdate_calc">Due Start Date</label><span class="text-danger">*</span>
-                                <input type="date" class="form-control" id="due_startdate_calc" name="due_startdate_calc" tabindex="23">
+                                <input type="text" class="form-control" id="due_startdate_calc" name="due_startdate_calc" placeholder="dd/mm/yyyy" tabindex="23">
                             </div>
                         </div>
                         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">

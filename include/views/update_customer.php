@@ -569,7 +569,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
                                 <div class="form-group">
                                     <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="first_loan_date" name="first_loan_date"  placeholder="First Loan Date" tabindex="35">
+                                    <input type="date" class="form-control" id="first_loan_date" name="first_loan_date"  placeholder="First Loan Date" tabindex="35">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">

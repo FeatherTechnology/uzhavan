@@ -719,8 +719,6 @@ $(document).ready(function () {
         let loan_count = $('#loan_count').val();
         let first_loan_date = $('#first_loan_date').val();
         let travel_with_company = $('#travel_with_company').val();
-        console.log("ff",travel_with_company);
-        console.log("pp",first_loan_date);
         let monthly_income = $('#monthly_income').val().replace(/,/g, '');
         let other_income = $('#other_income').val().replace(/,/g, '');
         let support_income = $('#support_income').val().replace(/,/g, '');
@@ -1112,7 +1110,6 @@ function getLoanCount(cus_id,profile_id) {
         dataType: 'json',
         cache: false,
         success: function (response) {
-               console.log(response.first_loan_date);
             $('#loan_count').val(response.loan_count);
             let formattedDate = response.first_loan_date;
             $('#first_loan_date').val(formattedDate);
@@ -2163,6 +2160,7 @@ $(document).ready(function () {
             $('#scheme_due_method_calc').val('')
             $('#profit_method_calc').val('After Benefit');
             $('#profit_type_calc_scheme').show();
+            $('.month_days_div').show();
         } else if (profitType == '1') { //Scheme
             $('#scheme_due_method_calc').val('').trigger('change');
             $('.calc').hide();
@@ -2170,6 +2168,7 @@ $(document).ready(function () {
             $('#due_type_calc').val('');
             $('#profit_method_calc').val('');
             $('#profit_type_calc_scheme').show();
+            $('.month_days_div').hide();
         } else {
             $('#profit_type_calc_scheme').hide();
         }
@@ -2184,7 +2183,26 @@ $(document).ready(function () {
         $('#due_startdate_calc').val('');
         $('#maturity_date_calc').val('');
         $('#profit_method_calc').val('');
+        initDueDatePicker();
     });
+
+//     $('#scheme_due_method_calc').change(function () {
+//     let schemeDueMethod = $(this).val();
+//     let loanCatId = $('#loan_category_calc').val();
+
+//     dueMethodScheme(schemeDueMethod, loanCatId);
+
+//     $('#maturity_date_calc').val('');
+//     $('#profit_method_calc').val('');
+
+//     setDueStartDate();
+// });
+
+$('#month_dates, #scheme_day_calc').change(function () {
+    $('#due_startdate_calc').val('');
+    initDueDatePicker();
+});
+
 
     $('#scheme_name_calc').change(function () { //Scheme Name change event
         let scheme_id = $(this).val();
@@ -2344,6 +2362,7 @@ $(document).ready(function () {
                 'profit_method_calc': $('#profit_method_calc').val(),
                 'scheme_due_method_calc': $('#scheme_due_method_calc').val(),
                 'scheme_day_calc': $('#scheme_day_calc').val(),
+                'month_dates': $('#month_dates').val(),
                 'scheme_name_calc': $('#scheme_name_calc').val(),
                 'interest_rate_calc': $('#interest_rate_calc').val(),
                 'due_period_calc': $('#due_period_calc').val(),
@@ -2407,6 +2426,69 @@ $(document).ready(function () {
     })
 
 }); //Document END.
+
+function initDueDatePicker() {
+    let method='';
+    if($('#profit_type_calc').val()=='0'){
+     method = 1;
+
+    }else{
+      method = $('#scheme_due_method_calc').val();
+
+    }
+
+
+    // Destroy existing instance
+    if ($('#due_startdate_calc')[0]._flatpickr) {
+        $('#due_startdate_calc')[0]._flatpickr.destroy();
+    }
+
+    flatpickr("#due_startdate_calc", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+
+        enable: [
+            function(date) {
+
+                // Daily
+                if (method == '3') {
+                    return true;
+                }
+
+                // Monthly
+                if (method == '1') {
+
+                    let day = parseInt($('#month_dates').val());
+
+                    return date.getDate() === day;
+                }
+
+                // Weekly
+                if (method == '2') {
+
+                    let week = parseInt($('#scheme_day_calc').val());
+
+                    let map = {
+                        1: 1, // Monday
+                        2: 2,
+                        3: 3,
+                        4: 4,
+                        5: 5,
+                        6: 6,
+                        7: 0  // Sunday
+                    };
+
+                    return date.getDay() === map[week];
+                }
+
+                return false;
+            }
+        ]
+    });
+     $('#due_startdate_calc').removeAttr('readonly');
+}
+
+
 
 function callLoanCaculationFunctions() {
     getLoanCategoryName();
@@ -2572,10 +2654,10 @@ function dueMethodScheme(schemeDueMethod, loanCatId) {
         $('.scheme_day_calc').val('');
     }
     if(schemeDueMethod == '1'){
-        $('.scheme_month_day').show();
+        $('.month_days_div').show();
     }else{
-         $('.scheme_month_day').hide();
-         $('#scheme_month_day_calc').val('');
+         $('.month_days_div').hide();
+         $('#month_dates').val('');
     }
 }
 
@@ -3008,7 +3090,7 @@ function resetValidation() {
 function isFormDataValid(formData) {
     let isValid = true;
     const excludedFields = [
-        'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc',
+        'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc','month_dates',
         'processing_fees_calculate', 'net_cash_calc',
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
@@ -3034,7 +3116,8 @@ function isFormDataValid(formData) {
             validateField(formData['interest_rate_calc'], 'interest_rate_calc'),
             validateField(formData['due_period_calc'], 'due_period_calc'),
             validateField(formData['doc_charge_calc'], 'doc_charge_calc'),
-            validateField(formData['processing_fees_calc'], 'processing_fees_calc')
+            validateField(formData['processing_fees_calc'], 'processing_fees_calc'),
+            validateField(formData['month_dates'], 'month_dates')
         ];
         if (!validationResults.every(result => result)) {
             isValid = false;
@@ -3050,6 +3133,9 @@ function isFormDataValid(formData) {
 
         if (formData['scheme_due_method_calc'] == '2') {
             validationResults.push(validateField(formData['scheme_day_calc'], 'scheme_day_calc'));
+        }
+        if (formData['scheme_due_method_calc'] == '1') {
+            validationResults.push(validateField(formData['month_dates'], 'month_dates'));
         }
 
         // Check if all validations passed
@@ -3119,6 +3205,8 @@ function loanCalculationEdit(id) {
             $('#due_type_calc').val(response[0].due_type);
             $('#profit_method_calc').val(response[0].profit_method);
             $('#scheme_due_method_calc').val(response[0].scheme_due_method);
+            $('#month_dates').val(response[0].month_date);
+            $('#scheme_day_calc').val(response[0].scheme_day);
             $('#scheme_name_edit').val(response[0].scheme_name);
             $('#int_rate_upd').val(response[0].interest_rate);
             $('#due_period_upd').val(response[0].due_period);
@@ -3158,10 +3246,21 @@ function loanCalculationEdit(id) {
 
             setTimeout(() => {
                 $('#scheme_day_calc').val(response[0].scheme_day);
+                $('#month_dates').val(response[0].month_date);
+
                 $('#agent_id_calc').val(response[0].agent_id);
                 $('#agent_name_calc').val(response[0].agent_name);
+
+                // Load calendar rules
+                initDueDatePicker();
+
+                // Set saved date
+                $('#due_startdate_calc').val(response[0].due_startdate);
+
                 $('#refresh_cal').trigger('click');
+
             }, 2000);
+
         }
     }, 'json');
 }
