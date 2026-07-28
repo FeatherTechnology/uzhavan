@@ -2,7 +2,6 @@
 require '../../ajaxconfig.php';
 
 $cus_id = $_POST['cus_id'];
-$cus_profile_id=$_POST['cus_profile_id'];
 $kyc_list_arr = array();
 $i = 0;
 
@@ -23,7 +22,7 @@ try {
                         FROM kyc_info ki
                         JOIN proof_info pi ON ki.proof = pi.id
                         LEFT JOIN family_info fi ON ki.fam_mem = fi.id 
-                        LEFT JOIN customer_profile cp ON ki.cus_id = cp.cus_id WHERE ki.cus_profile_id = '$cus_profile_id' GROUP BY ki.id");
+                        LEFT JOIN customer_profile cp ON ki.cus_id = cp.cus_id WHERE ki.cus_id = '$cus_id' GROUP BY ki.id");
 
     if (!$qry) {
         throw new Exception("Database query failed: " . implode(" - ", $pdo->errorInfo()));

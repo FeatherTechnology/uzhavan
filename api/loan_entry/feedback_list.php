@@ -6,7 +6,7 @@ $cus_id = $_POST['cus_id'];
 $feedback_list_arr = array();
 $feedback_arr = [1=>'Bad',2=>'Poor',3=>'Average',4=>'Good',5=>'Excellent'];
 $i=0;
-$qry = $pdo->query("SELECT id,feedback_label,feedback, cus_remark FROM cus_feedback WHERE cus_id = '$cus_id' ");
+$qry = $pdo->query("SELECT cf.id, cf.feedback, cf.cus_remark ,fn.feedback_name as feedback_label FROM cus_feedback cf JOIN cus_feedback_name fn on fn.id=cf.feedback_label WHERE cf.cus_id = '$cus_id' ");
 
 if ($qry->rowCount() > 0) {
     while ($row = $qry->fetch(PDO::FETCH_ASSOC)) {

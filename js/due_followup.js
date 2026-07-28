@@ -695,8 +695,7 @@ function getBankInfoTable() {
 }
 function getKycInfoTable() {
     let cus_id = $('#cus_id').val();
-    let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',

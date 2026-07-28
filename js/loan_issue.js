@@ -664,8 +664,7 @@ function BankInfoTable() {
 }
 function getKycInfoTable() {
     let cus_id = $('#cus_id').val();
-    let cus_profile_id = $('#customer_profile_id').val()
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id, cus_profile_id }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', {cus_id}, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -796,19 +795,17 @@ function getGrelationshipName(guarantorId) {
         }
     });
 }
-function getLoanCount(cus_id) {
+function getLoanCount(cus_id,profile_id) {
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
-        data: { cus_id: cus_id },
+        data: { cus_id: cus_id ,profile_id:profile_id},
         dataType: 'json',
         cache: false,
         success: function (response) {
-            $('#loan_count').val(response.loan_count);
-            $('#cus_loan_count').val(response.loan_count);
+             $('#loan_count').val(response.loan_count);
             let formattedDate = response.first_loan_date;
             $('#first_loan_date').val(formattedDate);
-            $('#cus_first_loan_date').val(formattedDate);
             $('#travel_with_company').val(response.travel);
         },
     });
@@ -878,17 +875,17 @@ async function editCustmerProfile(id) {
 
         $('#area').trigger('change');
         $('#guarantor_name').trigger('change');
+        let cus_id = $('#cus_id').val();
+        getLoanCount(cus_id,id);
 
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {
             $('.cus_status_div').show();
-            $('.loan_count_div').show();
-            let cus_id = $('#cus_id').val();
-            getLoanCount(cus_id);
+            // $('.loan_count_div').show();
         } else {
             $('.cus_status_div').hide();
             $('#data_checking_table_div').hide();
-            $('.loan_count_div').hide();
+            // $('.loan_count_div').hide();
         }
 
 
@@ -944,6 +941,7 @@ function personalInfo() {
         let id = $('#customer_profile_id').val();
 
         $.post('api/loan_issue_files/loan_issue_data.php', { id }, function (response) {
+            console.log("ggg",response[0].month_date);
             $('#aadhar_nums').val(response[0].aadhar_num);
             $('#cus_id').val(response[0].cus_id);
             $('#cus_name').val(response[0].cus_name);
@@ -979,14 +977,15 @@ function personalInfo() {
             $('#aadhar_num').val(response[0].aadhar_num);
             getIssuePerson(response[0].cus_name);
             $('#due_startdate_calc').attr('min', response[0].loan_date);
+            let cus_id = response[0].cus_id; // Add this line
+            getLoanCount(cus_id,id);
 
-            if (response[0].cus_data == 'Existing') {
-                $('#loan_count_div').show();
-                let cus_id = response[0].cus_id; // Add this line
-                getLoanCount(cus_id);
-            } else {
-                $('#loan_count_div').hide();
-            }
+            // if (response[0].cus_data == 'Existing') {
+            //     $('#loan_count_div').show();
+                
+            // } else {
+            //     $('#loan_count_div').hide();
+            // }
 
             let path = "uploads/loan_entry/cus_pic/";
             $('#pers_pic').val(response[0].pic);
@@ -1003,6 +1002,7 @@ function personalInfo() {
                 getLoanCatDetails(response[0].loan_category_id, 2);
                 $('#interest_rate_calc').prop('readonly', false);
                 $('#due_period_calc').prop('readonly', false);
+                 $('.month_days_div').show();
             } else if (response[0].profit_type == '1') { // Scheme
                 dueMethodScheme(response[0].scheme_due_method, response[0].loan_category_id)
                 $('.calc').hide();
@@ -1015,9 +1015,18 @@ function personalInfo() {
                     $('.scheme_day').hide();
                     $('.scheme_day_calc').val('');
                 }
+                if(response[0].scheme_due_method == '1'){
+                    $('.month_days_div').show();
+                }else{
+                    $('.month_days_div').hide();
+                    $('#month_dates').val('');
+                }
                 $('#interest_rate_calc').prop('readonly', true);
                 $('#due_period_calc').prop('readonly', true);
             }
+            setTimeout(function () {
+                $('#month_dates').val(response[0].month_date);
+            }, 1000);
             $('#bankInfo').hide();
             resolve(); // Resolve after everything is done
         }, 'json').fail(() => reject());

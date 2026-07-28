@@ -491,6 +491,7 @@
                                                     <th>Account Holder Name</th>
                                                     <th>Account Number</th>
                                                     <th>IFSC Code</th>
+                                                    <th>Upload</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -570,13 +571,13 @@
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
                                     <div class="form-group">
                                         <label for="loan_count">Loan Count</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="loan_count" name="loan_count" disabled placeholder="Loan Count" tabindex="34" readonly>
+                                        <input type="text" class="form-control" id="loan_count" name="loan_count"  placeholder="Loan Count" tabindex="34" >
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
                                     <div class="form-group">
                                         <label for="first_loan_date">First Loan Date</label><span class="text-danger">*</span>
-                                        <input type="text" class="form-control" id="first_loan_date" name="first_loan_date" disabled placeholder="First Loan Date" tabindex="35" readonly>
+                                        <input type="date" class="form-control" id="first_loan_date" name="first_loan_date"  placeholder="First Loan Date" tabindex="35" >
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 loan_count_div">
@@ -629,7 +630,7 @@
                             <hr>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-primary" id="add_cus_label" name="add_cus_label" data-toggle="modal" data-target="#addCusLabel" onclick="getFeedBackTable()" style="padding: 5px 35px; float: right;" tabindex="61"><span class="icon-add"></span></button>
+                                    <button type="button" class="btn btn-primary" id="add_cus_label" name="add_cus_label" data-toggle="modal" data-target="#addCusLabel"  style="padding: 5px 35px; float: right;" tabindex="61"><span class="icon-add"></span></button>
                                 </div>
                             </div> <br>
 
@@ -1002,6 +1003,45 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 month_days_div" style="display:none">
+                                <div class="form-group">
+                                    <label for="month_dates">Day</label><span class="text-danger">*</span>
+                                    <select class="form-control to_clear" id="month_dates" name="month_dates" tabindex="7">
+                                        <option value="">Select Day</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                        <option value="31">31</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12 scheme_day" style="display:none">
                                 <div class="form-group">
                                     <label for="scheme_day_calc">Day</label><span class="text-danger">*</span>
@@ -1138,7 +1178,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="due_startdate_calc">Due Start Date</label><span class="text-danger">*</span>
-                                    <input type="date" class="form-control" id="due_startdate_calc" name="due_startdate_calc" tabindex="23">
+                                    <input type="text" class="form-control" id="due_startdate_calc" name="due_startdate_calc" placeholder="dd/mm/yyyy" tabindex="23">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -1284,7 +1324,7 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
-                                    <label for="fam_aadhar">Aadhar No</label><span class="text-danger">*</span>
+                                    <label for="fam_aadhar">Aadhar No</label>
                                     <input type="text" class="form-control" name="fam_aadhar" id="fam_aadhar" tabindex="1" maxlength="14" data-type="adhaar-number" placeholder="Enter Aadhar Number">
                                     <input type="hidden" id="addaadhar_id" value='0'>
                                 </div>
@@ -1470,6 +1510,13 @@
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
+                                    <label for="bank_upload"> Upload</label>
+                                    <input type="file" class="form-control" id="bank_upload" name="bank_upload" onchange="compressImage(this, 200)" tabindex="1">
+                                    <input type="hidden" id="bnk_upload">
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
                                     <button name="submit_bank" id="submit_bank" class="btn btn-primary" tabindex="1" style="margin-top: 18px;"><span class="icon-check"></span>&nbsp;Submit</button>
                                     <button type="reset" id="clear_bank_form" class="btn btn-outline-secondary" style="margin-top: 18px;" tabindex="8">Clear</button>
                                 </div>
@@ -1488,6 +1535,7 @@
                                     <th>Account Holder Name</th>
                                     <th>Account Number</th>
                                     <th>IFSC Code</th>
+                                    <th>Upload</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -1685,10 +1733,24 @@
                     <form id="feedback_form">
                         <div class="row">
                             <input type="hidden" name="add_feedBack" id='add_feedBack'>
-                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <!-- <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="feedback_label">FeedBack Label</label><span class="text-danger">*</span>
                                     <input class="form-control" name="feedback_label" id="feedback_label" tabindex="1" placeholder="Enter FeedBack Label">
+                                </div>
+                            </div> -->
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group" style="display: flex; align-items: center;">
+                                    <div>
+                                        <label for="feedback_label"> Feedback Label </label> <span class="required">&nbsp;*</span>
+                                        <select type="text" class="form-control" id="feedback_label" style="width: 180px;" name="feedback_label" tabindex='1'>
+                                            <option value=""> Select Feedback Label</option>
+                                        </select>
+                                        <span class="text-danger" id="feedbacklabelCheck" style='display:none'> Select Feedback Label</span>
+                                    </div>
+                                    <div style="padding: 20px 0px 0px 10px;  ">
+                                        <button type="button" class="btn btn-primary" id="add_cus_feedback" name="add_cus_feedback" data-toggle="modal"  onclick="getFeedBackLabelList()" data-target="#add_feedback_lable" tabindex="2"><span class="icon-add"></span></button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
@@ -2339,3 +2401,66 @@
     </div>
 </div>
 <!-- ------------------------------------------------------------ Gold Info Modal END --------------------------------------------------------------- -->
+
+
+<!-- ------------------------------------------------------------ Add Feedback Modal Start --------------------------------------------------------------- -->
+<div class="modal fade" id="add_feedback_lable" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-lg " role="document">
+		<div class="modal-content" style="background-color: white; width: 1000px; height: 700px;">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLongTitle">Add Feedback Label  </h5>
+				<button type="button" class="close" data-dismiss="modal" tabindex="7" aria-label="Close" onclick="getFeedbackName()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+					
+					<div class="card-body" style="height: 400px;">
+						<div class="row ">
+							<!--Fields -->
+							<div class="col-md-12 ">
+								<div class="row">
+									<div class="col-xl-4 col-lg-4 col-md-4 col-sm-10 col-12"></div>
+									<div class="col-xl-4 col-lg-4 col-md-4 col-sm-10 col-12">
+										<div class="form-group">
+											<label for="disabledInput">Feedback Label</label>&nbsp;<span class="text-danger"></span>
+											<input type="hidden" name="fedbackname_id" id="fedbackname_id">
+											<input type="text" tabindex="4" class="form-control" id="feedbackname" name="feedbackname" value="" placeholder="Enter Feedback Label">
+										</div>
+									</div>
+
+									<div class="col-xl-4 col-lg-4 col-md-4 col-sm-10 col-12 d-flex align-items-center" style="margin-top: 20px;">
+										<div class="form-group">
+											<button type="submit" name="submit_feedback_lable" id="submit_feedback_lable" class="btn btn-primary" value="Submit" tabindex="5"><span class="icon-check"></span>&nbsp;Submit</button>
+										</div>
+									</div>
+								</div>
+								<br>
+							</div>
+							<div  class="col-md-12" id="cus_feedbackListTable_div">
+									<table class="table custom-table" id="cus_feedbackListTable">
+										<thead>
+											<tr>
+												<th width="50"> S.No </th>
+												<th> Feedback Label </th>
+												<th> ACTION </th>
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+									</table>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-dismiss="modal" tabindex="6"  onclick="getFeedbackLable()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ------------------------------------------------------------ Add Feedback Modal END --------------------------------------------------------------- -->

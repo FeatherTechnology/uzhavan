@@ -33,3 +33,6 @@
 
 	<!-- multiselect stylesheet -->
 	<link rel="stylesheet" href="vendor/multiselect/public/assets/styles/choices.min.css" />
+
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
