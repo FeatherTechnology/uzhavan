@@ -22,7 +22,7 @@ $doc_list_cnt = $_POST['doc_list_cnt'];
 $gold_list_cnt = $_POST['gold_list_cnt'];
 
 foreach ($signed_id as $id) {
-    $qry = $pdo->query("UPDATE `signed_doc_info` SET `noc_status`='1',`date_of_noc`='$date_of_noc',`noc_member`='$noc_member',`noc_relationship`='$noc_relation',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
+    $qry = $pdo->query("UPDATE `signed_doc_info` SET `noc_status`='1',`date_of_noc`='$date_of_noc',`noc_member`='$noc_member',`noc_relationship`='$noc_relation',`update_login_id`='$user_id',`updated_date`=now() WHERE `id`='$id'");
 }
 
 foreach ($cheque_no_id as $id) {

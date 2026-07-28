@@ -4,7 +4,8 @@ require '../../ajaxconfig.php';
 $update_doc_list_arr = array();
 $cus_id = $_POST['cus_id'];
 $coll_method = [1 => 'BySelf', 2 => 'On Spot', 3 => 'Cheque Collection', 4 => 'ECS'];
-$qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,lelc.collection_method ,cs.closed_date,cs.status as c_sts,cs.coll_status FROM loan_entry_loan_calculation lelc 
+$day_arr = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5=>'Friday', 6=>'Saturday', 7=>'Sunday'];
+$qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,lelc.collection_method ,cs.closed_date,cs.status as c_sts,cs.coll_status,lelc.scheme_day,lelc.month_date,lelc.profit_type,lelc.scheme_due_method FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
@@ -18,6 +19,22 @@ if ($qry->rowCount() > 0) {
         $loanInfo['c_sts'] = 'Present';
         $loanInfo['sub_status'] = $loanInfo['coll_status'];
 
+        // Due Method Display
+        if ($loanInfo['profit_type'] == 0) {
+            // Profit Type = 0 => Use due_method
+            $loanInfo['due_day_display'] = $loanInfo['month_date'];
+        } else {
+            // Profit Type = 1 => Use scheme_due_method
+            if ($loanInfo['scheme_due_method'] == 1) {
+                // Date Wise
+                $loanInfo['due_day_display'] = $loanInfo['month_date'];
+            } elseif ($loanInfo['scheme_due_method'] == 2) {
+                // Day Wise
+                $loanInfo['due_day_display'] = $day_arr[$loanInfo['scheme_day']];
+            } else {
+                $loanInfo['due_day_display'] = '';
+            }
+        }
 
         $loanInfo['charts'] = "<div class='dropdown'>
         <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>

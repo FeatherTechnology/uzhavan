@@ -240,19 +240,7 @@ class bulkUploadClass
             $datacheck = $result->fetch(PDO::FETCH_ASSOC);
             $auto_cus_id = $datacheck['cus_id'];
         } else {
-            $qry1 = $pdo->query("SELECT `company_name` FROM `company_creation` WHERE 1 ");
-            $qry_info = $qry1->fetch();
-            $company_name = $qry_info["company_name"];
-            $words = explode(" ", $company_name);
-
-            if (count($words) >= 2) {
-                // Take first letter of first two words
-                $myStr = strtoupper(mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1));
-            } else {
-                // Take only first letter
-                $myStr = strtoupper(mb_substr($company_name, 0, 1));
-            }
-
+          
             $qry = $pdo->query("SELECT max(cus_id) as cus_id FROM customer_profile WHERE 1");
             $row = $qry->fetch(PDO::FETCH_ASSOC);
 
@@ -260,12 +248,12 @@ class bulkUploadClass
                 // If branch codes exist, generate a new branch code
 
                 $ac2 = $row["cus_id"];
-                $appno2 = ltrim(strstr($ac2, '-'), '-');
+                $appno2 = ($ac2);
                 $appno2 = $appno2 + 1;
-                $auto_cus_id = $myStr . "-" . $appno2;
+                $auto_cus_id =  $appno2;
             } else {
                 // If no branch codes exist, set an initial one
-                $initialapp = $myStr . "-1001";
+                $initialapp = "-1001";
                 $auto_cus_id = $initialapp;
             }
         }

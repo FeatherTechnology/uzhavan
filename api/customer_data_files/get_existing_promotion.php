@@ -68,6 +68,32 @@ $order = '';
 if (isset($_POST['order'])) {
     $order = ' ORDER BY ' . $column[$_POST['order']['0']['column']] . ' ' . $_POST['order']['0']['dir'] . ' ';
 }
+$branchCondition = '';
+$lineCondition = '';
+
+// Branch Filter
+if (!empty($_POST['branch'])) {
+    $branch = $_POST['branch'];
+    if (!is_array($branch)) {
+        $branch = explode(',', $branch);
+    }
+    $branch = array_map('intval', $branch);
+    if (!empty($branch)) {
+        $branchCondition = " AND ac.branch_id IN (" . implode(',', $branch) . ")";
+    }
+}
+
+// Line Filter
+if (!empty($_POST['line'])) {
+    $line = $_POST['line'];
+    if (!is_array($line)) {
+        $line = explode(',', $line);
+    }
+    $line = array_map('intval', $line);
+    if (!empty($line)) {
+        $lineCondition = " AND ac.line_id IN (" . implode(',', $line) . ")";
+    }
+}
 // Step 4: Final query for customers
  $qry = "
     SELECT cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, 
@@ -75,9 +101,10 @@ if (isset($_POST['order'])) {
            cp.mobile1, cs.status as c_sts, cs.sub_status as c_substs,cs.closed_date,
            pc.created_on as created, pc.status as followup_sts, cp.created_on as cus_created,pc.follow_date,cs.closed_consider_sts
     FROM customer_profile cp
-    LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
     LEFT JOIN area_name_creation anc ON cp.area = anc.id
-    LEFT JOIN area_creation ac ON cp.line = ac.line_id
+    LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
+LEFT JOIN area_creation ac ON acan.area_creation_id = ac.id
+LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
     LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
     INNER JOIN (
         SELECT MAX(id) as max_id 
@@ -90,6 +117,8 @@ if (isset($_POST['order'])) {
       AND cs.sub_status = 1 
       AND cs.status NOT IN (13, 14) 
       $whereCondition
+    $branchCondition
+  $lineCondition
 ";
 
 if ($_POST['followUpSts']) {
