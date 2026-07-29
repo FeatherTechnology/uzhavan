@@ -1,3 +1,20 @@
+
+const branchChoices = new Choices('#branch_search', {
+    removeItemButton: true,
+    noChoicesText: 'No branches available',
+    allowHTML: true,
+});
+const lineChoices = new Choices('#line_search', {
+    removeItemButton: true,
+    noChoicesText: 'No line available',
+    allowHTML: true,
+});
+//Loan Category Multi select initialization
+const loan_category = new Choices('#loan_cat_search', {
+    removeItemButton: true,
+    noChoicesText: 'Select Loan Category',
+    allowHTML: true
+});
 $(document).ready(function () {
 
     $(document).on('click', '.approval-approve', function () {
@@ -71,6 +88,7 @@ $(document).ready(function () {
     });
 
     $('#back_btn').click(function () {
+
         getApprovalTable();
     });
     $(document).on('click', '.approval-edit', function () {
@@ -1060,10 +1078,29 @@ $(document).ready(function () {
 
     });
 
+    $('#search_loan').click(function () {
+        let branch = $("#branch_search").val();
+        let line = $("#line_search").val();
+        let loan_cat = $("#loan_cat_search").val();
+        if (
+            (!branch || branch.length === 0) &&
+            (!line || line.length === 0) &&
+            (!loan_cat || loan_cat.length === 0)
+        ) {
+            swalError('Warning', "Please select at least one filter");
+            return;
+        }
+
+        getApprovalTable();
+    });
+
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
 
 //On Load function 
 $(function () {
+    getBranchDropdown();
+    getLineDropdown()
+    getLoanCatName();
     getApprovalTable();
 });
 
@@ -1146,7 +1183,12 @@ function getLoanCount(cus_id,profile_id) {
 }
 
 function getApprovalTable() {
-    serverSideTable('#loan_entry_table', '', 'api/approval_files/approval_list.php');
+    let branch = $("#branch_search").val();
+    let line = $("#line_search").val();
+    let loan_cat = $("#loan_cat_search").val();
+
+    let params = { branch: branch, line: line, loan_cat: loan_cat };
+    serverSideTable('#loan_entry_table', params, 'api/approval_files/approval_list.php');
 }
 function moveToNext(cus_sts_id, cus_sts) {
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
@@ -1178,7 +1220,7 @@ function checkCustomerLimit(loan_calc_id, cus_sts_id, cus_sts) {
         } else if (response.status == '3') {
             swalConfirm(
                 "Customer Limit",
-                "Customer limit is set to " +  moneyFormatIndia(response.cus_limit) + ". Do you want to Approve?",
+                "Customer limit is set to " + moneyFormatIndia(response.cus_limit) + ". Do you want to Approve?",
                 () => moveToNext(cus_sts_id, cus_sts)
             );
         } else {
@@ -2411,7 +2453,7 @@ $(document).ready(function () {
 
             if (isFormDataValid(formData)) {
                 $.post('api/loan_entry/loan_calculation/submit_loan_calculation.php', formData, function (response) {
-                   if (response.status == '1') {
+                    if (response.status == '1') {
                         swalSuccessOk('Success', 'Loan Calculation Added Successfully!', function () {
                             if ($('.page-content').length) {
                                 $('html, body').animate({
@@ -2429,7 +2471,7 @@ $(document).ready(function () {
 
                             }
                         });
-                    }  else {
+                    } else {
                         swalError('Error', 'Error Occurs!')
                     }
 
@@ -4535,3 +4577,67 @@ function deleteFeedbackName(id) {
 }
 
 ////////////////////////////////////Loan Documentation End////////////////////////////////////////
+
+function getBranchDropdown() {
+    let branch_id = $('#branch_search').val();
+    let branch_name2 = $('#branch_2').val();
+    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
+        branchChoices.clearStore();
+        $.each(response, function (index, val) {
+            let selected = '';
+            if (branch_name2.includes(val.id)) {
+                selected = 'selected';
+            }
+            let items = [
+                {
+                    value: val.id,
+                    label: val.branch_name,
+                    selected: selected,
+                }
+            ];
+            branchChoices.setChoices(items); // Add choices
+
+        });
+    }, 'json');
+}
+
+function getLineDropdown() {
+    lineChoices.clearStore();
+    $.ajax({
+        url: 'api/due_followup/get_line_dropdown.php',
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            let items = [];
+            $.each(response, function (index, val) {
+                items.push({
+                    value: val.id,
+                    label: val.linename
+                });
+            });
+            lineChoices.setChoices(items, 'value', 'label', true);
+        }
+    });
+}
+
+function getLoanCatName() {
+    let loan_cat_edit_it = $('#loan_cat_edit_it').val()
+    $.post('api/common_files/get_loan_category_creation.php', function (response) {
+        loan_category.clearStore();
+        $.each(response, function (index, val) {
+            let selected = '';
+            if (loan_cat_edit_it.includes(val.id)) {
+                selected = 'selected';
+            }
+            let items = [
+                {
+                    value: val.id,
+                    label: val.loan_category,
+                    selected: selected
+                }
+            ];
+            loan_category.setChoices(items);
+            loan_category.init();
+        });
+    }, 'json');
+}

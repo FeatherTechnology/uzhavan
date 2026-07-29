@@ -2,6 +2,27 @@
 require '../../ajaxconfig.php';
 @session_start();
 $user_id = $_SESSION['user_id'];
+$branchCondition = '';
+$lineCondition = '';
+$loanCatCondition = '';
+
+// Branch Filter
+if (!empty($_POST['params']['branch'])) {
+    $branch = array_map('intval', $_POST['params']['branch']);
+    $branchCondition = " AND ac.branch_id IN (" . implode(',', $branch) . ")";
+}
+
+// Line Filter
+if (!empty($_POST['params']['line'])) {
+    $line = array_map('intval', $_POST['params']['line']);
+    $lineCondition = " AND ac.line_id IN (" . implode(',', $line) . ")";
+}
+
+// Loan Category Filter
+if (!empty($_POST['params']['loan_cat'])) {
+    $loanCat = array_map('intval', $_POST['params']['loan_cat']);
+    $loanCatCondition = " AND lelc.loan_category IN (" . implode(',', $loanCat) . ")";
+}
 
 $column = array(
     'cp.id',
@@ -23,15 +44,16 @@ $query = "SELECT cp.id, lelc.loan_date, cp.cus_id, cp.aadhar_num, cp.cus_name, a
 FROM customer_profile cp 
 LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
-LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN area_name_creation anc ON cp.area = anc.id
-LEFT JOIN area_creation ac ON cp.line = ac.line_id
+LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
+LEFT JOIN area_creation ac ON acan.area_creation_id = ac.id
+LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-WHERE cs.status = 4 AND cp.payment_mode_status = 1 AND u.id ='$user_id' AND us.id ='$user_id'";
+WHERE cs.status = 4 AND cp.payment_mode_status = 1 AND u.id ='$user_id' AND us.id ='$user_id' $branchCondition $lineCondition $loanCatCondition";
 
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
