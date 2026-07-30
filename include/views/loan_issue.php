@@ -7,7 +7,34 @@
 
 <div class="card loanissue_table_content">
     <div class="card-body">
-        <div class="col-12">
+        <div class="col-12 overflow-x-cls">
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <label for="branch_search">Branch</label>
+                    <input type="hidden" id="branch_2">
+                    <select class="" id="branch_search" name="branch_search" multiple>
+                        <option value=''>Select Branch name</option>
+                    </select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <label for="line_search">Line</label>
+                    <input type="hidden" id="line_name">
+                    <select class="" id="line_search" name="line_search" multiple>
+                        <option value=''>Select Line</option>
+                    </select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <label for="loan_cat_search">Loan Category</label>
+                    <input type="hidden" id="loan_cat_edit_it">
+                    <select class="" id="loan_cat_search" name="loan_cat_search" multiple>
+                        <option value=''>Select Loan Category</option>
+                    </select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <button type="button" class="btn btn-primary" id="search_loan" style="margin-top:20px;">Search</button>
+                </div>
+            </div>
+            <br>
             <table id="loan_issue_table" class="table custom-table">
                 <thead>
                     <tr>

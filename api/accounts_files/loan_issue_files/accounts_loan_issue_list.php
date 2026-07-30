@@ -23,10 +23,11 @@ $query = "SELECT cp.id, lelc.loan_date, cp.cus_id, cp.aadhar_num, cp.cus_name, a
 FROM customer_profile cp 
 LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id
-LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id
 LEFT JOIN area_name_creation anc ON cp.area = anc.id
-LEFT JOIN area_creation ac ON cp.line = ac.line_id
+LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
+LEFT JOIN area_creation ac ON acan.area_creation_id = ac.id
+LEFT JOIN line_name_creation lnc ON ac.line_id = lnc.id
 LEFT JOIN branch_creation bc ON ac.branch_id = bc.id
 LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
