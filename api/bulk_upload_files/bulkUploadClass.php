@@ -24,9 +24,9 @@ class bulkUploadClass
 
     public function fetchAllRowData($Row)
     {
-        
+
         $dataArray = array(
-          
+
             'aadhar_num' => isset($Row[1]) ? $Row[1] : "",
             'cus_name' => isset($Row[2]) ? $Row[2] : "",
             'gender' => isset($Row[3]) ? $Row[3] : "",
@@ -178,7 +178,7 @@ class bulkUploadClass
 
         return $dataArray;
     }
-     function dateFormatChecker($checkdate)
+    function dateFormatChecker($checkdate)
     {
         // Attempt to create a DateTime object from the provided date
         $dateTime = DateTime::createFromFormat('Y-m-d', $checkdate);
@@ -232,29 +232,26 @@ class bulkUploadClass
 
         return $loan_ID_final;
     }
+
     function getCustomerCode($pdo, $aadhar_num)
     {
         $check_query = "SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'";
         $result = $pdo->query($check_query);
+
         if ($result->rowCount() > 0) {
+
             $datacheck = $result->fetch(PDO::FETCH_ASSOC);
             $auto_cus_id = $datacheck['cus_id'];
         } else {
-          
-            $qry = $pdo->query("SELECT max(cus_id) as cus_id FROM customer_profile WHERE 1");
+
+            $qry = $pdo->query("SELECT MAX(CAST(cus_id AS SIGNED)) AS max_cus_id FROM customer_profile WHERE cus_id != '' AND cus_id IS NOT NULL");
+
             $row = $qry->fetch(PDO::FETCH_ASSOC);
 
-            if ($row['cus_id'] != '') {
-                // If branch codes exist, generate a new branch code
-
-                $ac2 = $row["cus_id"];
-                $appno2 = ($ac2);
-                $appno2 = $appno2 + 1;
-                $auto_cus_id =  $appno2;
+            if ($row['max_cus_id'] !== null) {
+                $auto_cus_id = $row['max_cus_id'] + 1;
             } else {
-                // If no branch codes exist, set an initial one
-                $initialapp = "-1001";
-                $auto_cus_id = $initialapp;
+                $auto_cus_id = -1001;
             }
         }
 
