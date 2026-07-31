@@ -365,9 +365,12 @@ function serverSideTable(tableSelector, params, apiUrl) {
 			'ajax': {
 				'url': apiUrl,
 				'data': function (data) {
-					var search = $('input[type=search]').val();
-					data.search = search;
-					data.params = params;
+				let searchValue = data.search.value;
+				if (!searchValue) {
+					searchValue = $('input[type=search]').val();
+				}
+				data.search = searchValue;
+				data.params = params;
 				}
 			},
 			dom: 'lBfrtip',
@@ -704,4 +707,29 @@ function nameFormatter(selector) {
             });
 }
 
+  function mantraInitDevice() {
+            const deviceList = GetConnectedDeviceList();
 
+            console.log("Connected Devices:", deviceList);
+
+            const desc = deviceList?.data?.ErrorDescription;
+
+            if (deviceList?.httpStaus && deviceList?.data?.ErrorCode == "0" && desc) {
+
+                const device = desc.split(":")[1]?.trim();
+
+                if (device) {
+                    console.log("Device Name:", device);
+                    const init = InitDevice(device, "");
+                    console.log("Init result:", init);
+                    alert(`Device Name: ${device}, ${init.data.ErrorDescription}.`);
+                } else {
+                    alert("Fingerprint Device not found in description");
+                    console.error("Device not found in description");
+                }
+
+            } else {
+                alert("Fingerprint Device not connected");
+                console.error("Device not connected");
+            }
+        }

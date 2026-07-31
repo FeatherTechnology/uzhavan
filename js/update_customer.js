@@ -1599,80 +1599,92 @@ function dataCheckList(cus_id, cus_name, cus_mble_no, aadhar_num) {
 }
 
 
-function fingerprintTable() {
-    var cus_name = $('#cus_name').val();
-    var cus_id = $('#auto_gen_cus_id').val();
-    $.ajax({
-        url: 'api/loan_entry/getNamesForFingerprint.php',
-        data: { 'cus_name': cus_name, 'cus_id': cus_id },
-        type: 'post',
-        cache: false,
-        success: function (html) {
-            $('.fingerprintTable').empty()
-            $('.fingerprintTable').html(html)
+// function fingerprintTable() {
+//     var cus_name = $('#cus_name').val();
+//     var cus_id = $('#auto_gen_cus_id').val();
+//     $.ajax({
+//         url: 'api/loan_entry/getNamesForFingerprint.php',
+//         data: { 'cus_name': cus_name, 'cus_id': cus_id },
+//         type: 'post',
+//         cache: false,
+//         success: function (html) {
+//             $('.fingerprintTable').empty()
+//             $('.fingerprintTable').html(html)
 
-            $('.scanBtn').click(function () {
-                var hand = $(this).prev().val();
-                var name = $(this).parent().prev().find('input[id="name_print"]').val(); var adhar = $(this).parent().prev().prev().find('input[id="adhar_print"]').val();
-                if (hand == '') { //prevent if hand is not selected
-                    $(this).prev().css('border-color', 'red');
-                } else {
-                    $(this).prev().css('border-color', '#009688')
+//             $('.scanBtn').click(function () {
+//                 var hand = $(this).prev().val();
+//                 var name = $(this).parent().prev().find('input[id="name_print"]').val(); var adhar = $(this).parent().prev().prev().find('input[id="adhar_print"]').val();
+//                 if (hand == '') { //prevent if hand is not selected
+//                     $(this).prev().css('border-color', 'red');
+//                 } else {
+//                     $(this).prev().css('border-color', '#009688')
 
-                    showOverlay();//loader start
+//                     showOverlay();//loader start
 
-                    $(this).attr('disabled', true);
+//                     $(this).attr('disabled', true);
 
-                    setTimeout(() => {
-                        var quality = 60; //(1 to 100) (recommended minimum 55)
-                        var timeout = 10; // seconds (minimum=10(recommended), maximum=60, unlimited=0)
-                        var res = CaptureFinger(quality, timeout);
-                        if (res.httpStaus) {
-                            if (res.data.ErrorCode == "0") {
-                                let fdata = res.data.AnsiTemplate;
-                                $(this).next().val(fdata); // Take ansi template that is the unique id which is passed by sensor
-                                storeFingerprints(fdata, hand, adhar, name);//stores the current finger data in database
-                            }//Error codes and alerts below
-                            else if (res.data.ErrorCode == -1307) {
-                                alert('Connect Your Device');
-                                $(this).removeAttr('disabled');
-                            } else if (res.data.ErrorCode == -1140 || res.data.ErrorCode == 700) {
-                                alert('Timeout');
-                                $(this).removeAttr('disabled');
-                            } else if (res.data.ErrorCode == 720) {
-                                alert('Reconnect Device');
-                                $(this).removeAttr('disabled');
-                            } else if (res.data.ErrorCode == 730) {
-                                alert('Capture Finger Again');
-                                $(this).removeAttr('disabled');
-                            } else {
-                                alert('Error Code:' + res.data.ErrorCode);
-                                $(this).removeAttr('disabled');
-                            }
-                        }
-                        else {
-                            alert(res.err);
-                        }
-                        // Hide the loading animation and remove blur effect from the body
-                        hideOverlay();//loader stop
+//                     setTimeout(() => {
+//                         var quality = 60; //(1 to 100) (recommended minimum 55)
+//                         var timeout = 10; // seconds (minimum=10(recommended), maximum=60, unlimited=0)
+//                         var res = CaptureFinger(quality, timeout);
+//                         if (res.httpStaus) {
+//                             if (res.data.ErrorCode == "0") {
+//                                 let fdata = res.data.AnsiTemplate;
+//                                 $(this).next().val(fdata); // Take ansi template that is the unique id which is passed by sensor
+//                                 storeFingerprints(fdata, hand, adhar, name);//stores the current finger data in database
+//                             }//Error codes and alerts below
+//                             else if (res.data.ErrorCode == -1307) {
+//                                 alert('Connect Your Device');
+//                                 $(this).removeAttr('disabled');
+//                             } else if (res.data.ErrorCode == -1140 || res.data.ErrorCode == 700) {
+//                                 alert('Timeout');
+//                                 $(this).removeAttr('disabled');
+//                             } else if (res.data.ErrorCode == 720) {
+//                                 alert('Reconnect Device');
+//                                 $(this).removeAttr('disabled');
+//                             } else if (res.data.ErrorCode == 730) {
+//                                 alert('Capture Finger Again');
+//                                 $(this).removeAttr('disabled');
+//                             } else {
+//                                 alert('Error Code:' + res.data.ErrorCode);
+//                                 $(this).removeAttr('disabled');
+//                             }
+//                         }
+//                         else {
+//                             alert(res.err);
+//                         }
+//                         // Hide the loading animation and remove blur effect from the body
+//                         hideOverlay();//loader stop
 
-                    }, 700)
-                }
-            })
-        }
-    })
+//                     }, 700)
+//                 }
+//             })
+//         }
+//     })
 
-    function storeFingerprints(fdata, hand, cus_id, cus_name) {//stores the current finger data in database
-        $.post('api/loan_entry/storeFingerprints.php', { 'fdata': fdata, 'hand': hand, 'cus_id': cus_id, 'cus_name': cus_name }, function (response) {
-            if (response.includes('Successfully')) {
-                Swal.fire({
-                    title: response, icon: 'success', confirmButtonColor: '#009688'
-                })
-            }
-        }, 'json')
+//     function storeFingerprints(fdata, hand, cus_id, cus_name) {//stores the current finger data in database
+//         $.post('api/loan_entry/storeFingerprints.php', { 'fdata': fdata, 'hand': hand, 'cus_id': cus_id, 'cus_name': cus_name }, function (response) {
+//             if (response.includes('Successfully')) {
+//                 Swal.fire({
+//                     title: response, icon: 'success', confirmButtonColor: '#009688'
+//                 })
+//             }
+//         }, 'json')
+//     }
+// }
+function fingerprintTable() {//To Get family member's name are required for scanning fingerprint
+  let aadhar_nums = $('#aadhar_nums').val();
+  let cus_id = $('#auto_gen_cus_id').val();
+  $.ajax({
+    url: 'api/loan_entry/getNamesForFingerprint.php',
+    data: { cus_id ,aadhar_nums},
+    type: 'post',
+    cache: false,
+    success: function (html) {
+      $('.fingerprintTable').html(html);
     }
+  })
 }
-
 function getLoanCount(cus_id,profile_id) {
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
@@ -1685,6 +1697,13 @@ function getLoanCount(cus_id,profile_id) {
             let formattedDate = response.first_loan_date;
             $('#first_loan_date').val(formattedDate);
             $('#travel_with_company').val(response.travel);
+
+    //         $('#loan_count').val(response.loan_count)
+    //                 .prop('readonly', response.loan_count !== '');
+
+    // $('#first_loan_date').val(response.first_loan_date)
+    //                      .prop('readonly', response.first_loan_date !== '');
+
         },
     });
 }
@@ -1766,12 +1785,10 @@ async function editCustmerProfile(id, cus_id) {
             $('.cus_status_div').show();
             $('#data_checking_div').show();
             checkAdditionalRenewal(data.cus_id);
-            $('.loan_count_div').show();
         } else {
             $('.cus_status_div').hide();
             $('#checking_hide').hide();
             $('#data_checking_table_div').hide();
-            $('.loan_count_div').hide();
         }
 
 
