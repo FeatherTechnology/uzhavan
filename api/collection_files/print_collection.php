@@ -28,60 +28,122 @@ $loan_balance = getBalance($pdo, $cus_profile_id, $coll_date);
 $qry = $pdo->query("SELECT name from `users` where `id` = $insert_login_id ");
 $user_name = $qry->fetch()['name'];
 ?>
+<style>
+    @media print {
+        * {
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box;
+        }
+        @page {
+            margin: 0; /* Remove default print margin */
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #dettable {
+            margin: 0;
+            padding: 0;
+            width: 58mm; /* Width of thermal printer roll */
+            font-size: 8px;
+            line-height: 1.2;
+            text-align: left;
+        }
+        .overlap-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .captions, .data {
+            width: 50%;
+            word-wrap: break-word;
+            text-align: left;
+        }
+        .mar-logo {
+            width: 100px;
+            margin: 0 auto; /* Center align logo */
+            display: block;
+        }
+    }
+</style>
 
+        <div class="frame" id="dettable" style="background-color: #ffffff; font-size: 8px; display: flex;flex-direction: column; align-items: flex-start;">
 
-<div class="frame" id="dettable" style="position: relative; width: 302px; height: 500px; background-color: #ffffff;">
-    <div class="overlap-group">
-        <div class="captions" style="position: absolute; width: 112px; height: 278px; top: 150px; left: 45px;font-size: 12px">
-            <!-- Other text-wrapper elements -->
-            <b>
-                <div class="text-wrapper" style="text-align:right;">Receipt No :</div>
-            </b>
-            <div class="div" style="text-align:right;">Date / Time :</div>
-            <div class="text-wrapper-2" style="text-align:right;">Line / Area :</div>
-            <div class="text-wrapper-3" style="text-align:right;">Customer ID :</div>
-            <b>
-                <div class="text-wrapper-4" style="text-align:right;">Customer Name :</div>
-            </b>
-            <div class="text-wrapper-6" style="text-align:right;">Loan Category :</div>
-            <div class="text-wrapper-6" style="text-align:right;">Loan No :</div>
-            <div class="text-wrapper-7" style="text-align:right;">Due Receipt :</div>
-            <div class="text-wrapper-8" style="text-align:right;">Penalty :</div>
-            <div class="text-wrapper-9" style="text-align:right;">Fine :</div><br>
-            <b>
-                <div class="text-wrapper-10" style="text-align:right;">Net Received :</div>
-            </b><br>
-            <div class="text-wrapper-11" style="text-align:right;">Due Balance :</div>
-            <div class="text-wrapper-12" style="text-align:right;">Loan Balance :</div>
-            <div class="text-wrapper-12" style="text-align:right;">User Name:</div>
-            
+            <div style="display: flex; justify-content: center;padding-bottom:8px;">
+                <!-- <img class="mar-logo" src="img/uzhavan_logo.jpeg" style="width:150px;height:auto;"> -->
+                <img class="mar-logo" alt="Uzhavan Finance" src="img/uzhavan_logo.jpeg" style="width: 260px; height: auto;" />
+            </div>
+
+        <div class="overlap-group" style="display: flex; justify-content: center; gap: 10px;">
+
+        <div class="captions" style="display: flex; flex-direction: column; align-items: flex-end;">
+
+            <b><div>Receipt No :</div></b>
+            <div>Date / Time :</div>
+            <div>Line / Area :</div>
+            <div>Customer ID :</div>
+
+            <b><div>Customer Name :</div></b>
+
+            <div>Loan Category :</div>
+            <div>Loan No :</div>
+            <div>Due Receipt :</div>
+            <div>Penalty :</div>
+            <div>Fine :</div>
+
+            <br>
+
+            <b><div>Net Received :</div></b>
+
+            <br>
+
+            <div>Due Balance :</div>
+            <div>Loan Balance :</div>
+            <div>User Name :</div>
+
         </div>
-        <div class="data" style="position: absolute; width: 128px; height: 278px; top: 150px; left: 158px;font-size: 12px">
-            <!-- Other text-wrapper elements -->
-            <b>
-                <div class="text-wrapper-13" style="margin-left: 5px;"><?php echo $coll_code; ?></div>
-            </b>
-            <div class="text-wrapper-14" style="margin-left:5px; white-space:nowrap;"><?php echo date('d-m-Y h:i:s A', strtotime($coll_date)); ?></div>
-            <div class="text-wrapper-15" style="margin-left: 5px;"><?php echo $line_name; ?></div>
-            <div class="text-wrapper-16" style="margin-left: 5px;"><?php echo $cus_id; ?></div>
-            <b>
-                <div class="text-wrapper-17" style="margin-left: 5px;"><?php echo $cus_name; ?></div>
-            </b>
-            <div class="text-wrapper-18" style="margin-left: 5px;"><?php echo $loan_category; ?></div>
-            <div class="text-wrapper-19" style="margin-left: 5px;"><?php echo $loan_id; ?></div>
-            <div class="text-wrapper-20" style="margin-left: 5px;"><?php echo moneyFormatIndia($due_amt_track); ?></div>
-            <div class="text-wrapper-21" style="margin-left: 5px;"><?php echo moneyFormatIndia($penalty_track); ?></div>
-            <div class="text-wrapper-22" style="margin-left: 5px;"><?php echo moneyFormatIndia($coll_charge_track); ?></div><br>
-            <b>
-                <div class="text-wrapper-23" style="margin-left: 5px;"><?php echo moneyFormatIndia($net_received); ?></div>
-            </b><br>
-            <div class="text-wrapper-24" style="margin-left: 5px;"><?php echo moneyFormatIndia($due_balance); ?></div>
-            <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo moneyFormatIndia($loan_balance); ?></div>
-            <div class="text-wrapper-25" style="margin-left: 5px;"><?php echo $user_name; ?></div>
+
+        <div class="data" style="display: flex; flex-direction: column; align-items: flex-start;">
+
+            <b><div><?php echo $coll_code; ?></div></b>
+
+            <div><?php echo date('d-m-Y h:i:s A', strtotime($coll_date)); ?></div>
+
+            <div><?php echo $line_name; ?></div>
+
+            <div><?php echo $cus_id; ?></div>
+
+            <b><div><?php echo $cus_name; ?></div></b>
+
+            <div><?php echo $loan_category; ?></div>
+
+            <div><?php echo $loan_id; ?></div>
+
+            <div><?php echo moneyFormatIndia($due_amt_track); ?></div>
+
+            <div><?php echo moneyFormatIndia($penalty_track); ?></div>
+
+            <div><?php echo moneyFormatIndia($coll_charge_track); ?></div>
+
+            <br>
+
+            <b><div><?php echo moneyFormatIndia($net_received); ?></div></b>
+
+            <br>
+
+            <div><?php echo moneyFormatIndia($due_balance); ?></div>
+
+            <div><?php echo moneyFormatIndia($loan_balance); ?></div>
+
+            <div><?php echo $user_name; ?></div>
+
         </div>
+
     </div>
-    <img class="group" alt="Uzhavan Software" src="img/fav.png" style="position: absolute; width: 150px; height: 91px; top: 34px; left: 44px;" />
+
 </div>
+
 
 <button type="button" name="printpurchase" onclick="poprint()" id="printpurchase" class="btn btn-primary">Print</button>
 

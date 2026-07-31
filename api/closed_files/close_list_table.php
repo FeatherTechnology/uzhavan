@@ -19,7 +19,8 @@ $query = "SELECT cp.id, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, lnc
  LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
  LEFT JOIN line_name_creation lnc ON cp.line = lnc.id 
  LEFT JOIN area_name_creation anc ON cp.area = anc.id 
- LEFT JOIN area_creation ac ON cp.line = ac.line_id 
+ LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
+ LEFT JOIN area_creation ac ON acan.area_creation_id = ac.id
  LEFT JOIN branch_creation bc ON ac.branch_id = bc.id LEFT JOIN customer_status cs ON cp.cus_id = cs.cus_id 
  INNER JOIN (SELECT MAX(id) as max_id FROM customer_profile GROUP BY cus_id) latest ON cp.id = latest.max_id 
  JOIN users u ON FIND_IN_SET(cp.line, u.line)

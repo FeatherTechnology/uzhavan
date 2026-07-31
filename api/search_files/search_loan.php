@@ -142,7 +142,7 @@ function loanCustomerStatus($pdo, $cus_profile_id, $i)
         $due_nil_sts = isset($_POST["due_nil_sts"]) ? explode(',', $_POST["due_nil_sts"]) : [];
         $bal_amt = isset($_POST["bal_amt"]) ? explode(',', $_POST["bal_amt"]) : [];
 
-
+        $status='';
         if ($cs_status == '1' || $cs_status == '2') {
             $status = 'Loan Entry';
         } elseif ($cs_status == '3') {
