@@ -43,6 +43,7 @@
                         <th>Customer ID</th>
                         <th>Aadhar Number</th>
                         <th>Customer Name</th>
+                        <th>Guarantor Name</th>
                         <th>Area</th>
                         <th>Line</th>
                         <th>Branch</th>
@@ -524,7 +525,7 @@
                                     <!-- set val as 1 when finger Print Matching becuz to use for finger print validation if submit click.-->
                                     <input type="hidden" class="form-control" id="fingerValidation" name="fingerValidation">
 
-                                    <button type="button" class='btn btn-success scanBtn' style='background-color: #7CA5B8;margin-top: 19px;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='57'><i class="material-icons" id="icon-flipped"> &#xe90d; </i>&nbsp;Scan</button>
+                                    <button type="button" class='btn btn-success scanBtn' style='background-color: #333c61;margin-top: 19px;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='57'><i class="material-icons" id="icon-flipped"> &#xe90d; </i>&nbsp;Scan</button>
 
                                     <span class="text-danger" id="hand_type" style="position: relative;top: 12px;"> </span>
                                 </div>

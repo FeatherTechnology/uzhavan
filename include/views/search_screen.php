@@ -55,7 +55,7 @@
                                             <!-- finger print value from Device when scanning.-->
                                             <input type="hidden" class="form-control" id="match_fingerprint" name="match_fingerprint">
                                             <input type="hidden" class="form-control" id="matched_aadhar" name="matched_aadhar">
-                                            <button type="button" class='btn btn-success scanBtn' style='background-color:#7CA5B8;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
+                                            <button type="button" class='btn btn-success scanBtn' style='background-color:#333c61;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
                                             <input type='hidden' id='fingerprint' name='fingerprint[]'>
                                             <span class="text-danger" id="hand_type" style="position: relative;top: 12px;"> </span>
                                         </div>

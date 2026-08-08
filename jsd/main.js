@@ -410,7 +410,7 @@ function swalSuccessOk(title, text, callback) {
 		text: text,
 		showConfirmButton: true,
 		confirmButtonText: 'OK',
-		confirmButtonColor: '#7CA5B8',
+		confirmButtonColor: '#333c61',
 		allowOutsideClick: false,
 		allowEscapeKey: false
 	}).then((result) => {
@@ -733,3 +733,108 @@ function nameFormatter(selector) {
                 console.error("Device not connected");
             }
         }
+
+
+		//////////////////////////////////// Session Logout Time Start ////////////////////////////////////
+
+        /* ---------------- CONFIG ---------------- */
+        let warningTimeout, logoutTimeout;
+        let swalOpen = false;
+
+        const idleTime = 10 * 60 * 1000; // 10 minutes;
+        const warningDuration = 10 * 1000; // 10 seconds
+        const STORAGE_KEY = "last-activity";
+        const FORCE_LOGOUT_KEY = "force-logout";
+
+        /* ---------------- HELPERS ---------------- */
+        const now = () => Date.now();
+
+        const getLastActivity = () =>
+            Number(localStorage.getItem(STORAGE_KEY)) || now();
+
+        const setLastActivity = () =>
+            localStorage.setItem(STORAGE_KEY, now());
+
+        /* ---------------- TIMER LOGIC ---------------- */
+        function startTimers() {
+            clearTimeout(warningTimeout);
+            clearTimeout(logoutTimeout);
+
+            const idle = now() - getLastActivity();
+            const remaining = idleTime - idle;
+
+            if (remaining <= 0) {
+                showWarning();
+                return;
+            }
+
+            warningTimeout = setTimeout(
+                showWarning,
+                Math.max(remaining - warningDuration, 0)
+            );
+        }
+
+        /* ---------------- ACTIVITY ---------------- */
+        function resetTimers() {
+            if (swalOpen) hideWarning();
+            setLastActivity();
+            startTimers();
+        }
+
+        /* ---------------- ALERT ---------------- */
+        function showWarning() {
+            if (swalOpen) return;
+
+            swalOpen = true;
+
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Session will expire in 10 seconds due to inactivity',
+                timer: warningDuration,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false
+            });
+
+            logoutTimeout = setTimeout(() => {
+                window.location.href = 'logout.php';
+            }, warningDuration);
+        }
+
+        function hideWarning() {
+            swalOpen = false;
+            Swal.close();
+        }
+
+        /* ---------------- EVENT BINDINGS ---------------- */
+
+        // Initial load
+        window.addEventListener("load", () => {
+            setLastActivity();
+            startTimers();
+        });
+
+        // Keyboard (capture phase → works with SweetAlert)
+        document.addEventListener("keydown", resetTimers, true);
+
+        // Mouse activity
+        window.addEventListener("mousemove", resetTimers);
+
+        // STORAGE SYNC (IDLE + FORCE LOGOUT)
+        window.addEventListener("storage", (e) => {
+
+            // Idle activity sync
+            if (e.key === STORAGE_KEY) {
+                if (swalOpen) hideWarning();
+                startTimers();
+            }
+
+            // Force logout across all tabs
+            if (e.key === FORCE_LOGOUT_KEY) {
+                window.location.href = 'logout.php';
+            }
+        });
+
+        //////////////////////////////////// Session Logut Time End ////////////////////////////////////

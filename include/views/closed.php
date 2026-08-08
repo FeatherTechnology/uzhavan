@@ -14,6 +14,7 @@
                                     <th>Customer ID</th>
                                     <th>Aadhar Number</th>
                                     <th>Customer Name</th>
+                                    <th>Gurantor Name</th>
                                     <th>Area</th>
                                     <th>Line</th>
                                     <th>Branch</th>

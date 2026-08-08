@@ -8,15 +8,20 @@ $column = array(
     'cp.cus_id',
     'cp.aadhar_num',
     'cp.cus_name',
+    'fi.fam_name',
     'anc.areaname',
     'lnc.linename',
     'bc.branch_name',
     'cp.mobile1',
     'cp.id'
 );
-$query = "SELECT cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, lnc.linename, bc.branch_name, cp.mobile1, cs.status, cs.id as c_id
+$query = "SELECT cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, lnc.linename, bc.branch_name, cp.mobile1, cs.status, cs.id as c_id,fi.fam_name
     FROM customer_profile cp 
     LEFT JOIN loan_entry_loan_calculation lelc ON cp.id = lelc.cus_profile_id
+     LEFT JOIN (  SELECT cp1.cus_id, MAX(cp1.id) AS last_id FROM customer_profile cp1 INNER JOIN customer_status cs1  ON cs1.cus_profile_id = cp1.id  WHERE cs1.status >= 2
+    GROUP BY cp1.cus_id ) gue_latest ON gue_latest.cus_id = cp.cus_id
+    LEFT JOIN customer_profile cp_last ON cp_last.id = gue_latest.last_id
+    LEFT JOIN family_info fi ON fi.id = cp_last.guarantor_name
      LEFT JOIN line_name_creation lnc ON cp.line = lnc.id
      LEFT JOIN area_name_creation anc ON cp.area = anc.id
      LEFT JOIN area_creation_area_name acan ON cp.area = acan.area_id
@@ -33,6 +38,7 @@ if (isset($_POST['search'])) {
         $query .= " AND (cp.cus_id LIKE '" . $search . "%'
                           OR cp.aadhar_num LIKE '%" . $search . "%'
                           OR cp.cus_name LIKE '%" . $search . "%'
+                          OR fi.fam_name LIKE '%" . $search . "%'
                           OR anc.areaname LIKE '%" . $search . "%'
                           OR lnc.linename LIKE '%" . $search . "%'
                           OR bc.branch_name LIKE '%" . $search . "%'
@@ -69,6 +75,7 @@ foreach ($result as $row) {
     $sub_array[] = isset($row['cus_id']) ? $row['cus_id'] : '';
     $sub_array[] = isset($row['aadhar_num']) ? $row['aadhar_num'] : '';
     $sub_array[] = isset($row['cus_name']) ? $row['cus_name'] : '';
+    $sub_array[] = isset($row['fam_name']) ? $row['fam_name'] : '';
     $sub_array[] = isset($row['areaname']) ? $row['areaname'] : '';
     $sub_array[] = isset($row['linename']) ? $row['linename'] : '';
     $sub_array[] = isset($row['branch_name']) ? $row['branch_name'] : '';

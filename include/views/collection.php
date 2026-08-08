@@ -15,7 +15,7 @@
                 <h5 class="card-title mb-0">Collection List</h5>
                 <div class="dropdown">
                     <button class="border-0 bg-transparent" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa fa-filter" style="color:#7CA5B8; font-size:30px;"></i>
+                        <i class="fa fa-filter" style="color:#333c61; font-size:30px;"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="filterDropdown">
                         <li><a class="dropdown-item filter-option" id="due_nill_btn" value="Due Nil" data-filter="DueNil">Due Nil</a></li>
@@ -34,6 +34,7 @@
                                     <th>Customer ID</th>
                                     <th>Aadhar Number</th>
                                     <th>Customer Name</th>
+                                    <th>Gurantor Name</th>
                                     <th>Area</th>
                                     <th>Line</th>
                                     <th>Branch</th>

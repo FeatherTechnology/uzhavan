@@ -224,6 +224,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="home_access">Home Access</label><span class="text-danger">*</span>
+                                            <select class="form-control" id="home_access" name="home_access" tabindex="18" >
+                                                <option value="">Select Home Access</option>
+                                                <option value="1">YES</option>
+                                                <option value="2">NO</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     
                                      
                                 </div>

@@ -70,7 +70,7 @@ $user_name = $qry->fetch()['name'];
 
         <div class="frame" id="dettable" style="background-color: #ffffff; font-size: 8px; display: flex;flex-direction: column; align-items: flex-start;">
 
-            <div style="display: flex; justify-content: center;padding-bottom:8px;">
+            <div style="display: flex; justify-content: center;padding-bottom:7px;">
                 <!-- <img class="mar-logo" src="img/uzhavan_logo.jpeg" style="width:150px;height:auto;"> -->
                 <img class="mar-logo" alt="Uzhavan Finance" src="img/uzhavan_logo.jpeg" style="width: 260px; height: auto;" />
             </div>

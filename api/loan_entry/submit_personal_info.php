@@ -64,23 +64,21 @@ try {
     // Begin transaction
     $pdo->beginTransaction();
     // Step 1: Check if this aadhar number already exists
-    $checkAadhar = $pdo->query("SELECT cus_id FROM customer_profile WHERE aadhar_num = '$aadhar_num'");
+    $checkAadhar = $pdo->query("SELECT cus_id FROM customer_profile WHERE cus_id = '$cus_id' AND cus_id != '' AND cus_id IS NOT NULL");
     if ($checkAadhar->rowCount() > 0) {
         // Aadhar exists, reuse the existing cus_id
         $existing = $checkAadhar->fetch();
         $cus_id = $existing['cus_id'];
     } else {
-        $selectIC = $pdo->query("SELECT MAX(cus_id) as cus_id FROM customer_profile");
-        $row = $selectIC->fetch();
-        $ac2 = $row["cus_id"];
 
-        if (!empty($ac2)) {
-            $appno2 = (($ac2));
-            $appno2 = (int)$appno2 + 1;
-            $cus_id = $appno2;
+        $qry = $pdo->query("SELECT MAX(CAST(cus_id AS UNSIGNED)) AS max_number FROM customer_profile WHERE cus_id != '' AND cus_id IS NOT NULL");
+
+        $row = $qry->fetch(PDO::FETCH_ASSOC);
+
+        if (!empty($row['max_number'])) {
+            $cus_id = $row['max_number'] + 1;
         } else {
-            $initialapp = "1001";
-            $cus_id = $initialapp;
+            $cus_id = 1001;
         }
     }
 

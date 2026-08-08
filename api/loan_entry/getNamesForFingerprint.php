@@ -57,12 +57,12 @@ $aadhar_nums = $_POST['aadhar_nums'];
                     <td><?php echo $row["relationship"]; ?></td>
                     <td><span class="badge badge-pill <?= $left ?>">L</span> &nbsp;&nbsp; <span class="badge badge-pill <?= $right ?>">R</span></td>
                     <td>
-                        <select type='text' id='hand_selection' name='hand_selection[]' class='btn hand_selection' style="border: #7ca5b8 1px solid;height: 38px;" tabindex='42'>
+                        <select type='text' id='hand_selection' name='hand_selection[]' class='btn hand_selection' style="border: #333c61 1px solid;height: 38px;" tabindex='42'>
                             <option value=''>Select Hand</option>
                             <option value='1'>Left Hand</option>
                             <option value='2'>Right Hand</option>
                         </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button type="button" class='btn btn-success scanBtn' style='background-color:#7ca5b8;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
+                        <button type="button" class='btn btn-success scanBtn' style='background-color:#333c61;' onclick="event.preventDefault()" title='Put Your Thumb' tabindex='42'><i class="material-icons" id="icon-flipped">&#xe90d;</i>&nbsp;Scan</button>
                     </td>
                 </tr>
         <?php } ?>

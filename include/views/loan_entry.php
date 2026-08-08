@@ -43,6 +43,7 @@
                         <th>Customer ID</th>
                         <th>Aadhar Number</th>
                         <th>Customer Name</th>
+                        <th>Guarantor Name</th>
                         <th>Area</th>
                         <th>Line</th>
                         <th>Branch</th>
