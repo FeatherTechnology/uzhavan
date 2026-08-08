@@ -19,9 +19,15 @@ $loan_category = implode(',', $_POST['loan_category']);
 $bank_access = !empty($_POST['bank_access']) ? implode(',', $_POST['bank_access']) : '';
 $collection_access = $_POST['collection_access'];
 $download_access = $_POST['download_access'];
+$home_access = $_POST['home_access'];
 $bank_cl_up_access = $_POST['bank_cl_up_access'];
-$submenus = implode(',', $_POST['submenus']);
+// $submenus = implode(',', $_POST['submenus']);
+$submenus = $_POST['submenus'] ?? [];
+array_unshift($submenus, '1');
+$submenus = array_unique($submenus);
+$submenus = implode(',', $submenus);
 $id = $_POST['id'];
+
 try {
     // Begin transaction
     $pdo->beginTransaction();
@@ -33,7 +39,7 @@ try {
         $last_id = '0'; //Already exists.
     } else {
         if ($id != '0' && $id != '') {
-            $qry = $pdo->query("UPDATE `users` SET `name`='$name',`user_code`='$user_code',`role`='$role',`designation`='$designation',`address`='$address',`place`='$place',`email`='$email',`mobile`='$mobile_no',`user_name`='$user_name',`password`='$password',`branch`='$branch_name',`loan_category`='$loan_category',`line`='$line_name',`bank_access`='$bank_access',`bank_cl_up_access`='$bank_cl_up_access',`collection_access`= '$collection_access',`download_access`='$download_access',`screens`='$submenus',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
+            $qry = $pdo->query("UPDATE `users` SET `name`='$name',`user_code`='$user_code',`role`='$role',`designation`='$designation',`address`='$address',`place`='$place',`email`='$email',`mobile`='$mobile_no',`user_name`='$user_name',`password`='$password',`branch`='$branch_name',`loan_category`='$loan_category',`line`='$line_name',`bank_access`='$bank_access',`bank_cl_up_access`='$bank_cl_up_access',`collection_access`= '$collection_access',`download_access`='$download_access',`home_access`='$home_access',`screens`='$submenus',`update_login_id`='$user_id',`updated_on`=now() WHERE `id`='$id'");
             if ($qry) {
                 $status = '1';
                 $last_id = $id;
@@ -48,7 +54,7 @@ try {
             } else {
                 $user_code_final = "US-" . "001";
             }
-            $qry = $pdo->query("INSERT INTO `users`(`name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`,`bank_access`,`bank_cl_up_access`, `collection_access`,`download_access`, `screens`, `insert_login_id`, `created_on`) VALUES ('$name','$user_code','$role','$designation','$address','$place','$email','$mobile_no','$user_name','$password','$branch_name','$loan_category','$line_name','$bank_access', '$bank_cl_up_access', '$collection_access','$download_access', '$submenus','$user_id',now())");
+            $qry = $pdo->query("INSERT INTO `users`(`name`, `user_code`, `role`, `designation`, `address`, `place`, `email`, `mobile`, `user_name`, `password`, `branch`, `loan_category`, `line`,`bank_access`,`bank_cl_up_access`, `collection_access`,`download_access`,`home_access`, `screens`, `insert_login_id`, `created_on`) VALUES ('$name','$user_code','$role','$designation','$address','$place','$email','$mobile_no','$user_name','$password','$branch_name','$loan_category','$line_name','$bank_access', '$bank_cl_up_access', '$collection_access','$download_access','$home_access', '$submenus','$user_id',now())");
             if ($qry) {
                 $status = '2';
                 $last_id = $pdo->lastInsertId();

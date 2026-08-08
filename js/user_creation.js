@@ -153,10 +153,11 @@ $(document).ready(function () {
             bank_cl_up_access: $('#bank_cl_up_access').val(),
             collection_access: $('#collection_access').val(),
             download_access: $('#download_access').val(),
+            home_access: $('#home_access').val(),
             submenus: selectedSubmenuIds,
             id: $('#user_creation_id').val()
         }
-        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access','download_access','bank_cl_up_access']
+        var data = ['name', 'user_id', 'designation', 'role', 'user_name', 'password', 'confirm_password', 'collection_access','download_access','bank_cl_up_access','home_access']
 
         var isValid = true;
         data.forEach(function (entry) {
@@ -216,6 +217,7 @@ $(document).ready(function () {
             $('#confirm_password').val(response[0].password);
             $('#collection_access').val(response[0].collection_access);
             $('#download_access').val(response[0].download_access);
+            $('#home_access').val(response[0].home_access);
             $('#bank_cl_up_access').val(response[0].bank_cl_up_access);
 
             setTimeout(() => {

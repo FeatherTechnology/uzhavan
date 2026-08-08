@@ -23,6 +23,10 @@ $(document).ready(function () {
             getOpeningBal('today', '', '', '')
             getBalSheetDetails('today', '', '', '');
             getNetBenefitDetails('today', '', '', '');
+            ProfitCalculations('today', '', '', '');
+            OpeningOutStandingCalculations('today', '', '', '');
+            ClosingOutStandingCalculations('today', '', '', '');
+
         }
     });
 
@@ -33,6 +37,9 @@ $(document).ready(function () {
             getOpeningBal('day', from_date, to_date, '')
             getBalSheetDetails('day', from_date, to_date, '');
             getNetBenefitDetails('day', from_date, to_date, '');
+             ProfitCalculations('day', from_date, to_date, '');
+             OpeningOutStandingCalculations('day', from_date, to_date, '');
+             ClosingOutStandingCalculations('day', from_date, to_date, '');
 
             $('.close').trigger('click');//it will close modal
         } else {
@@ -48,6 +55,9 @@ $(document).ready(function () {
             getOpeningBal('month', '', '', for_month)
             getBalSheetDetails('month', '', '', for_month);
             getNetBenefitDetails('month', '', '', for_month);
+            ProfitCalculations('month', '', '', for_month);
+            OpeningOutStandingCalculations('month', '', '', for_month);
+            ClosingOutStandingCalculations('month', '', '', for_month);
 
             $('.close').trigger('click');//it will close modal
         } else {
@@ -61,6 +71,57 @@ $(document).ready(function () {
 $(function () {
     getUserNames();
 });
+
+function ProfitCalculations(type, from_date, to_date, month) {
+
+     var user_id = $('#by_user').val();
+    if (type == 'today') {
+        var args = { 'type': 'today', 'user_id': user_id };
+    } else if (type == 'day') {
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id };
+    } else if (type == 'month') {
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id };
+    }
+    $.post('api/accounts_files/balance_sheet_files/getProfitAmount.php', args, function (response) {
+         $('#profit_table tbody tr:nth-child(2) td:nth-child(2)').text(moneyFormatIndia(response['split_interest']));
+    }, 'json').then(function () {
+        setTimeout(() => {
+            getProfitTotal();
+        }, 2000);
+    });
+
+}
+function OpeningOutStandingCalculations(type, from_date, to_date, month) {
+
+     var user_id = $('#by_user').val();
+    if (type == 'today') {
+        var args = { 'type': 'today', 'user_id': user_id };
+    } else if (type == 'day') {
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id };
+    } else if (type == 'month') {
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id };
+    }
+    $.post('api/accounts_files/balance_sheet_files/getOpeningOutstandingAmount.php', args, function (response) {
+          $('#benefit_check_table tbody tr:first td:nth-child(2)').text(moneyFormatIndia(response['opening_outstanding']));
+    }, 'json');
+
+}
+function ClosingOutStandingCalculations(type, from_date, to_date, month) {
+
+     var user_id = $('#by_user').val();
+    if (type == 'today') {
+        var args = { 'type': 'today', 'user_id': user_id };
+    } else if (type == 'day') {
+        var args = { 'type': 'day', 'from_date': from_date, 'to_date': to_date, 'user_id': user_id };
+    } else if (type == 'month') {
+        var args = { 'type': 'month', 'month': month, 'user_id': user_id };
+    }
+    $.post('api/accounts_files/balance_sheet_files/getclosingOutstandingAmount.php', args, function (response) { 
+          $('#benefit_check_table tbody tr:nth-child(10) td:nth-child(3)').text(moneyFormatIndia(response['closing_outstanding'] || 0));
+        getBenefitCheckTotal();
+
+    }, 'json');
+}
 
 function getUserNames() {
     //get user name only who has access of cash tally
@@ -87,6 +148,11 @@ function getOpeningBal(type, from_date, to_date, month) {
             $('#balance_sheet_table tbody tr:first td:nth-child(2)').text(moneyFormatIndia(response[0]['opening_balance']));
             $('#balance_sheet_table tbody tr:nth-child(17) td:nth-child(2)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_credit']) || 0)));
             $('#balance_sheet_table tbody tr:nth-child(17) td:nth-child(3)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_debit']) || 0)));
+
+
+            $('#benefit_check_table tbody tr:nth-child(2) td:nth-child(2)').text(moneyFormatIndia(response[0]['opening_balance']));
+            $('#benefit_check_table tbody tr:nth-child(8) td:nth-child(2)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_credit']) || 0)));
+            $('#benefit_check_table tbody tr:nth-child(8) td:nth-child(3)').text(moneyFormatIndia(-(parseFloat(response[0]['previous_uncleared_debit']) || 0)));
         }
     }, 'json');
 }
@@ -128,6 +194,24 @@ function getBalSheetDetails(type, from_date, to_date, month) {
          $('#balance_sheet_table tbody tr:nth-child(19) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_debit'] || 0));
          $('#balance_sheet_table tbody tr:nth-child(20) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_waiver'] || 0));
 
+        
+        $('#benefit_check_table tbody tr:nth-child(3) td:nth-child(2)').text(moneyFormatIndia(response[0]['invcr']));
+        $('#benefit_check_table tbody tr:nth-child(4) td:nth-child(2)').text(moneyFormatIndia(response[0]['depcr']));
+        $('#benefit_check_table tbody tr:nth-child(5) td:nth-child(2)').text(moneyFormatIndia(response[0]['elcr']));
+        $('#benefit_check_table tbody tr:nth-child(6) td:nth-child(2)').text(moneyFormatIndia(response[0]['exccr']));
+        $('#benefit_check_table tbody tr:nth-child(7) td:nth-child(2)').text(moneyFormatIndia(response[0]['contracr']));
+
+        $('#benefit_check_table tbody tr:nth-child(3) td:nth-child(3)').text(moneyFormatIndia(response[0]['invdr']));
+        $('#benefit_check_table tbody tr:nth-child(4) td:nth-child(3)').text(moneyFormatIndia(response[0]['depdr']));
+        $('#benefit_check_table tbody tr:nth-child(5) td:nth-child(3)').text(moneyFormatIndia(response[0]['eldr']));
+        $('#benefit_check_table tbody tr:nth-child(6) td:nth-child(3)').text(moneyFormatIndia(response[0]['excdr']));
+        $('#benefit_check_table tbody tr:nth-child(7) td:nth-child(3)').text(moneyFormatIndia(response[0]['contradr']));
+
+        $('#benefit_check_table tbody tr:nth-child(9) td:nth-child(2)').text(moneyFormatIndia(response[0]['current_uncleared_credit']));
+        $('#benefit_check_table tbody tr:nth-child(9) td:nth-child(3)').text(moneyFormatIndia(response[0]['current_uncleared_debit'] || 0));
+         $('#benefit_check_table tbody tr:nth-child(11) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_debit'] || 0));
+         $('#benefit_check_table tbody tr:nth-child(12) td:nth-child(3)').text(moneyFormatIndia(response[0]['circular_total_waiver'] || 0));
+
     }, 'json').then(function () {
         setTimeout(() => {
             getBalSheetTotal();
@@ -151,6 +235,9 @@ function getBalSheetTotal() {
     debit_total = moneyFormatIndia(debit_total.toFixed(2));
 
     $('#balance_sheet_table tbody tr:nth-child(21) td:nth-child(3)').text(moneyFormatIndia(close.toFixed(2)));
+    $('#benefit_check_table tbody tr:nth-child(13) td:nth-child(3)').text(moneyFormatIndia(close.toFixed(2)));
+
+
     $('#balance_sheet_table tbody tr:nth-child(23) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
     $('#balance_sheet_table tbody tr:nth-child(23) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
 }
@@ -173,6 +260,14 @@ function getNetBenefitDetails(type, from_date, to_date, month) {
         $('#net_benefit_table tbody tr:nth-child(7) td:nth-child(2)').text(moneyFormatIndia(response[0]['oicr']));
 
         $('#net_benefit_table tbody tr:nth-child(9) td:nth-child(3)').text(moneyFormatIndia(response[0]['expdr']));
+
+        $('#profit_table tbody tr:nth-child(3) td:nth-child(2)').text(moneyFormatIndia(response[0]['doc_charges']));
+        $('#profit_table tbody tr:nth-child(4) td:nth-child(2)').text(moneyFormatIndia(response[0]['proc_charges']));
+        $('#profit_table tbody tr:nth-child(5) td:nth-child(2)').text(moneyFormatIndia(response[0]['penalty']));
+        $('#profit_table tbody tr:nth-child(6) td:nth-child(2)').text(moneyFormatIndia(response[0]['fine']));
+        $('#profit_table tbody tr:nth-child(7) td:nth-child(2)').text(moneyFormatIndia(response[0]['oicr']));
+
+        $('#profit_table tbody tr:nth-child(9) td:nth-child(3)').text(moneyFormatIndia(response[0]['expdr']));
 
     }, 'json').then(function () {
         setTimeout(() => {
@@ -199,6 +294,44 @@ function getNetBenefitTotal() {
     $('#net_benefit_table tbody tr:nth-child(11) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
     $('#net_benefit_table tbody tr:nth-child(11) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
     $('#net_benefit_table tbody tr:nth-child(12) td:nth-child(2)').text(benefit_total).css('font-weight', 'bold');
+}
+function getProfitTotal() {
+    let credit_total = 0;
+    let debit_total = 0;
+    $('#profit_table tbody tr').each(function () {
+        let credit = $(this).find('td:nth-child(2)').text().replace(/,/g, ''); // credit amount
+        let debit = $(this).find('td:nth-child(3)').text().replace(/,/g, ''); // debit amount
+        credit_total += parseInt(credit) || 0;
+        debit_total += parseInt(debit) || 0;
+    });
+
+    let benefit = credit_total - debit_total;
+    credit_total = moneyFormatIndia(credit_total);
+    debit_total = moneyFormatIndia(debit_total);
+    benefit_total = moneyFormatIndia(benefit);
+
+    $('#profit_table tbody tr:nth-child(11) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
+    $('#profit_table tbody tr:nth-child(11) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
+    $('#profit_table tbody tr:nth-child(12) td:nth-child(2)').text(benefit_total).css('font-weight', 'bold');
+}
+function getBenefitCheckTotal() {
+    let credit_total = 0;
+    let debit_total = 0;
+    $('#benefit_check_table tbody tr').each(function () {
+        let credit = $(this).find('td:nth-child(2)').text().replace(/,/g, ''); // credit amount
+        let debit = $(this).find('td:nth-child(3)').text().replace(/,/g, ''); // debit amount
+        credit_total += parseInt(credit) || 0;
+        debit_total += parseInt(debit) || 0;
+    });
+
+    let benefit = credit_total - debit_total;
+    credit_total = moneyFormatIndia(credit_total);
+    debit_total = moneyFormatIndia(debit_total);
+    Difference = moneyFormatIndia(benefit);
+
+    $('#benefit_check_table tbody tr:nth-child(15) td:nth-child(2)').text(credit_total).css('font-weight', 'bold');
+    $('#benefit_check_table tbody tr:nth-child(15) td:nth-child(3)').text(debit_total).css('font-weight', 'bold');
+    $('#benefit_check_table tbody tr:nth-child(16) td:nth-child(2)').text(Difference).css('font-weight', 'bold');
 }
 
 // to clear all contents

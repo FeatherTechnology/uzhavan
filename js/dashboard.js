@@ -81,19 +81,19 @@ function checkUserScreenAccess() {
 
         let screens = response[0].screens.split(','); // Split the comma-separated string into an array
 
-        if (screens.includes('9')) {
+        if (screens.includes('10')) {
             $('.loan-entry-card').show();
         }
-        if (screens.includes('10')) {
+        if (screens.includes('11')) {
             $('.approval-card').show();
         }
-        if (screens.includes('11')) {
+        if (screens.includes('121')) {
             $('.loan-issue-card').show();
         }
-        if (screens.includes('12')) {
+        if (screens.includes('13')) {
             $('.collection-card').show();
         }
-        if (screens.includes('13')) {
+        if (screens.includes('14')) {
             $('.closed-card').show();
         }
     }, 'json').then(function () {

@@ -38,6 +38,7 @@
                         <th>Customer ID</th>
                         <th>Aadhar Number</th>
                         <th>Customer Name</th>
+                        <th>Guarantor Name</th>
                         <th>Area</th>
                         <th>Line</th>
                         <th>Branch</th>
@@ -660,7 +661,7 @@
                             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group highlight-field">
                                     <label for="cus_limit">Customer Limit</label><span class="text-danger">*</span>
-                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" style="border: 2px solid #7CA5B8 !important;
+                                    <input type="text" class="form-control" id="cus_limit" name="cus_limit" placeholder="Customer Limit" style="border: 2px solid #333c61 !important;
                                     box-shadow: 0 0 8px rgba(124, 165, 184, 0.5);" tabindex="42">
                                 </div>
                             </div>

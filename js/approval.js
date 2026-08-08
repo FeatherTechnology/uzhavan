@@ -248,6 +248,7 @@ $(document).ready(function () {
             $('#fam_occupation').val(response[0].fam_occupation);
             $('#fam_aadhar').val(response[0].fam_aadhar);
             $('#fam_mobile').val(response[0].fam_mobile);
+            (response[0].fam_aadhar !='') ? $("#fam_aadhar").prop('readonly', true) : $("#fam_aadhar").prop('readonly', false);
         }, 'json');
     });
 
@@ -1429,6 +1430,7 @@ function getFamilyTable() {
         $('#fam_relationship').val('');
         $('#remarks').val('');
         $('#fam_live').val('');
+        $("#fam_aadhar").prop('readonly', false);
     }, 'json')
 }
 
@@ -4525,8 +4527,7 @@ function getFeedbackAccess() {
                 // Convert to array
                 let screenArray = screens.split(',');
 
-                if (screenArray.includes('10')) {
-                    console.log('jjj');
+                if (screenArray.includes('11')) {
                     $('#add_cus_feedback').show();
                 } else {
                     console.log('gggg');

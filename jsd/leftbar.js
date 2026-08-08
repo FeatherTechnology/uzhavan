@@ -1,6 +1,7 @@
 $(document).ready(function () {
     // Define the mapping of current_page values to current_module values
     const moduleMapping = {
+        'home_page': 'home',
         'dashboard':'dashboard',
         'company_creation': 'master',
         'branch_creation': 'master',
@@ -38,7 +39,7 @@ $(document).ready(function () {
 
     const current_page = localStorage.getItem('currentPage');
     // Assign the current_module based on the current_page value
-    const current_module = moduleMapping[current_page] || 'dashboard';
+    const current_module = moduleMapping[current_page] || 'home_page';
 
     // Call the function with the current module
     setTimeout(() => {
@@ -157,12 +158,12 @@ function toggleSidebarSubmenus(current_module) {
             var mainLink = selectedLink.closest('.sidebar-dropdown').querySelector('a');
 
             // Set the background color of the 'Master' link
-            mainLink.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+            mainLink.style.backgroundColor = 'rgba(253, 253, 253, 0.2)';
 
-            link.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+            link.style.backgroundColor = 'rgba(253, 253, 253, 0.3)';
         }
     });
     if (current_page == 'dashboard') {
-        $('.dashboard').css('backgroundColor', 'rgba(0, 0, 0, 0.2)');
+        $('.dashboard').css('backgroundColor', 'rgba(253, 253, 253, 0.2)');
     }
 }
