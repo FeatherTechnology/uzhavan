@@ -443,7 +443,7 @@ function swalConfirm(title, text, functionname, idvalue, noCallback) {
 		text: text,
 		icon: 'question',
 		showCancelButton: true,
-		confirmButtonColor: '#009688',
+		confirmButtonColor: '#333c61',
 		cancelButtonColor: '#d33',
 		cancelButtonText: 'No',
 		confirmButtonText: 'Yes'
@@ -707,32 +707,32 @@ function nameFormatter(selector) {
             });
 }
 
-  function mantraInitDevice() {
-            const deviceList = GetConnectedDeviceList();
+function mantraInitDevice() {
+    const deviceList = GetConnectedDeviceList();
 
-            console.log("Connected Devices:", deviceList);
+    console.log("Connected Devices:", deviceList);
 
-            const desc = deviceList?.data?.ErrorDescription;
+    const desc = deviceList?.data?.ErrorDescription;
 
-            if (deviceList?.httpStaus && deviceList?.data?.ErrorCode == "0" && desc) {
+    if (deviceList?.httpStaus && deviceList?.data?.ErrorCode == "0" && desc) {
 
-                const device = desc.split(":")[1]?.trim();
+        const device = desc.split(":")[1]?.trim();
 
-                if (device) {
-                    console.log("Device Name:", device);
-                    const init = InitDevice(device, "");
-                    console.log("Init result:", init);
-                    alert(`Device Name: ${device}, ${init.data.ErrorDescription}.`);
-                } else {
-                    alert("Fingerprint Device not found in description");
-                    console.error("Device not found in description");
-                }
-
-            } else {
-                alert("Fingerprint Device not connected");
-                console.error("Device not connected");
-            }
+        if (device) {
+            console.log("Device Name:", device);
+            const init = InitDevice(device, "");
+            console.log("Init result:", init);
+            (init.data.ErrorCode !='0') ? alert(`Device Name: ${device}, ${init.data.ErrorDescription}.`) : ''; //Alert show only if device not connected or gets error. 
+        } else {
+            alert("Fingerprint Device not found in description");
+        	console.error("Device not found in description");
         }
+
+    } else {
+        alert("Fingerprint Device not connected");
+        console.error("Device not connected");
+    }
+}
 
 
 		//////////////////////////////////// Session Logout Time Start ////////////////////////////////////

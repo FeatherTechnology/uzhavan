@@ -86,75 +86,7 @@ $(document).ready(function () {
         var issue_person = $('#noc_member').val();
 
         if (issue_person != '') {
-
-            $(this).attr('disabled', true);
-            showOverlay();//loader start
-
-            setTimeout(() => { //Set Timeout, because loadin animation will be intrupped by this capture event
-                var quality = 60; //(1 to 100) (recommended minimum 55)
-                var timeout = 10; // seconds (minimum=10(recommended), maximum=60, unlimited=0)
-                var res = CaptureFinger(quality, timeout);
-                if (res.httpStaus) {
-                    if (res.data.ErrorCode == "0") {
-                        $('#ack_fingerprint').val(res.data.AnsiTemplate); // Take ansi template that is the unique id which is passed by sensor
-                    }//Error codes and alerts below
-                    else if (res.data.ErrorCode == -1307) {
-                        alert('Connect Your Device');
-                        $(this).removeAttr('disabled');
-                    } else if (res.data.ErrorCode == -1140 || res.data.ErrorCode == 700) {
-                        alert('Timeout');
-                        $(this).removeAttr('disabled');
-                    } else if (res.data.ErrorCode == 720) {
-                        alert('Reconnect Device');
-                        $(this).removeAttr('disabled');
-                    } else if (res.data.ErrorCode == 730) {
-                        alert('Capture Finger Again');
-                        $(this).removeAttr('disabled');
-                    } else {
-                        alert('Error Code:' + res.data.ErrorCode);
-                        $(this).removeAttr('disabled');
-                    }
-                }
-                else {
-                    alert(res.err);
-                }
-
-                //Verify the finger is matched with member name
-                var compare_finger = $('#compare_finger').val()
-                var ack_fingerprint = $('#ack_fingerprint').val()
-                var res = VerifyFinger(compare_finger, ack_fingerprint)
-                if (res.httpStaus) {
-                    if (res.data.Status) {
-                        Swal.fire({
-                            title: 'Fingerprint Matching',
-                            icon: 'success',
-                            showConfirmButton: true,
-                            confirmButtonColor: '#009688'
-                        });
-                        $('#fingerValidation').val('1');
-                        $("#hand_type").text('Done').attr('class', 'text-success');
-                    } else {
-                        if (res.data.ErrorCode != "0") {
-                            alert(res.data.ErrorDescription);
-                        }
-                        else {
-                            Swal.fire({
-                                title: 'Fingerprint Not Matching',
-                                icon: 'error',
-                                showConfirmButton: true,
-                                confirmButtonColor: '#009688'
-                            });
-                            $(this).removeAttr('disabled');
-                        }
-                    }
-                } else {
-                    alert(res.err)
-                }
-
-                hideOverlay();//loader stop
-
-            }, 700) //Timeout End
-
+             getMatchFingerDetails();
         }
     });
 
@@ -276,6 +208,7 @@ $(document).ready(function () {
 
 $(function () {
     getNOCList();
+    mantraInitDevice();
 });
 
 function getNOCList() {
@@ -444,10 +377,11 @@ function getGoldList(cp_id) {
 }
 function getFamilyMember(cus_name) {
     let cus_id = $('#cus_id').val();
+    let aadhar_num = $('#aadhar_num').val();
     return $.post('api/loan_entry/get_guarantor_name.php', { cus_id }, function (response) {
         let appendOption = '';
         appendOption += "<option value='' data-val=''>Select Member Name</option>";
-        appendOption += "<option value='" + cus_id + "' data-val='Customer'>" + cus_name + "</option>";
+        appendOption += "<option value='" + aadhar_num + "' data-val='Customer'>" + cus_name + "</option>";
         $.each(response, function (index, val) {
             appendOption += "<option value='" + val.fam_aadhar + "' data-val='" + val.id + "'>" + val.fam_name + "</option>";
         });

@@ -503,7 +503,7 @@ $(document).ready(function () {
             imageHeight: 210,
             imageAlt: 'Custom image',
             showCancelButton: true,
-            confirmButtonColor: '#009688',
+            confirmButtonColor: '#333c61',
             cancelButtonColor: '#d33',
             cancelButtonText: 'No',
             confirmButtonText: 'Yes'
@@ -572,7 +572,7 @@ $(document).ready(function () {
                     imageHeight: 210,
                     imageAlt: 'Custom image',
                     showCancelButton: true,
-                    confirmButtonColor: '#009688',
+                    confirmButtonColor: '#333c61',
                     cancelButtonColor: '#d33',
                     cancelButtonText: 'No',
                     confirmButtonText: 'Yes'

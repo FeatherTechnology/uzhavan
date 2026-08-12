@@ -11,7 +11,7 @@ $(document).on('click','.scanBtn', function () {
     if (hand == '') { //prevent if hand is not selected
         $(this).prev().css('border-color', 'red');
     } else {
-        $(this).prev().css('border-color', '#009688');
+        $(this).prev().css('border-color', '#333c61');
         let btn = $(this);
         commonCaptureFinger((ansi) => {
             btn.next().val(ansi);
@@ -105,12 +105,12 @@ function handleMantraError(errorCode, errorDescription) {
 }
 
 function commonStoreFingerprint(ansi, hand, aadhaar, name) {
-    $.post('updateFile/storeFingerprints.php', { ansi, hand, aadhaar, name }, function (response) {
+    $.post('api/loan_entry/storeFingerprints.php', { ansi, hand, aadhaar, name }, function (response) {
         if (response.includes('Successfully')) {
             Swal.fire({ 
                 title: response, 
                 icon: 'success', 
-                confirmButtonColor: '#009688' 
+                confirmButtonColor: '#333c61' 
             }).then((result) => {
                 if(result.isConfirmed){
                     fingerprintTable(); //Call fingerprint data after stored to get updated data.
@@ -128,13 +128,13 @@ function commonMatchFinger(compare_template, successCallback, errorCallback) {
     const matchResult = MatchFinger(quality, timeout, compare_template, 2);
     if (matchResult.httpStaus) {
         if (matchResult.data.Status) {
-            Swal.fire({ title: 'Fingerprint Matching', icon: 'success', showConfirmButton: true, confirmButtonColor: '#009688' });
+            Swal.fire({ title: 'Fingerprint Matching', icon: 'success', showConfirmButton: true, confirmButtonColor: '#333c61' });
             if (typeof successCallback === 'function') successCallback();
         } else {
             if (matchResult.data.ErrorCode != "0") {
                 swalError('Warning', matchResult.data.ErrorDescription);
             } else {
-                Swal.fire({ title: 'Fingerprint Not Matching', icon: 'error', showConfirmButton: true, confirmButtonColor: '#009688' });
+                Swal.fire({ title: 'Fingerprint Not Matching', icon: 'error', showConfirmButton: true, confirmButtonColor: '#333c61' });
                 if (typeof errorCallback === 'function') errorCallback();
             }
         }

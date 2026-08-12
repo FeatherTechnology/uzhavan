@@ -20,71 +20,115 @@ $(document).ready(function () {
         }
     });
 
-    $('.scanBtn').click(function () {
-        const scanButton = $(this);
-        scanButton.attr('disabled', true);
-        showOverlay();
+    $('.scanBtn').click(async function(){
+        // const scanButton = $(this);
+        // scanButton.attr('disabled', true);
+        // showOverlay();
 
-        setTimeout(() => {
-            const quality = 60;
-            const timeout = 10;
-            const res = CaptureFinger(quality, timeout);
+        // setTimeout(() => {
+        //     const quality = 60;
+        //     const timeout = 10;
+        //     const res = CaptureFinger(quality, timeout);
 
-            if (res.httpStaus && res.data.ErrorCode == "0") {
-                const match_fingerprint = res.data.AnsiTemplate;
-                $('#match_fingerprint').val(match_fingerprint);
+        //     if (res.httpStaus && res.data.ErrorCode == "0") {
+        //         const match_fingerprint = res.data.AnsiTemplate;
+        //         $('#match_fingerprint').val(match_fingerprint);
 
-                // 🔁 Get stored templates from DB
-                $.ajax({
-                    url: 'api/search_files/get_match_fingerprint.php',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (fingerList) {
-                        let matchFound = false;
+        //         // 🔁 Get stored templates from DB
+        //         $.ajax({
+        //             url: 'api/search_files/get_match_fingerprint.php',
+        //             type: 'GET',
+        //             dataType: 'json',
+        //             success: function (fingerList) {
+        //                 let matchFound = false;
 
-                        for (let i = 0; i < fingerList.length; i++) {
-                            const storedTemplate = fingerList[i].ansi_template;
-                            const aadhar = fingerList[i].adhar_num;
-                            const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
+        //                 for (let i = 0; i < fingerList.length; i++) {
+        //                     const storedTemplate = fingerList[i].ansi_template;
+        //                     const aadhar = fingerList[i].adhar_num;
+        //                     const verifyRes = VerifyFinger(storedTemplate, match_fingerprint);
 
-                            if (verifyRes.httpStaus && verifyRes.data.Status === true) {
-                                matchFound = true;
+        //                     if (verifyRes.httpStaus && verifyRes.data.Status === true) {
+        //                         matchFound = true;
 
-                                Swal.fire({
-                                    title: 'Fingerprint Matched',
-                                    icon: 'success',
-                                    confirmButtonColor: '#009688'
-                                });
+        //                         Swal.fire({
+        //                             title: 'Fingerprint Matched',
+        //                             icon: 'success',
+        //                             confirmButtonColor: '#333c61'
+        //                         });
 
-                                $('#matched_aadhar').val(aadhar);
-                                $("#hand_type").text('Done').attr('class', 'text-success');
-                            }
-                        }
+        //                         $('#matched_aadhar').val(aadhar);
+        //                         $("#hand_type").text('Done').attr('class', 'text-success');
+        //                     }
+        //                 }
 
-                        if (!matchFound) {
-                            Swal.fire({
-                                title: 'Fingerprint Not Matching',
-                                icon: 'error',
-                                confirmButtonColor: '#009688'
-                            });
-                        }
-                    },
-                    error: function () {
-                        alert('Failed to fetch stored fingerprints');
-                    },
-                    complete: function () {
-                        scanButton.removeAttr('disabled');
-                        hideOverlay();
-                    }
+        //                 if (!matchFound) {
+        //                     Swal.fire({
+        //                         title: 'Fingerprint Not Matching',
+        //                         icon: 'error',
+        //                         confirmButtonColor: '#333c61'
+        //                     });
+        //                 }
+        //             },
+        //             error: function () {
+        //                 alert('Failed to fetch stored fingerprints');
+        //             },
+        //             complete: function () {
+        //                 scanButton.removeAttr('disabled');
+        //                 hideOverlay();
+        //             }
+        //         });
+
+        //     } else {
+        //         alert('Fingerprint scan failed or device not connected');
+        //         scanButton.removeAttr('disabled');
+        //         hideOverlay();
+        //     }
+        // }, 700);
+         let response = await $.ajax({
+            url: "api/search_files/get_match_fingerprint.php",
+            type: "GET",
+            dataType: "json"
+        });
+
+        let fingerList = response.data || response;
+
+        commonCaptureFinger(function(capturedAnsi){
+
+            let matched = false;
+
+            for (const row of fingerList) {
+
+                const verifyRes = VerifyFinger(capturedAnsi, row.ansi_template, 2);
+
+                if (verifyRes.httpStaus && verifyRes.data.Status) {
+
+                    matched = true;
+
+                    $('#matched_aadhar').val(row.adhar_num);
+
+                    Swal.fire({
+                        title: `Fingerprint Matched: ${row.name}`,
+                        icon: 'success',
+                        confirmButtonColor: '#333c61'
+                    }).then(() => {
+                        $('#submit_search').trigger('click');
+                    });
+
+                    break;
+                } //if END.
+            } //for loop END.
+
+            if(!matched){
+                Swal.fire({
+                    title:'No Match Found',
+                    icon:'error', 
+                    confirmButtonColor: '#333c61'
                 });
-
-            } else {
-                alert('Fingerprint scan failed or device not connected');
-                scanButton.removeAttr('disabled');
-                hideOverlay();
             }
-        }, 700);
-    });
+
+        }); //Capture END.
+    }); //Scan button Onclick end
+    // });
 
 
     $(document).on('click', '.view_customer', function (event) {
@@ -151,7 +195,7 @@ $(document).ready(function () {
                     imageHeight: 210,
                     imageAlt: 'Custom image',
                     showCancelButton: true,
-                    confirmButtonColor: '#009688',
+                    confirmButtonColor: '#333c61',
                     cancelButtonColor: '#d33',
                     cancelButtonText: 'No',
                     confirmButtonText: 'Yes'
@@ -352,6 +396,11 @@ $('#print_doc').click(function () {
         alert('Popup blocked. Please allow popups for this website.');
     }
 })
+
+$(function(){
+    mantraInitDevice(); //to initialize the fingerprint scanner.
+});
+
 function validate() {
     let response = true;
 

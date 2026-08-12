@@ -1,16 +1,13 @@
 
 <?php
 require "../../ajaxconfig.php";
+// Fetch only the fingerprint templates
+$runSql = $pdo->query("SELECT adhar_num, name, ansi_template FROM fingerprints");
+$data = $runSql->fetchAll(PDO::FETCH_ASSOC);
+    
+echo json_encode($data);
 
-$templates = [];
-
-$result = $pdo->query("SELECT adhar_num, ansi_template FROM fingerprints");
-
-if ($result->rowCount() > 0) {
-    while ($row = $result->fetch()) {
-        $templates[] = $row;
-    }
-}
-
-echo json_encode($templates);
+// Close the database connection
+$pdo = null;
+?>
 
