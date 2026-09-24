@@ -177,7 +177,30 @@ $(document).ready(function () {
                 }
 
                 //To set limitations for input fields
-                $('#due_amt_track').on('blur', function () {
+               $('#due_amt_track').off('blur.limit').on('blur.limit', function () {
+
+                    let value = $(this).val().trim();
+                    if (value === '') {
+                        $('#pre_close_waiver').trigger('blur');
+                        return;
+                    }
+
+                    let dueAmtValue = Number(value);
+                    let balanceLimit = Number(response.balance);
+                    if (isNaN(dueAmtValue) || isNaN(balanceLimit)) {
+                        $('#pre_close_waiver').trigger('blur');
+                        return;
+                    }
+                    if (dueAmtValue > balanceLimit) {
+                        alert("Enter a Lesser Value");
+                        $(this).val('');
+                        $('#total_paid_track').val('');
+                    }
+
+                    $('#pre_close_waiver').trigger('blur');
+                });
+
+                $('#princ_amt_track').off('blur.limit').on('blur.limit', function () {
                     if (parseInt($(this).val()) > response['balance']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
@@ -186,16 +209,7 @@ $(document).ready(function () {
                     $('#pre_close_waiver').trigger('blur');//this will check whether preclosure amount crosses limit
                 });
 
-                $('#princ_amt_track').on('blur', function () {
-                    if (parseInt($(this).val()) > response['balance']) {
-                        alert("Enter a Lesser Value");
-                        $(this).val("");
-                        $('#total_paid_track').val("");
-                    }
-                    $('#pre_close_waiver').trigger('blur');//this will check whether preclosure amount crosses limit
-                });
-
-                $('#int_amt_track').on('blur', function () {
+                $('#int_amt_track').off('blur.limit').on('blur.limit', function  () {
                     if (parseInt($(this).val()) > response['payable']) {
                         alert("Enter a Lesser Value");
                         $(this).val("");
@@ -203,24 +217,27 @@ $(document).ready(function () {
                     }
                 });
 
-                $('#penalty_track').on('blur', function () {
-                    var penaltyValue = parseInt($(this).val()); // Value entered in the field
-                    var penaltyLimit = parseInt(response['penalty']); // Value from the response
+                $('#penalty_track').off('blur.limit').on('blur.limit', function () {
 
-                    if (isNaN(penaltyValue)) {
-                        console.log("Penalty value is not a valid number");
-                        return; // Exit if the value is not a valid number
+                    let value = $(this).val().trim();
+                    if (value === '') {
+                        return;
                     }
 
+                    let penaltyValue = Number(value);
+                    let penaltyLimit = Number(response.penalty);
+                    if (!Number.isFinite(penaltyValue) || !Number.isFinite(penaltyLimit)) {
+                        return;
+                    }
                     if (penaltyValue > penaltyLimit) {
                         alert("Enter a Lesser Value");
-                        $(this).val("");  // Clear the penalty input field
-                        $('#total_paid_track').val("");  // Clear the total paid track field
+                        $(this).val('');
+                        $('#total_paid_track').val('');
                     }
                 });
 
-                $('#coll_charge_track').on('blur', function () {
-                    let value = $(this).val();
+                $('#coll_charge_track').off('blur.limit').on('blur.limit', function () {
+                    let value = $(this).val().trim();
                     if (value === '') {
                         return; // Don't validate if the field is empty
                     }

@@ -15,6 +15,12 @@ const loan_category = new Choices('#loan_cat_search', {
     noChoicesText: 'Select Loan Category',
     allowHTML: true
 });
+const LOAN_ENTRY_FILTER_KEY = 'loan_entry_search_filters';
+
+var branchLoaded = false;
+var lineLoaded = false;
+var loanCatLoaded = false;
+
 $(document).ready(function () {
     //Move Loan Entry 
     $(document).on('click', '.move-loan-entry', function () {
@@ -255,7 +261,7 @@ $(document).ready(function () {
             $('#fam_occupation').val(response[0].fam_occupation);
             $('#fam_aadhar').val(response[0].fam_aadhar);
             $('#fam_mobile').val(response[0].fam_mobile);
-            (response[0].fam_aadhar !='') ? $("#fam_aadhar").prop('readonly', true) : $("#fam_aadhar").prop('readonly', false);
+            (response[0].fam_aadhar != '') ? $("#fam_aadhar").prop('readonly', true) : $("#fam_aadhar").prop('readonly', false);
         }, 'json');
     });
 
@@ -375,7 +381,7 @@ $(document).ready(function () {
                 isValid = false;
             }
         });
-       if (isValid) {
+        if (isValid) {
 
             var formData = new FormData();
 
@@ -396,7 +402,7 @@ $(document).ready(function () {
                 data: formData,
                 processData: false,
                 contentType: false,
-                success: function(response) {
+                success: function (response) {
                     if (response == '1') {
                         swalSuccess('Success', 'Bank Info Added Successfully!');
                     } else {
@@ -936,12 +942,12 @@ $(document).ready(function () {
                     $('#per_pic').val(response.pic);
                     $('#cus_data').val(response.cus_data);
                     // if (response.cus_data == 'Existing') {
-                        $('.cus_status_div').show();
-                        // $('.loan_count_div').show();
-                        getLoanCount(cus_id,response.last_id);
+                    $('.cus_status_div').show();
+                    // $('.loan_count_div').show();
+                    getLoanCount(cus_id, response.last_id);
                     // }
                     // else {
-                        // $('.loan_count_div').hide();
+                    // $('.loan_count_div').hide();
                     // }
                     $('#cus_status').val(response.cus_status);
                     $('.personal_info_disble').attr("disabled", true);
@@ -1016,17 +1022,17 @@ $(document).ready(function () {
     // $('.feedbackEditBtn').click(function () {
     $(document).on('click', '.feedbackEditBtn', function () {
         let id = $(this).attr('value');
-        console.log("id",id);
-        $.post('api/loan_entry/get_feedback_name.php', {id:id }, function (response) {
+        console.log("id", id);
+        $.post('api/loan_entry/get_feedback_name.php', { id: id }, function (response) {
             $('#feedbackname').val(response[0].feedback_name);
             $('#fedbackname_id').val(response[0].id);
-    }, 'json'); 
+        }, 'json');
     });
 
     $(document).on('click', '.feedbackNameDeleteBtn', function () {
         let id = $(this).attr('value');
         swalConfirm('Delete', 'Are you sure you want to delete this  Feedback Name ?', deleteFeedbackName, id);
-       
+
     });
 
     $('#submit_feedback_lable').click(function () {
@@ -1052,10 +1058,10 @@ $(document).ready(function () {
                     swalSuccess('Success', 'FeedBack Name Added Successfully!');
                 } else if (response == '2') {
                     swalSuccess('Success', 'FeedBack Name Updated Successfully!')
-                } else if(response == '3'){
-                     swalError('Warning', 'Feedback name already exists');
+                } else if (response == '3') {
+                    swalError('Warning', 'Feedback name already exists');
                 }
-                 else {
+                else {
                     swalError('Error', 'Error Occurred!')
                 }
                 getFeedBackLabelList();
@@ -1064,12 +1070,12 @@ $(document).ready(function () {
             });
         }
     })
-    $(document).on('click','.scanBtn', function () {
+    $(document).on('click', '.scanBtn', function () {
         let hand = $(this).prev().val();
         let aadhaarprint = $(this).parent().prev().prev().prev().find('input[id="adhar_print"]');
         let aadhaar = aadhaarprint.attr('data-no');
         let name = aadhaarprint.val();
-        
+
         if (hand == '') { //prevent if hand is not selected
             $(this).prev().css('border-color', 'red');
         } else {
@@ -1090,7 +1096,7 @@ $(document).ready(function () {
     });
 
 
-     $("#first_loan_date").on("change", function () {
+    $("#first_loan_date").on("change", function () {
         var firstLoanDate = new Date($(this).val());
         var today = new Date();
 
@@ -1113,38 +1119,63 @@ $(document).ready(function () {
 
 
     $('#search_loan').click(function () {
-        let branch = $("#branch_search").val();
-        let line = $("#line_search").val();
-        let loan_cat = $("#loan_cat_search").val();
-        // if (
-        //     (!branch || branch.length === 0) &&
-        //     (!line || line.length === 0) &&
-        //     (!loan_cat || loan_cat.length === 0)
-        // ) {
-        //     swalError('Warning', "Please select at least one filter");
-        //     return;
-        // }
+        saveLoanEntryFilters();
         getLoanEntryTable();
+    });
+
+    $('#branch_search').on('change', function () {
+        lineChoices.clearStore();       // explicitly clear old selection
+        lineChoices.setChoices([{ value: '', label: 'Select Line' }], 'value', 'label', true);
+        saveLoanEntryFilters();
+        lineLoaded = true;
+        getLineDropdown();
+    });
+
+    // Keep storage in sync whenever any selection changes
+    $('#line_search, #loan_cat_search').on('change', function () {
+        saveLoanEntryFilters();
+    });
+
+    branchChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!branchLoaded) {
+            branchLoaded = true;
+            getBranchDropdown();
+        }
+    });
+
+    lineChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!lineLoaded) {
+            lineLoaded = true;
+            getLineDropdown();
+        }
+    });
+
+    loan_category.passedElement.element.addEventListener('showDropdown', function () {
+        if (!loanCatLoaded) {
+            loanCatLoaded = true;
+            getLoanCatName();
+        }
     });
 
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
 
 //On Load function 
 $(function () {
-    getBranchDropdown();
-    getLineDropdown()
-    getLoanCatName();
+    let savedLoanFilters = getSavedLoanEntryFilters();
+    if (savedLoanFilters) {
+        restoreLoanEntryFilters(savedLoanFilters);
+    }
     getLoanEntryTable();
     nameFormatter('#cus_name');
     mantraInitDevice();
 
 });
 
-function getLoanCount(cus_id,profile_id) {
+function getLoanCount(cus_id, profile_id) {
     $.ajax({
         url: 'api/loan_entry/get_loan_count.php',
         type: 'POST',
-        data: { cus_id: cus_id, profile_id:profile_id},
+        data: { cus_id: cus_id, profile_id: profile_id },
         dataType: 'json',
         cache: false,
         success: function (response) {
@@ -1366,7 +1397,7 @@ function getFamilyTable() {
         $("#fam_aadhar").prop('readonly', false);
         fingerprintTable();
         dataCheckList(cus_id, cus_name, customerMobile, aadhar_num)
-        
+
     }, 'json')
 }
 
@@ -1621,7 +1652,7 @@ function getKycDelete(id) {
 
 function getKycTable() {
     let cus_id = $('#auto_gen_cus_id').val();
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id}, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1646,7 +1677,7 @@ function getKycTable() {
 
 function getKycInfoTable() {
     let cus_id = $('#auto_gen_cus_id').val();
-    $.post('api/loan_entry/kyc_creation_list.php', { cus_id  }, function (response) {
+    $.post('api/loan_entry/kyc_creation_list.php', { cus_id }, function (response) {
         var columnMapping = [
             'sno',
             'proof_of',
@@ -1840,17 +1871,17 @@ function cusDeleteStatus(cus_id) {
 }
 
 function fingerprintTable() {//To Get family member's name are required for scanning fingerprint
-  let aadhar_nums = $('#aadhar_nums').val();
-  let cus_id = $('#auto_gen_cus_id').val();
-  $.ajax({
-    url: 'api/loan_entry/getNamesForFingerprint.php',
-    data: { cus_id ,aadhar_nums},
-    type: 'post',
-    cache: false,
-    success: function (html) {
-      $('.fingerprintTable').html(html);
-    }
-  })
+    let aadhar_nums = $('#aadhar_nums').val();
+    let cus_id = $('#auto_gen_cus_id').val();
+    $.ajax({
+        url: 'api/loan_entry/getNamesForFingerprint.php',
+        data: { cus_id, aadhar_nums },
+        type: 'post',
+        cache: false,
+        success: function (html) {
+            $('.fingerprintTable').html(html);
+        }
+    })
 }
 
 async function editCustmerProfile(id) {
@@ -1921,13 +1952,13 @@ async function editCustmerProfile(id) {
         $('#area').trigger('change');
         $('#guarantor_name').trigger('change');
         let cus_id = $('#auto_gen_cus_id').val();
-        getLoanCount(cus_id,id);
+        getLoanCount(cus_id, id);
         // Show/hide based on customer data
         if (data.cus_data === 'Existing') {
             $('.cus_status_div').show();
             checkAdditionalRenewal(data.cus_id);
             // $('.loan_count_div').show();
-            
+
         } else {
             $('.cus_status_div').hide();
             $('#data_checking_table_div').hide();
@@ -2172,22 +2203,22 @@ $(document).ready(function () {
         initDueDatePicker();
     });
 
-//     $('#scheme_due_method_calc').change(function () {
-//     let schemeDueMethod = $(this).val();
-//     let loanCatId = $('#loan_category_calc').val();
+    //     $('#scheme_due_method_calc').change(function () {
+    //     let schemeDueMethod = $(this).val();
+    //     let loanCatId = $('#loan_category_calc').val();
 
-//     dueMethodScheme(schemeDueMethod, loanCatId);
+    //     dueMethodScheme(schemeDueMethod, loanCatId);
 
-//     $('#maturity_date_calc').val('');
-//     $('#profit_method_calc').val('');
+    //     $('#maturity_date_calc').val('');
+    //     $('#profit_method_calc').val('');
 
-//     setDueStartDate();
-// });
+    //     setDueStartDate();
+    // });
 
-$('#month_dates, #scheme_day_calc').change(function () {
-    $('#due_startdate_calc').val('');
-    initDueDatePicker();
-});
+    $('#month_dates, #scheme_day_calc').change(function () {
+        $('#due_startdate_calc').val('');
+        initDueDatePicker();
+    });
 
 
     $('#scheme_name_calc').change(function () { //Scheme Name change event
@@ -2414,12 +2445,12 @@ $('#month_dates, #scheme_day_calc').change(function () {
 }); //Document END.
 
 function initDueDatePicker() {
-    let method='';
-    if($('#profit_type_calc').val()=='0'){
-     method = 1;
+    let method = '';
+    if ($('#profit_type_calc').val() == '0') {
+        method = 1;
 
-    }else{
-      method = $('#scheme_due_method_calc').val();
+    } else {
+        method = $('#scheme_due_method_calc').val();
 
     }
 
@@ -2434,7 +2465,7 @@ function initDueDatePicker() {
         minDate: "today",
 
         enable: [
-            function(date) {
+            function (date) {
 
                 // Daily
                 if (method == '3') {
@@ -2471,7 +2502,7 @@ function initDueDatePicker() {
             }
         ]
     });
-     $('#due_startdate_calc').removeAttr('readonly');
+    $('#due_startdate_calc').removeAttr('readonly');
 }
 
 
@@ -2639,11 +2670,11 @@ function dueMethodScheme(schemeDueMethod, loanCatId) {
         $('.scheme_day').hide();
         $('.scheme_day_calc').val('');
     }
-    if(schemeDueMethod == '1'){
+    if (schemeDueMethod == '1') {
         $('.month_days_div').show();
-    }else{
-         $('.month_days_div').hide();
-         $('#month_dates').val('');
+    } else {
+        $('.month_days_div').hide();
+        $('#month_dates').val('');
     }
 }
 
@@ -3076,7 +3107,7 @@ function resetValidation() {
 function isFormDataValid(formData) {
     let isValid = true;
     const excludedFields = [
-        'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc','month_dates',
+        'loan_amnt_calc', 'principal_amnt_calc', 'interest_amnt_calc', 'total_amnt_calc', 'month_dates',
         'processing_fees_calculate', 'net_cash_calc',
         'due_amnt_calc', 'doc_charge_calculate',
         'id', 'category_info_calc', 'due_method_calc', 'due_type_calc', 'profit_method_calc',
@@ -4501,8 +4532,8 @@ function refreshGoldModal() {
 function getFeedbackAccess() {
     $.post(
         'api/user_creation_files/user_creation_data.php',
-        {id:''},
-        function(response) {
+        { id: '' },
+        function (response) {
 
             if (response.length > 0) {
                 let screens = response[0].screens;
@@ -4529,11 +4560,11 @@ function getFeedbackName() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
-            $("#feedback_label") .empty() .append("<option value=''>Select Feedback Label</option>");
+            $("#feedback_label").empty().append("<option value=''>Select Feedback Label</option>");
             for (var i = 0; i < data.length; i++) {
                 var feedback_name = data[i]["feedback_name"];
                 var id = data[i]["id"];
-                $("#feedback_label").append( "<option value='" + id + "'>" + feedback_name + "</option>"
+                $("#feedback_label").append("<option value='" + id + "'>" + feedback_name + "</option>"
                 );
             }
 
@@ -4542,7 +4573,7 @@ function getFeedbackName() {
 }
 
 function getFeedBackLabelList() {
-  $.post('api/loan_entry/get_feedback_name_list.php', { }, function (response) {
+    $.post('api/loan_entry/get_feedback_name_list.php', {}, function (response) {
         var columnMapping = [
             'sno',
             'feedback_name',
@@ -4550,17 +4581,17 @@ function getFeedBackLabelList() {
         ];
         appendDataToTable('#cus_feedbackListTable', response, columnMapping);
         setdtable('#cus_feedbackListTable');
-        
+
     }, 'json')
 }
 
 function deleteFeedbackName(id) {
-    $.post('api/loan_entry/delete_feedback_name.php', { id : id }, function (response) {
+    $.post('api/loan_entry/delete_feedback_name.php', { id: id }, function (response) {
         if (response == '0') {
             swalError('Warning', 'Feedback Name already used');
         } else if (response == '1') {
             swalSuccess('Success', 'FeedBack Name Deleted Successfully!')
-        } else if(response == '2'){
+        } else if (response == '2') {
             swalError('Warning', 'Feedback name Delete failed');
         }
         else {
@@ -4574,40 +4605,39 @@ function deleteFeedbackName(id) {
 ////////////////////////////////////Loan Documentation End////////////////////////////////////////
 
 function getBranchDropdown() {
-    let branch_id = $('#branch_search').val();
-    let branch_name2 = $('#branch_2').val();
-    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
-        branchChoices.clearStore();
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (branch_name2.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.branch_name,
-                    selected: selected,
-                }
-            ];
-            branchChoices.setChoices(items); // Add choices
+    let currentlySelected = ($('#branch_search').val() || []).map(String); // preserve restored selection
 
+    $.post('api/common_files/user_mapped_branches.php', {}, function (response) {
+        branchChoices.clearStore();
+        let items = [];
+        $.each(response, function (index, val) {
+            items.push({
+                value: val.id,
+                label: val.branch_name,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        branchChoices.setChoices(items, 'value', 'label', true);
     }, 'json');
 }
 
 function getLineDropdown() {
+    let currentlySelected = ($('#line_search').val() || []).map(String);
+    let selectedBranch = $('#branch_search').val() || [];
+
     lineChoices.clearStore();
     $.ajax({
         url: 'api/due_followup/get_line_dropdown.php',
         type: 'POST',
+        data: { branch: selectedBranch },
         dataType: 'json',
         success: function (response) {
             let items = [];
             $.each(response, function (index, val) {
                 items.push({
                     value: val.id,
-                    label: val.linename
+                    label: val.linename,
+                    selected: currentlySelected.includes(String(val.id))
                 });
             });
             lineChoices.setChoices(items, 'value', 'label', true);
@@ -4616,23 +4646,61 @@ function getLineDropdown() {
 }
 
 function getLoanCatName() {
-    let loan_cat_edit_it = $('#loan_cat_edit_it').val()
+    let currentlySelected = ($('#loan_cat_search').val() || []).map(String);
+
     $.post('api/common_files/get_loan_category_creation.php', function (response) {
         loan_category.clearStore();
+        let items = [];
         $.each(response, function (index, val) {
-            let selected = '';
-            if (loan_cat_edit_it.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.loan_category,
-                    selected: selected
-                }
-            ];
-            loan_category.setChoices(items);
-            loan_category.init();
+            items.push({
+                value: val.id,
+                label: val.loan_category,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        loan_category.setChoices(items, 'value', 'label', true);
     }, 'json');
+}
+
+
+// Save value + label for each selected item, so restore doesn't need an AJAX call
+function saveLoanEntryFilters() {
+    let filters = {
+        branch: branchChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        line: lineChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        loan_cat: loan_category.getValue().map(item => ({ value: item.value, label: item.label }))
+    };
+    sessionStorage.setItem(LOAN_ENTRY_FILTER_KEY, JSON.stringify(filters));
+}
+
+function getSavedLoanEntryFilters() {
+    let saved = sessionStorage.getItem(LOAN_ENTRY_FILTER_KEY);
+    if (!saved) return null;
+    try {
+        return JSON.parse(saved);
+    } catch (e) {
+        return null;
+    }
+}
+
+// Restores selected chips directly from saved {value, label} pairs — no AJAX needed
+function restoreLoanEntryFilters(filters) {
+    let hasBranch = filters.branch && filters.branch.length;
+    let hasLine = filters.line && filters.line.length;
+    let hasLoanCat = filters.loan_cat && filters.loan_cat.length;
+
+    if (hasBranch) {
+        let items = filters.branch.map(f => ({ value: f.value, label: f.label, selected: true }));
+        branchChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLine) {
+        let items = filters.line.map(f => ({ value: f.value, label: f.label, selected: true }));
+        lineChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLoanCat) {
+        let items = filters.loan_cat.map(f => ({ value: f.value, label: f.label, selected: true }));
+        loan_category.setChoices(items, 'value', 'label', true);
+    }
 }

@@ -15,6 +15,13 @@ const loan_category = new Choices('#loan_cat_search', {
     noChoicesText: 'Select Loan Category',
     allowHTML: true
 });
+
+const APPROVAL_FILTER_KEY = 'approval_search_filters';
+
+var branchLoaded = false;
+var lineLoaded = false;
+var loanCatLoaded = false;
+
 $(document).ready(function () {
 
     $(document).on('click', '.approval-approve', function () {
@@ -1079,29 +1086,54 @@ $(document).ready(function () {
 
     });
 
-    $('#search_loan').click(function () {
-        let branch = $("#branch_search").val();
-        let line = $("#line_search").val();
-        let loan_cat = $("#loan_cat_search").val();
-        if (
-            (!branch || branch.length === 0) &&
-            (!line || line.length === 0) &&
-            (!loan_cat || loan_cat.length === 0)
-        ) {
-            swalError('Warning', "Please select at least one filter");
-            return;
-        }
-
+   $('#search_loan').click(function () {
+        saveApprovalFilters();
         getApprovalTable();
     });
+
+    $('#branch_search').on('change', function () {
+        lineChoices.clearStore();       // explicitly clear old selection
+        lineChoices.setChoices([{ value: '', label: 'Select Line' }], 'value', 'label', true);
+        saveApprovalFilters();
+        lineLoaded = true;
+        getLineDropdown();
+    });
+
+    // Keep storage in sync whenever any selection changes
+    $('#line_search, #loan_cat_search').on('change', function () {
+        saveApprovalFilters();
+    });
+
+    branchChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!branchLoaded) {
+            branchLoaded = true;
+            getBranchDropdown();
+        }
+    });
+
+    lineChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!lineLoaded) {
+            lineLoaded = true;
+            getLineDropdown();
+        }
+    });
+
+    loan_category.passedElement.element.addEventListener('showDropdown', function () {
+        if (!loanCatLoaded) {
+            loanCatLoaded = true;
+            getLoanCatName();
+        }
+    });
+
 
 }); ///////////////////////////////////////////////////////////////// Customer Profile - Document END ////////////////////////////////////////////////////////////////////
 
 //On Load function 
 $(function () {
-    getBranchDropdown();
-    getLineDropdown()
-    getLoanCatName();
+    let savedApprovalFilters = getSavedApprovalFilters();
+    if (savedApprovalFilters) {
+        restoreApprovalFilters(savedApprovalFilters);
+    }
     getApprovalTable();
     mantraInitDevice();
 });
@@ -1190,7 +1222,7 @@ function getApprovalTable() {
     let loan_cat = $("#loan_cat_search").val();
 
     let params = { branch: branch, line: line, loan_cat: loan_cat };
-    serverSideTable('#loan_entry_table', params, 'api/approval_files/approval_list.php');
+    serverSideTable('#approval_table', params, 'api/approval_files/approval_list.php');
 }
 function moveToNext(cus_sts_id, cus_sts) {
     $.post('api/common_files/move_to_next.php', { cus_sts_id, cus_sts }, function (response) {
@@ -4521,40 +4553,39 @@ function deleteFeedbackName(id) {
 ////////////////////////////////////Loan Documentation End////////////////////////////////////////
 
 function getBranchDropdown() {
-    let branch_id = $('#branch_search').val();
-    let branch_name2 = $('#branch_2').val();
-    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
-        branchChoices.clearStore();
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (branch_name2.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.branch_name,
-                    selected: selected,
-                }
-            ];
-            branchChoices.setChoices(items); // Add choices
+    let currentlySelected = ($('#branch_search').val() || []).map(String); // preserve restored selection
 
+    $.post('api/common_files/user_mapped_branches.php', {}, function (response) {
+        branchChoices.clearStore();
+        let items = [];
+        $.each(response, function (index, val) {
+            items.push({
+                value: val.id,
+                label: val.branch_name,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        branchChoices.setChoices(items, 'value', 'label', true);
     }, 'json');
 }
 
 function getLineDropdown() {
+    let currentlySelected = ($('#line_search').val() || []).map(String);
+    let selectedBranch = $('#branch_search').val() || [];
+
     lineChoices.clearStore();
     $.ajax({
         url: 'api/due_followup/get_line_dropdown.php',
         type: 'POST',
+        data: { branch: selectedBranch },
         dataType: 'json',
         success: function (response) {
             let items = [];
             $.each(response, function (index, val) {
                 items.push({
                     value: val.id,
-                    label: val.linename
+                    label: val.linename,
+                    selected: currentlySelected.includes(String(val.id))
                 });
             });
             lineChoices.setChoices(items, 'value', 'label', true);
@@ -4563,23 +4594,59 @@ function getLineDropdown() {
 }
 
 function getLoanCatName() {
-    let loan_cat_edit_it = $('#loan_cat_edit_it').val()
+    let currentlySelected = ($('#loan_cat_search').val() || []).map(String);
+
     $.post('api/common_files/get_loan_category_creation.php', function (response) {
         loan_category.clearStore();
+        let items = [];
         $.each(response, function (index, val) {
-            let selected = '';
-            if (loan_cat_edit_it.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.loan_category,
-                    selected: selected
-                }
-            ];
-            loan_category.setChoices(items);
-            loan_category.init();
+            items.push({
+                value: val.id,
+                label: val.loan_category,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        loan_category.setChoices(items, 'value', 'label', true);
     }, 'json');
+}
+// Save value + label for each selected item, so restore doesn't need an AJAX call
+function saveApprovalFilters() {
+    let filters = {
+        branch: branchChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        line: lineChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        loan_cat: loan_category.getValue().map(item => ({ value: item.value, label: item.label }))
+    };
+    sessionStorage.setItem(APPROVAL_FILTER_KEY, JSON.stringify(filters));
+}
+
+function getSavedApprovalFilters() {
+    let saved = sessionStorage.getItem(APPROVAL_FILTER_KEY);
+    if (!saved) return null;
+    try {
+        return JSON.parse(saved);
+    } catch (e) {
+        return null;
+    }
+}
+
+// Restores selected chips directly from saved {value, label} pairs — no AJAX needed
+function restoreApprovalFilters(filters) {
+    let hasBranch = filters.branch && filters.branch.length;
+    let hasLine = filters.line && filters.line.length;
+    let hasLoanCat = filters.loan_cat && filters.loan_cat.length;
+
+    if (hasBranch) {
+        let items = filters.branch.map(f => ({ value: f.value, label: f.label, selected: true }));
+        branchChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLine) {
+        let items = filters.line.map(f => ({ value: f.value, label: f.label, selected: true }));
+        lineChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLoanCat) {
+        let items = filters.loan_cat.map(f => ({ value: f.value, label: f.label, selected: true }));
+        loan_category.setChoices(items, 'value', 'label', true);
+    }
 }

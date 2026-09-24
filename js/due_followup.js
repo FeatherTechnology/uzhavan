@@ -19,15 +19,21 @@ const loan_category = new Choices('#loan_cat', {
     noChoicesText: 'Select Loan Category',
     allowHTML: true
 });
+
+const DUE_FOLLOWUP_FILTER_KEY = 'due_followup_search_filters';
+
+var branchLoaded = false;
+var lineLoaded = false;
+var loanCatLoaded = false;
 $(document).ready(function () {
 
     $('#show_due_followup').click(function () {
         let cusSts = $("#sub_status_mapping").val();
         let comm_date = $("#comm_date").val();
-       let branch = $("#branch_name").val();
-       let line = $("#line").val();
-       let loan_cat = $("#loan_cat").val();
-       OnLoadFunctions (cusSts, comm_date,branch,line,loan_cat);
+        let branch = $("#branch_name").val();
+        let line = $("#line").val();
+        let loan_cat = $("#loan_cat").val();
+        OnLoadFunctions(cusSts, comm_date, branch, line, loan_cat);
     });
 
     $(document).on('click', '.loan_list', function () {
@@ -46,11 +52,11 @@ $(document).ready(function () {
         let cusSts = $("#sub_status_mapping").val();
         let commDate = $("#comm_date").val();
         let branch = $("#branch_name").val();
-       let line = $("#line").val();
-       let loan_cat = $("#loan_cat").val();
+        let line = $("#line").val();
+        let loan_cat = $("#loan_cat").val();
 
         if (cusSts != '') {
-            OnLoadFunctions(cusSts, commDate,branch,line,loan_cat);
+            OnLoadFunctions(cusSts, commDate, branch, line, loan_cat);
         }
     });
 
@@ -492,14 +498,49 @@ $(document).ready(function () {
     });
 
     ///////////////////////////////////Commitement End/////////////////////
+
+    $('#branch_name').on('change', function () {
+        lineChoices.clearStore();       // explicitly clear old selection
+        lineChoices.setChoices([{ value: '', label: 'Select Line' }], 'value', 'label', true);
+        
+        lineLoaded = true;
+        getLineDropdown();
+    });
+
+     branchChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!branchLoaded) {
+            branchLoaded = true;
+            getBranchDropdown();
+        }
+    });
+
+    lineChoices.passedElement.element.addEventListener('showDropdown', function () {
+        if (!lineLoaded) {
+            lineLoaded = true;
+            getLineDropdown();
+        }
+    });
+
+    loan_category.passedElement.element.addEventListener('showDropdown', function () {
+        if (!loanCatLoaded) {
+            loanCatLoaded = true;
+            getLoanCatName();
+        }
+    });
+
+    // Keep storage in sync whenever any selection changes
+    $('#line, #loan_cat').on('change', function () {
+        saveDueFollowupFilters();
+    });
     ///////////////////////////////Document End///////////////////////////////////
 });
 
 $(function () {
+    let savedDueFollowupFilters = getSavedDueFollowupFilters();
+    if (savedDueFollowupFilters) {
+        restoreDueFollowupFilters(savedDueFollowupFilters);
+    }
     getSubStsMapping(); //Call Customer status dropdown.
-    getBranchDropdown();
-    getLineDropdown()
-    getLoanCatName();
 });
 
 function getSubStsMapping() {
@@ -520,7 +561,7 @@ function getSubStsMapping() {
 }
 
 
-function OnLoadFunctions (cusSts, comm_date,branch,line,loan_cat) {
+function OnLoadFunctions(cusSts, comm_date, branch, line, loan_cat) {
     if (!cusSts || cusSts.length === 0) {
         swalError('Warning!', 'Select Customer Status.');
         return;
@@ -529,17 +570,20 @@ function OnLoadFunctions (cusSts, comm_date,branch,line,loan_cat) {
         cusSts: cusSts,
         comm_date: comm_date,
         branch: branch,
-        line:line,
-        loan_cat:loan_cat
+        line: line,
+        loan_cat: loan_cat
     };
+    // Reset saved page ONLY when loading/changing filters
+    localStorage.removeItem('due_followup_table_currentPage');
 
     serverSideTable('#due_followup_table', params, 'api/due_followup/due_followup_data.php');
     // Run after every draw (first load, pagination, search, sort)
     $('#due_followup_table').on('draw.dt', function () {
-         promotionChartColor('due_followup_table', 14);
+        promotionChartColor('due_followup_table', 14);
     });
-  
+
 }
+
 //Loan List
 function getLoanListTable(cus_id) {
     $.post('api/due_followup/customer_loan_list.php', { cus_id }, function (response) {
@@ -1372,40 +1416,39 @@ function emptyholderFields() {
 }
 //////////////////////////////////////////////////////////////// Commitement END //////////////////////////////////////////////////////////////////////
 function getBranchDropdown() {
-    let branch_id = $('#branch_name').val();
-    let branch_name2 = $('#branch_name2').val();
-    $.post('api/common_files/user_mapped_branches.php', { branch_id }, function (response) {
-        branchChoices.clearStore();
-        $.each(response, function (index, val) {
-            let selected = '';
-            if (branch_name2.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.branch_name,
-                    selected: selected,
-                }
-            ];
-            branchChoices.setChoices(items); // Add choices
+    let currentlySelected = ($('#branch_name').val() || []).map(String); // preserve restored selection
 
+    $.post('api/common_files/user_mapped_branches.php', {}, function (response) {
+        branchChoices.clearStore();
+        let items = [];
+        $.each(response, function (index, val) {
+            items.push({
+                value: val.id,
+                label: val.branch_name,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        branchChoices.setChoices(items, 'value', 'label', true);
     }, 'json');
 }
 
 function getLineDropdown() {
+    let currentlySelected = ($('#line').val() || []).map(String);
+    let selectedBranch = $('#branch_name').val() || [];
+
     lineChoices.clearStore();
     $.ajax({
         url: 'api/due_followup/get_line_dropdown.php',
         type: 'POST',
+        data: { branch: selectedBranch },
         dataType: 'json',
         success: function (response) {
             let items = [];
             $.each(response, function (index, val) {
                 items.push({
                     value: val.id,
-                    label: val.linename
+                    label: val.linename,
+                    selected: currentlySelected.includes(String(val.id))
                 });
             });
             lineChoices.setChoices(items, 'value', 'label', true);
@@ -1414,25 +1457,63 @@ function getLineDropdown() {
 }
 
 function getLoanCatName() {
-    let loan_cat_edit_it = $('#loan_cat_edit_it').val()
+    let currentlySelected = ($('#loan_cat').val() || []).map(String);
+
     $.post('api/common_files/get_loan_category_creation.php', function (response) {
         loan_category.clearStore();
+        let items = [];
         $.each(response, function (index, val) {
-            let selected = '';
-            if (loan_cat_edit_it.includes(val.id)) {
-                selected = 'selected';
-            }
-            let items = [
-                {
-                    value: val.id,
-                    label: val.loan_category,
-                    selected: selected
-                }
-            ];
-            loan_category.setChoices(items);
-            loan_category.init();
+            items.push({
+                value: val.id,
+                label: val.loan_category,
+                selected: currentlySelected.includes(String(val.id))
+            });
         });
+        loan_category.setChoices(items, 'value', 'label', true);
     }, 'json');
+}
+
+
+// Save value + label for each selected item, so restore doesn't need an AJAX call
+function saveDueFollowupFilters() {
+    let filters = {
+        branch: branchChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        line: lineChoices.getValue().map(item => ({ value: item.value, label: item.label })),
+        loan_cat: loan_category.getValue().map(item => ({ value: item.value, label: item.label }))
+    };
+    sessionStorage.setItem(DUE_FOLLOWUP_FILTER_KEY, JSON.stringify(filters));
+}
+
+function getSavedDueFollowupFilters() {
+    let saved = sessionStorage.getItem(DUE_FOLLOWUP_FILTER_KEY);
+    if (!saved) return null;
+    try {
+        return JSON.parse(saved);
+    } catch (e) {
+        return null;
+    }
+}
+
+// Restores selected chips directly from saved {value, label} pairs — no AJAX needed
+function restoreDueFollowupFilters(filters) {
+    let hasBranch = filters.branch && filters.branch.length;
+    let hasLine = filters.line && filters.line.length;
+    let hasLoanCat = filters.loan_cat && filters.loan_cat.length;
+
+    if (hasBranch) {
+        let items = filters.branch.map(f => ({ value: f.value, label: f.label, selected: true }));
+        branchChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLine) {
+        let items = filters.line.map(f => ({ value: f.value, label: f.label, selected: true }));
+        lineChoices.setChoices(items, 'value', 'label', true);
+    }
+
+    if (hasLoanCat) {
+        let items = filters.loan_cat.map(f => ({ value: f.value, label: f.label, selected: true }));
+        loan_category.setChoices(items, 'value', 'label', true);
+    }
 }
 
 function promotionChartColor(tableid, colNo) {
