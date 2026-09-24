@@ -62,6 +62,7 @@ $('.task-actions').on('click', '.star', function () {
 });
 // Countdown
 $(document).ready(function () {
+	
 	countdown();
 	setInterval(countdown, 1000);
 	function countdown() {
@@ -221,32 +222,47 @@ window.alert = function (message) {
 $(document).ajaxStart(function () {
 	showOverlay();
 });
+
 $(document).ajaxStop(function () {
 	hideOverlay();
 });
+
 showOverlay();
+
 window.addEventListener('load', function () {
 	hideOverlay();
 });
-// Function to add the overlay
+
 function showOverlay() {
+
+	// Don't create another overlay if one already exists
+	if (document.querySelector('.overlay')) {
+		return;
+	}
+
 	var overlayDiv = document.createElement('div');
 	overlayDiv.classList.add('overlay');
-	document.body.appendChild(overlayDiv);
 
 	var loaderDiv = document.createElement('div');
 	loaderDiv.classList.add('loader');
-	overlayDiv.appendChild(loaderDiv);
 
 	var overlayText = document.createElement('span');
 	overlayText.classList.add('overlay-text');
 	overlayText.innerText = 'Please Wait';
+
+	overlayDiv.appendChild(loaderDiv);
 	overlayDiv.appendChild(overlayText);
+
+	document.body.appendChild(overlayDiv);
 }
-// Function to remove the overlay and clear the timer
+
 function hideOverlay() {
+
 	var overlayDiv = document.querySelector('.overlay');
-	overlayDiv.remove();
+
+	if (overlayDiv) {
+		overlayDiv.remove();
+	}
 }
 function getUserAccess(callback) {
 	$.ajax({
@@ -273,14 +289,12 @@ function setdtable(table_id) {
 				title: "Export Data"
 			});
 		}
-
 		// Add other buttons
 		buttons.push({
 			extend: 'colvis',
 			collectionLayout: 'fixed four-column',
 		});
-
-		// Initialize DataTable with conditional buttons
+		// Initialize DataTable
 		$(table_id).DataTable({
 			'processing': true,
 			'iDisplayLength': 10,
@@ -295,10 +309,13 @@ function setdtable(table_id) {
 				this.api().column(0).nodes().each(function (cell, i) {
 					cell.innerHTML = i + 1;
 				});
+				searchFunction(table_id.replace(/^#/, ''));
+				paginationFunction(table_id.replace(/^#/, ''));
 			},
 			dom: 'lBfrtip',
-			buttons: buttons,
+			buttons: buttons
 		});
+
 	});
 }
 ///////////////////////////////////////////////////////////////////////////////////
@@ -334,56 +351,106 @@ function appendDataToTable(tableSelector, response, columnMapping) {
 }
 /////////////////////////////////////////////////////
 
-// / Function to initialize DataTable with conditional Excel button
 function serverSideTable(tableSelector, params, apiUrl) {
-	// Fetch user access and initialize DataTable based on it
-	getUserAccess(function (downloadAccess) {
-		let buttons = [];
-		// Add Excel button if download access is 1
-		if (downloadAccess == 1) {
-			buttons.push({
-				extend: 'excel',
-				title: "Branch List"
-			});
-		}
+	 const tableId = tableSelector.replace(/^#/, '');
 
-		// Add other buttons
-		buttons.push({
-			extend: 'colvis',
-			collectionLayout: 'fixed four-column',
-		});
+    getUserAccess(function (downloadAccess) {
 
-		// Destroy existing DataTable instance
-		$(tableSelector).DataTable().destroy();
+        let buttons = [];
 
-		// Initialize DataTable with conditional buttons
-		$(tableSelector).DataTable({
-			'order': [[0, "desc"]],
-			'processing': true,
-			'serverSide': true,
-			'serverMethod': 'post',
-			'ajax': {
-				'url': apiUrl,
-				'data': function (data) {
-				let searchValue = data.search.value;
-				if (!searchValue) {
-					searchValue = $('input[type=search]').val();
-				}
-				data.search = searchValue;
-				data.params = params;
-				}
-			},
-			dom: 'lBfrtip',
-			buttons: buttons,
-			"lengthMenu": [
-				[10, 25, 50, -1],
-				[10, 25, 50, "All"]
-			],
-			'drawCallback': function () {
-				setDropdownScripts();
-			}
-		});
-	});
+        // Excel - only when download permission is 1
+        if (downloadAccess == 1) {
+            buttons.push({
+                extend: 'excel',
+                title: tableId
+            });
+        }
+
+        // Column visibility
+        buttons.push({
+            extend: 'colvis',
+            collectionLayout: 'fixed four-column'
+        });
+
+       
+
+        // Destroy existing DataTable
+        if ($.fn.DataTable.isDataTable(tableSelector)) {
+            $(tableSelector).DataTable().destroy();
+        }
+
+        // Remove old events
+        $(tableSelector).off(
+            'preXhr.dt xhr.dt error.dt draw.dt'
+        );
+
+        // Loader
+        $(tableSelector).on('preXhr.dt', function () {
+            showOverlay();
+        });
+
+        $(tableSelector).on('xhr.dt', function () {
+            hideOverlay();
+        });
+
+        $(tableSelector).on('error.dt', function () {
+            hideOverlay();
+        });
+
+        const table = $(tableSelector).DataTable({
+
+            ...getStateSaveConfig(tableId),
+
+            order: [[0, "desc"]],
+
+            processing: true,
+
+            serverSide: true,
+
+            serverMethod: 'post',
+
+            ajax: {
+                url: apiUrl,
+
+                data: function (data) {
+
+                    let searchValue = data.search.value;
+
+                    if (!searchValue) {
+                        searchValue = $('input[type=search]').val();
+                    }
+
+                    data.search = searchValue;
+
+                    data.params = params;
+                }
+            },
+
+            dom: 'lBfrtip',
+
+            buttons: buttons,
+
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ],
+
+            drawCallback: function () {
+
+                setDropdownScripts();
+
+                searchFunction(tableId);
+
+                paginationFunction(tableId);
+
+                initColVisFeatures(
+                    table,
+                    tableId
+                );
+            }
+        });
+
+    });
 }
 
 
@@ -679,162 +746,549 @@ function moneyFormatIndia(num) {
 }
 
 
-  function checkBankTransactionDetails(crdrType, bankId, transId, amount) {
-            return $.post('api/accounts_files/accounts/getBankTransactionDetails.php', {
-                crdrType,
-                bankId,
-                transId,
-                amount
-            }, null, 'json');
-        }
+function checkBankTransactionDetails(crdrType, bankId, transId, amount) {
+	return $.post('api/accounts_files/accounts/getBankTransactionDetails.php', {
+		crdrType,
+		bankId,
+		transId,
+		amount
+	}, null, 'json');
+}
 
 function nameFormatter(selector) {
-    $(selector).on('input', function() {
-        let value = $(this).val();
+	$(selector).on('input', function () {
+		let value = $(this).val();
 
-        // Split by space
-        let parts = value.split(" ");
+		// Split by space
+		let parts = value.split(" ");
 
-        if (parts.length > 1) {
-            // Convert second part to CAPS and allow only 2 letters
-        	parts[1] = parts[1].toUpperCase().replace(/[^A-Z]/g, "").substring(0, 2);
-            // Block more than 2 parts
-            if (parts.length > 2) {
-                parts = parts.slice(0, 2);
-            }
-        }
-        	$(this).val(parts.join(" "));
-            });
+		if (parts.length > 1) {
+			// Convert second part to CAPS and allow only 2 letters
+			parts[1] = parts[1].toUpperCase().replace(/[^A-Z]/g, "").substring(0, 2);
+			// Block more than 2 parts
+			if (parts.length > 2) {
+				parts = parts.slice(0, 2);
+			}
+		}
+		$(this).val(parts.join(" "));
+	});
 }
 
 function mantraInitDevice() {
-    const deviceList = GetConnectedDeviceList();
+	const deviceList = GetConnectedDeviceList();
 
-    console.log("Connected Devices:", deviceList);
+	console.log("Connected Devices:", deviceList);
 
-    const desc = deviceList?.data?.ErrorDescription;
+	const desc = deviceList?.data?.ErrorDescription;
 
-    if (deviceList?.httpStaus && deviceList?.data?.ErrorCode == "0" && desc) {
+	if (deviceList?.httpStaus && deviceList?.data?.ErrorCode == "0" && desc) {
 
-        const device = desc.split(":")[1]?.trim();
+		const device = desc.split(":")[1]?.trim();
 
-        if (device) {
-            console.log("Device Name:", device);
-            const init = InitDevice(device, "");
-            console.log("Init result:", init);
-            (init.data.ErrorCode !='0') ? alert(`Device Name: ${device}, ${init.data.ErrorDescription}.`) : ''; //Alert show only if device not connected or gets error. 
-        } else {
-            alert("Fingerprint Device not found in description");
-        	console.error("Device not found in description");
-        }
+		if (device) {
+			console.log("Device Name:", device);
+			const init = InitDevice(device, "");
+			console.log("Init result:", init);
+			(init.data.ErrorCode != '0') ? alert(`Device Name: ${device}, ${init.data.ErrorDescription}.`) : ''; //Alert show only if device not connected or gets error. 
+		} else {
+			alert("Fingerprint Device not found in description");
+			console.error("Device not found in description");
+		}
 
-    } else {
-        alert("Fingerprint Device not connected");
-        console.error("Device not connected");
-    }
+	} else {
+		alert("Fingerprint Device not connected");
+		console.error("Device not connected");
+	}
 }
 
 
-		//////////////////////////////////// Session Logout Time Start ////////////////////////////////////
+//////////////////////////////////// Session Logout Time Start ////////////////////////////////////
 
-        /* ---------------- CONFIG ---------------- */
-        let warningTimeout, logoutTimeout;
-        let swalOpen = false;
+/* ---------------- CONFIG ---------------- */
+let warningTimeout, logoutTimeout;
+let swalOpen = false;
 
-        const idleTime = 10 * 60 * 1000; // 10 minutes;
-        const warningDuration = 10 * 1000; // 10 seconds
-        const STORAGE_KEY = "last-activity";
-        const FORCE_LOGOUT_KEY = "force-logout";
+const idleTime = 10 * 60 * 1000; // 10 minutes;
+const warningDuration = 10 * 1000; // 10 seconds
+const STORAGE_KEY = "last-activity";
+const FORCE_LOGOUT_KEY = "force-logout";
 
-        /* ---------------- HELPERS ---------------- */
-        const now = () => Date.now();
+/* ---------------- HELPERS ---------------- */
+const now = () => Date.now();
 
-        const getLastActivity = () =>
-            Number(localStorage.getItem(STORAGE_KEY)) || now();
+const getLastActivity = () =>
+	Number(localStorage.getItem(STORAGE_KEY)) || now();
 
-        const setLastActivity = () =>
-            localStorage.setItem(STORAGE_KEY, now());
+const setLastActivity = () =>
+	localStorage.setItem(STORAGE_KEY, now());
 
-        /* ---------------- TIMER LOGIC ---------------- */
-        function startTimers() {
-            clearTimeout(warningTimeout);
-            clearTimeout(logoutTimeout);
+/* ---------------- TIMER LOGIC ---------------- */
+function startTimers() {
+	clearTimeout(warningTimeout);
+	clearTimeout(logoutTimeout);
 
-            const idle = now() - getLastActivity();
-            const remaining = idleTime - idle;
+	const idle = now() - getLastActivity();
+	const remaining = idleTime - idle;
 
-            if (remaining <= 0) {
-                showWarning();
-                return;
-            }
+	if (remaining <= 0) {
+		showWarning();
+		return;
+	}
 
-            warningTimeout = setTimeout(
-                showWarning,
-                Math.max(remaining - warningDuration, 0)
+	warningTimeout = setTimeout(
+		showWarning,
+		Math.max(remaining - warningDuration, 0)
+	);
+}
+
+/* ---------------- ACTIVITY ---------------- */
+function resetTimers() {
+	if (swalOpen) hideWarning();
+	setLastActivity();
+	startTimers();
+}
+
+/* ---------------- ALERT ---------------- */
+function showWarning() {
+	if (swalOpen) return;
+
+	swalOpen = true;
+
+	Swal.fire({
+		icon: 'warning',
+		title: 'Warning',
+		text: 'Session will expire in 10 seconds due to inactivity',
+		timer: warningDuration,
+		timerProgressBar: true,
+		allowOutsideClick: false,
+		allowEscapeKey: false,
+		showConfirmButton: false
+	});
+
+	logoutTimeout = setTimeout(() => {
+		window.location.href = 'logout.php';
+	}, warningDuration);
+}
+
+function hideWarning() {
+	swalOpen = false;
+	Swal.close();
+}
+
+/* ---------------- EVENT BINDINGS ---------------- */
+
+// Initial load
+window.addEventListener("load", () => {
+	setLastActivity();
+	startTimers();
+});
+
+// Keyboard (capture phase → works with SweetAlert)
+document.addEventListener("keydown", resetTimers, true);
+
+// Mouse activity
+window.addEventListener("mousemove", resetTimers);
+
+// STORAGE SYNC (IDLE + FORCE LOGOUT)
+window.addEventListener("storage", (e) => {
+
+	// Idle activity sync
+	if (e.key === STORAGE_KEY) {
+		if (swalOpen) hideWarning();
+		startTimers();
+	}
+
+	// Force logout across all tabs
+	if (e.key === FORCE_LOGOUT_KEY) {
+		window.location.href = 'logout.php';
+	}
+});
+
+//////////////////////////////////// Session Logut Time End ////////////////////////////////////
+
+function searchFunction(table_name) {
+    let $searchInput = $(`#${table_name}_wrapper .dataTables_filter input[type=search]`);
+
+    $searchInput.attr({
+        'title': 'Press Enter or click outside to search',
+        'autocomplete': 'off'
+    });
+
+    // Remove DataTables' own default keyup/input search listener + any of ours from before
+    $searchInput.off('keyup.DT input.DT keyup blur');
+
+    function doSearch() {
+        let table = $(`#${table_name}`).DataTable();
+        table.search($searchInput.val()).draw();
+    }
+
+    // Trigger on Enter key
+    $searchInput.on('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            doSearch();
+        }
+    });
+
+    // Trigger on blur (click/tab outside the box)
+    $searchInput.on('blur', function (e) {
+        doSearch();
+    });
+}
+
+
+
+//////////////////////////////////// Pagination  Start ////////////////////////////////////
+
+function paginationFunction(tableId) {
+    const table = $(`#${tableId}`).DataTable();
+    const pagination = $(`#${tableId}_paginate`);
+    const pageInfo = table.page.info();
+
+    // If current page is greater than available pages,
+    // automatically move to first page
+    if (pageInfo.pages > 0 && pageInfo.page >= pageInfo.pages) {
+        localStorage.removeItem(`${tableId}_currentPage`);
+        table.page(0).draw('page');
+        return;
+    }
+
+    // If no data
+    if (pageInfo.pages === 0) {
+        pagination.html(
+            '<span class="paginate_button disabled">No pages</span>'
+        );
+        return;
+    }
+
+    const currentPage = pageInfo.page;
+    const totalPages = pageInfo.pages;
+    const maxVisible = 6;
+
+    // Save current page
+    localStorage.setItem(
+        `${tableId}_currentPage`,
+        currentPage
+    );
+
+    pagination.empty();
+
+    // Add pagination button
+    const addButton = (
+        label,
+        pageNum,
+        isActive = false,
+        isDisabled = false
+    ) => {
+        const classList = ['paginate_button'];
+
+        if (isActive) {
+            classList.push('current');
+        }
+
+        if (isDisabled) {
+            classList.push('disabled');
+        }
+
+        pagination.append(`
+            <span
+                class="${classList.join(' ')}"
+                data-page="${pageNum}"
+            >
+                ${label}
+            </span>
+        `);
+    };
+
+    // Previous
+    addButton(
+        'Previous',
+        currentPage - 1,
+        false,
+        currentPage === 0
+    );
+
+    // First page
+    addButton(
+        1,
+        0,
+        currentPage === 0
+    );
+
+    // Middle pages
+    if (totalPages > 1) {
+
+        let start = Math.max(
+            1,
+            currentPage - Math.floor(maxVisible / 2)
+        );
+
+        let end = start + maxVisible - 1;
+
+        // Keep last page visible
+        if (end >= totalPages - 1) {
+            end = totalPages - 2;
+
+            start = Math.max(
+                1,
+                end - maxVisible + 1
             );
         }
 
-        /* ---------------- ACTIVITY ---------------- */
-        function resetTimers() {
-            if (swalOpen) hideWarning();
-            setLastActivity();
-            startTimers();
+        // Left ellipsis
+        if (start > 1) {
+            pagination.append(
+                '<span class="paginate_ellipsis">...</span>'
+            );
         }
 
-        /* ---------------- ALERT ---------------- */
-        function showWarning() {
-            if (swalOpen) return;
+        // Page numbers
+        for (let i = start; i <= end; i++) {
 
-            swalOpen = true;
+            addButton(
+                i + 1,
+                i,
+                currentPage === i
+            );
+        }
 
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warning',
-                text: 'Session will expire in 10 seconds due to inactivity',
-                timer: warningDuration,
-                timerProgressBar: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false
+        // Right ellipsis
+        if (end < totalPages - 2) {
+            pagination.append(
+                '<span class="paginate_ellipsis">...</span>'
+            );
+        }
+
+        // Last page
+        addButton(
+            totalPages,
+            totalPages - 1,
+            currentPage === totalPages - 1
+        );
+    }
+
+    // Next
+    addButton(
+        'Next',
+        currentPage + 1,
+        false,
+        currentPage === totalPages - 1 || totalPages === 1
+    );
+
+    // Jump to page input
+    if ($(`#${tableId}_jumpToPage`).length === 0) {
+
+        pagination.append(`
+            <input
+                type="number"
+                id="${tableId}_jumpToPage"
+                min="1"
+                max="${totalPages}"
+                placeholder="Page"
+                style="
+                    width: 60px;
+                    height: 30px;
+                    margin-left: 10px;
+                "
+            />
+        `);
+
+    } else {
+
+        // Update max when total pages changes
+        $(`#${tableId}_jumpToPage`)
+            .attr('max', totalPages)
+            .val('');
+    }
+
+    // Pagination button click
+    pagination
+        .off('click')
+        .on(
+            'click',
+            '.paginate_button',
+            function () {
+
+                if ($(this).hasClass('disabled')) {
+                    return;
+                }
+
+                const page = parseInt(
+                    $(this).attr('data-page'),
+                    10
+                );
+
+                if (!isNaN(page)) {
+
+                    table
+                        .page(page)
+                        .draw('page');
+                }
+            }
+        );
+
+    // Jump to page
+    $(`#${tableId}_jumpToPage`)
+        .off('keypress')
+        .on('keypress', function (e) {
+
+            if (e.which === 13 || e.which === 9) {
+
+                const inputPage = parseInt(
+                    $(this).val(),
+                    10
+                );
+
+                if (
+                    !isNaN(inputPage) &&
+                    inputPage > 0 &&
+                    inputPage <= totalPages
+                ) {
+
+                    table
+                        .page(inputPage - 1)
+                        .draw('page');
+
+                } else {
+
+                    alert(
+                        `Please enter a valid page number (1 - ${totalPages})`
+                    );
+                }
+            }
+        });
+}
+
+/*
+ * Get saved page when DataTable is initialized
+ */
+  const isPageReloaded = performance.getEntriesByType("navigation")[0]?.type === "reload";
+function getDisplayStart(tableId, pageLength = 10) {
+
+    if (isPageReloaded) {
+
+        localStorage.removeItem(
+            `${tableId}_currentPage`
+        );
+
+        return 0;
+    }
+
+    const savedPage = localStorage.getItem(
+        `${tableId}_currentPage`
+    );
+
+    if (
+        savedPage !== null &&
+        !isNaN(parseInt(savedPage, 10))
+    ) {
+
+        return parseInt(savedPage, 10) * pageLength;
+    }
+
+    return 0;
+}
+
+//////////////////////////////////// Pagination  End ////////////////////////////////////
+
+
+function getStateSaveConfig(tableId) {
+
+    return {
+
+        // Keep DataTables state save
+        stateSave: true,
+
+        // Save only column visibility in our custom localStorage
+        stateSaveParams: function (settings, data) {
+
+            const visibility = settings.aoColumns.map(
+                col => col.bVisible
+            );
+
+            localStorage.setItem(
+                tableId + "_colVis",
+                JSON.stringify(visibility)
+            );
+        },
+
+        // Restore column visibility
+        stateLoadParams: function (settings, data) {
+
+            const saved = localStorage.getItem(
+                tableId + "_colVis"
+            );
+
+            if (!saved) {
+                return;
+            }
+
+            const visibility = JSON.parse(saved);
+
+            visibility.forEach((isVisible, index) => {
+
+                if (settings.aoColumns[index]) {
+                    settings.aoColumns[index].bVisible =
+                        isVisible;
+                }
             });
-
-            logoutTimeout = setTimeout(() => {
-                window.location.href = 'logout.php';
-            }, warningDuration);
         }
+    };
+}
 
-        function hideWarning() {
-            swalOpen = false;
-            Swal.close();
-        }
+function initColVisFeatures(table, tableId) {
 
-        /* ---------------- EVENT BINDINGS ---------------- */
+	const STORAGE_KEY = tableId + "_colVis";
+	const COLLECTION_SELECTOR = '.dt-button-collection .buttons-columnVisibility';
 
-        // Initial load
-        window.addEventListener("load", () => {
-            setLastActivity();
-            startTimers();
-        });
+	// 1. Sync ColVis button active state with column
+	function syncButtonActiveState() {
+		table.buttons('.buttons-columnVisibility').each(function (idx) {
+			const btn = table.button(idx);
+			const colIdx = btn.conf?._fnInit?.columns;
+			if (colIdx === undefined) return;
+			btn.active(table.column(colIdx).visible());
+		});
+	}
 
-        // Keyboard (capture phase → works with SweetAlert)
-        document.addEventListener("keydown", resetTimers, true);
+	// 2. Apply green/red color classes
+	function updateColVisColors() {
+		$(COLLECTION_SELECTOR).each(function () {
+			const isActive = $(this).hasClass('active');
+			$(this)
+				.toggleClass('active-column', isActive)
+				.toggleClass('inactive-column', !isActive);
+		});
+	}
 
-        // Mouse activity
-        window.addEventListener("mousemove", resetTimers);
+	// 3. One master fix (state + color)
+	function fixColVisUI() {
+		syncButtonActiveState();
+		updateColVisColors();
+	}
 
-        // STORAGE SYNC (IDLE + FORCE LOGOUT)
-        window.addEventListener("storage", (e) => {
+	// 4. Restore column visibility from localStorage
+	function applySavedVisibility() {
+		const saved = localStorage.getItem(STORAGE_KEY);
+		if (!saved) return;
 
-            // Idle activity sync
-            if (e.key === STORAGE_KEY) {
-                if (swalOpen) hideWarning();
-                startTimers();
-            }
+		JSON.parse(saved).forEach((isVisible, i) => {
+			table.column(i).visible(isVisible, false);
+		});
 
-            // Force logout across all tabs
-            if (e.key === FORCE_LOGOUT_KEY) {
-                window.location.href = 'logout.php';
-            }
-        });
+		table.columns.adjust();
+	}
 
-        //////////////////////////////////// Session Logut Time End ////////////////////////////////////
+	// 5. Event bindings
+	function bindColVisEvents() {
+		table.on('buttons-collection.dt column-visibility.dt', fixColVisUI);
+
+		$(document)
+			.off('click.colvisFix_' + tableId)
+			.on('click.colvisFix_' + tableId, '.buttons-collection', fixColVisUI);
+	}
+
+	// 6. Execution order (DO NOT CHANGE)
+	applySavedVisibility(); // restore actual column state
+	bindColVisEvents(); // attach listeners
+	fixColVisUI(); // initial correction
+}

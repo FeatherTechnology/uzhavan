@@ -30,7 +30,7 @@
                 </div>
             </div>
             <br>
-            <table id="loan_entry_table" class="table custom-table">
+            <table id="approval_table" class="table custom-table">
                 <thead>
                     <tr>
                         <th>S.NO</th>
