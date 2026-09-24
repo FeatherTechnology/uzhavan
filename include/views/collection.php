@@ -65,6 +65,7 @@
                         <input type="hidden" name="od_sts" id="od_sts" value="" />
                         <input type="hidden" name="due_nil_sts" id="due_nil_sts" value="" />
                         <input type="hidden" name="coll_sts" id="coll_sts" />
+                        <input type="hidden" name="payable_amts" id="payable_amts" />
 
                         <div class="card-body">
                             <div class="row">

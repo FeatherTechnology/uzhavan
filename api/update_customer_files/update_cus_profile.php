@@ -1,35 +1,59 @@
 <?php
+
 require '../../ajaxconfig.php';
 @session_start();
+
+$path = "../../uploads/loan_entry/cus_pic/";
+$paths = "../../uploads/loan_entry/gu_pic/";
+
+
+// === Customer Picture === //
+
 if (!empty($_FILES['pic']['name'])) {
-    $path = "../../uploads/loan_entry/cus_pic/";
-    $picture = $_FILES['pic']['name'];
+
+    $originalName = $_FILES['pic']['name'];
     $pic_temp = $_FILES['pic']['tmp_name'];
-    $picfolder = $path . $picture;
-    $fileExtension = pathinfo($picfolder, PATHINFO_EXTENSION); //get the file extention
+
+    $fileExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+
     $picture = uniqid() . '.' . $fileExtension;
+
     while (file_exists($path . $picture)) {
-        //this loop will continue until it generates a unique file name
         $picture = uniqid() . '.' . $fileExtension;
     }
-    move_uploaded_file($pic_temp, $path . $picture);
+
+    if (!move_uploaded_file($pic_temp, $path . $picture)) {
+        throw new Exception("Failed to upload customer picture.");
+    }
 } else {
-    $picture = $_POST['per_pic'];
+
+    // Keep existing picture
+    $picture = $_POST['per_pic'] ?? '';
 }
+
+
+// === Guarantor Picture === //
+
 if (!empty($_FILES['gu_pic']['name'])) {
-    $paths = "../../uploads/loan_entry/gu_pic/";
-    $gpicture = $_FILES['gu_pic']['name'];
+
+    $originalName = $_FILES['gu_pic']['name'];
     $pic_temp = $_FILES['gu_pic']['tmp_name'];
-    $picfolder = $paths . $gpicture;
-    $fileExtension = pathinfo($picfolder, PATHINFO_EXTENSION); //get the file extention
+
+    $fileExtension = pathinfo($originalName, PATHINFO_EXTENSION);
+
     $gpicture = uniqid() . '.' . $fileExtension;
+
     while (file_exists($paths . $gpicture)) {
-        //this loop will continue until it generates a unique file name
         $gpicture = uniqid() . '.' . $fileExtension;
     }
-    move_uploaded_file($pic_temp, $paths . $gpicture);
+
+    if (!move_uploaded_file($pic_temp, $paths . $gpicture)) {
+        throw new Exception("Failed to upload guarantor picture.");
+    }
 } else {
-    $gpicture = $_POST['gur_pic'];
+
+    // Keep existing guarantor picture
+    $gpicture = $_POST['gur_pic'] ?? '';
 }
 
 $cus_id = $_POST['cus_id'];
@@ -73,7 +97,7 @@ $date = DateTime::createFromFormat('d-m-Y', $first_loan_date);
 if ($date) {
     $converted_date = $date->format('Y-m-d');
 } else {
-   $converted_date = '0000-00-00';
+    $converted_date = '0000-00-00';
 }
 
 if ($customer_profile_id != '') {
@@ -92,21 +116,31 @@ if ($customer_profile_id != '') {
     if (!empty($profileIdsToUpdate)) {
         foreach ($profileIdsToUpdate as $profileId) {
             $qry = $pdo->query("UPDATE `customer_profile` SET `cus_id`='$cus_id',`aadhar_num`='$aadhar_num',`cus_name`='$cus_name',`gender`='$gender',`dob`='$dob',`age`='$age',`mobile1`='$mobile1',`mobile2`='$mobile2', `whatsapp_no`='$whatsapp_no',`pic`='$picture',`cus_data`='$cus_data',`cus_status`='$cus_status',`res_type`='$res_type',`res_detail`='$res_detail',`res_address`='$res_address',`native_address`='$native_address',`occupation`='$occupation',`occ_detail`='$occ_detail',`occ_income`='$occ_income',`occ_address`='$occ_address',`area_confirm`='$area_confirm',`area`='$area',`line`='$line',`cus_limit`='$cus_limit',`about_cus`='$about_cus',`how_to_know`='$how_to_know',`loan_count`='$loan_count',`first_loan_date`='$converted_date',`travel_with_company`='$travel_with_company',`monthly_income`='$monthly_income',`other_income`='$other_income',`support_income`='$support_income',`commitment`='$commitment',`monthly_due_capacity`='$monthly_due_capacity',`update_login_id`='$user_id',updated_on = now() WHERE id = '$profileId' ");
-
         }
 
 
-        if (($currentPic) && $currentPic != $picture) {
-            unlink($path . $currentPic);
-        }
-       
-    }
-     if (!empty($customer_profile_id) && $customer_profile_id !== 'null') {
-            if (!empty($currentGuPic) && $currentGuPic != $gpicture) {
-                unlink($paths . $currentGuPic);
+        // Delete old customer picture only if a new picture was uploaded
+        if (!empty($currentPic) && $currentPic != $picture) {
+
+            $oldPicPath = $path . $currentPic;
+
+            if (file_exists($oldPicPath)) {
+                unlink($oldPicPath);
             }
         }
-        $pdo->query("UPDATE `customer_profile` SET 
+    }
+    if (!empty($customer_profile_id) && $customer_profile_id !== 'null') {
+        // Delete old guarantor picture only if a new picture was uploaded
+        if (!empty($currentGuPic) && $currentGuPic != $gpicture) {
+
+            $oldGuPicPath = $paths . $currentGuPic;
+
+            if (file_exists($oldGuPicPath)) {
+                unlink($oldGuPicPath);
+            }
+        }
+    }
+    $pdo->query("UPDATE `customer_profile` SET 
                 `guarantor_name`='$guarantor_name',
                 `gu_pic`='$gpicture',
                 `update_login_id`='$user_id',

@@ -356,6 +356,11 @@ async function getAreaNameDropdown() {
     const branch_id = $('#branch_name').val();
     const area_name2 = $('#area_name2').val();
 
+    // Convert comma-separated IDs into an array of numbers
+    const selectedAreaIds = area_name2
+        ? area_name2.split(',').map(id => Number(id.trim()))
+        : [];
+
     try {
         const response = await $.ajax({
             url: 'api/area_creation_files/get_area_name_dropdown.php',
@@ -369,8 +374,12 @@ async function getAreaNameDropdown() {
         const items = response.map(val => ({
             value: val.id,
             label: val.areaname,
-            selected: area_name2.includes(val.id),
-            disabled: val.disabled && !area_name2.includes(val.id)
+
+            // Exact ID matching
+            selected: selectedAreaIds.includes(Number(val.id)),
+
+            // Exact ID matching
+            disabled: val.disabled && !selectedAreaIds.includes(Number(val.id))
         }));
 
         intance.setChoices(items);
