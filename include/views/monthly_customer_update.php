@@ -12,8 +12,8 @@ function logMessage($message)
 
 // 3. Prevent script from running on non-1st days
 // if (date('d') !== '1') {
-//     logMessage("Not the 1st of the month. Script exited.");
-//     exit;
+//    logMessage("Not the 1st of the month. Script exited.");
+// exit;
 // }
 logMessage(" Script started at " . date('h:i:s A'));
 
@@ -29,12 +29,19 @@ try {
     exit;
 }
 
-logMessage("Total cp_ids fetched: " . count($customer_profile_id));
+$totalCount = count($customer_profile_id);
+$processedCount = 0;
+
+logMessage("Total cp_ids fetched: $totalCount");
 
 $chunks = array_chunk($customer_profile_id, 2);
 
 foreach ($chunks as $chunk) {
     foreach ($chunk as $cp_id) {
+
+        $processedCount++;
+        $remainingCount = $totalCount - $processedCount;
+
         logMessage("Processing cp_id: $cp_id");
         $postData = ['cpID' => $cp_id];
 
@@ -79,7 +86,10 @@ foreach ($chunks as $chunk) {
         }
 
         curl_close($ch2);
-        logMessage(" Updated cp_id $cp_id: $updateResponse");
+        logMessage(
+            "Updated cp_id $cp_id: $updateResponse | " .
+                "Processed: $processedCount | Remaining: $remainingCount"
+        );
     }
 }
 

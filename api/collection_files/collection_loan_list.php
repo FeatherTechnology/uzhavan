@@ -8,6 +8,7 @@ $pending_sts = explode(',', $_POST["pending_sts"]);
 $od_sts = explode(',', $_POST["od_sts"]);
 $due_nil_sts = explode(',', $_POST["due_nil_sts"]);
 $bal_amt = explode(',', $_POST["bal_amt"]);
+$payable_amt = explode(',', $_POST["payable_amts"]);
 
 function moneyFormatIndia($num)
 {
@@ -72,6 +73,9 @@ if ($qry->rowCount() > 0) {
                 }
             }
         }
+
+        $closedQry = $pdo->query("UPDATE `customer_status`  SET  `coll_status` = '$sub_sts', `payable_amnt` = '" . $payable_amt[$i - 1] . "', `bal_amnt` = '" . $bal_amt[$i - 1] . "', `update_login_id` = '$user_id', `updated_on` = NOW() WHERE `cus_profile_id` = '" . $loanInfo['cp_id'] . "'");
+
         $loanInfo['sub_status'] = $sub_sts;
         $loanInfo['charts'] = "<div class='dropdown'>
         <button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i></button>

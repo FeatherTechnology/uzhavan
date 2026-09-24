@@ -940,6 +940,9 @@ function OnLoadFunctions(cus_id, callback) {
                     due_nil_arr[i] = response['due_nil_customer'][i]
                     balAmnt[i] = response['balAmnt'][i]
                 }
+
+                var payable_amt  = response['payable_as_req'];
+                $('#payable_amts').val(payable_amt);
                 var pending_sts = pending_arr.join(',');
                 $('#pending_sts').val(pending_sts);
                 var od_sts = od_arr.join(',');
@@ -955,10 +958,11 @@ function OnLoadFunctions(cus_id, callback) {
         var od_sts = $('#od_sts').val()
         var due_nil_sts = $('#due_nil_sts').val()
         var bal_amt = balAmnt;
+        var payable_amts =  $('#payable_amts').val();
         $.ajax({
             //in this file, details gonna fetch by customer ID, Not by req id (Because we need all loans from customer)
             url: 'api/collection_files/collection_loan_list.php',
-            data: { 'cus_id': cus_id, 'pending_sts': pending_sts, 'od_sts': od_sts, 'due_nil_sts': due_nil_sts, 'bal_amt': bal_amt },
+            data: { 'cus_id': cus_id, 'pending_sts': pending_sts, 'od_sts': od_sts, 'due_nil_sts': due_nil_sts, 'bal_amt': bal_amt ,'payable_amts' : payable_amts},
             type: 'post',
             dataType: 'json',
             cache: false,

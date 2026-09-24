@@ -5,14 +5,32 @@ $user_id = $_SESSION['user_id'];
 
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',15=>'Error',16=>'Legal'];
+$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed', 15 => 'Error', 16 => 'Legal'];
 
 $column = [
-    'li.id', 'lnc.linename', 'lelc.loan_id', 'li.issue_date', 'lelc.maturity_date',
-    'cp.cus_id', 'cp.aadhar_num', 'cp.cus_name', 'anc.areaname', 'bc.branch_name', 'cp.mobile1',
-    'lc.loan_category', 'li.id', 'li.id', 'li.id', 'li.id',
-    'li.id', 'li.id', 'li.id', 'li.id', 'li.id',
-    'li.id', 'li.id',
+    'li.id',
+    'lnc.linename',
+    'lelc.loan_id',
+    'li.issue_date',
+    'lelc.maturity_date',
+    'cp.cus_id',
+    'cp.aadhar_num',
+    'cp.cus_name',
+    'anc.areaname',
+    'bc.branch_name',
+    'cp.mobile1',
+    'lc.loan_category',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
+    'li.id',
 ];
 
 $query = "SELECT li.id, lnc.linename, lelc.loan_id, li.issue_date, lelc.maturity_date, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name, cp.mobile1, lc.loan_category, ac.agent_name, lelc.loan_amnt, lelc.due_amnt, lelc.due_period, lelc.total_amnt, lelc.principal_amnt, lelc.interest_amnt,lelc.due_type, cs.status, c.due_amt_track, c.princ_amt_track, c.int_amt_track
@@ -90,6 +108,11 @@ foreach ($result as $row) {
     $balance_amt = ($row['due_type'] != 'Interest') ?
         intVal($row['total_amnt']) - intVal($row['due_amt_track']) :
         intVal($row['principal_amnt']) - intVal($row['princ_amt_track']);
+
+    // Don't show customer if balance amount is 0 or less
+    if ($balance_amt <= 0) {
+        continue;
+    }
 
     $princ_amt = intVal($row['principal_amnt']) / $row['due_period'];
     $int_amt = intVal($row['interest_amnt']) / $row['due_period'];
