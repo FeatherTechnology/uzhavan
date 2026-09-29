@@ -17,6 +17,7 @@ $status = [
     14 => 'Loan Issue',
     15 => 'Present',
     16 => 'Present',
+    17 => 'Present',
 ];
 //$sub_status = [''=>'',1 => 'Consider', 2 => 'Reject'];
 $update_doc_list_arr = array();
@@ -128,6 +129,9 @@ function loanCustomerStatus($pdo, $cus_profile_id,$i)
         }
          elseif ($cs_status == '16') {
             $status = 'Legal';
+        }
+         elseif ($cs_status == '17') {
+            $status = 'NIP';
         }
 
         return $status;

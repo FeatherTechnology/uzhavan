@@ -7,7 +7,7 @@ if (isset($_POST['cus_id'])) {
 
 $cp_arr = array();
 if (isset($cus_id)) {
-    $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status IN(7,15,16)  and li.balance_amount = 0 ORDER BY li.cus_profile_id DESC ");
+    $qry = $pdo->query("SELECT li.cus_profile_id as cp_id FROM loan_issue li JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  where li.cus_id = '$cus_id' and cs.status IN(7,15,16,17)  and li.balance_amount = 0 ORDER BY li.cus_profile_id DESC ");
     while ($row = $qry->fetch()) {
         $cp_arr[] = $row['cp_id'];
     }
@@ -155,7 +155,7 @@ foreach ($cp_arr as $cp_id) {
     $i++;
 }
 //for knowing the customer status for due followup screen
-//this will give the customer's sub status in the order of Legal, Error, OD, Due Nill, Pending, Current
+//this will give the customer's sub status in the order of NIP,Legal, Error, OD, Due Nill, Pending, Current
 $response['follow_cus_sts'] = checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo);
 
 function calculateOthers($loan_arr, $response, $pdo, $cp_id)
@@ -669,16 +669,19 @@ function checkStatusOfCustomer($response, $loan_arr, $cus_id, $pdo)
             $query = $pdo->query("SELECT cs.status AS cus_status, cs.cus_profile_id 
                                   FROM loan_issue li 
                                   JOIN customer_status cs ON li.cus_profile_id = cs.cus_profile_id  
-                                  WHERE li.cus_id = '$cus_id'  AND cs.status IN (7,15,16)");
+                                  WHERE li.cus_id = '$cus_id'  AND cs.status IN (7,15,16,17)");
             $row = $query->fetch();
             $curdate = date('Y-m-d');
 
-            // 🔹 Priority check: if status is 15 or 16
+            // 🔹 Priority check: if status is 15 or 16 or 17
             if ($row && $row['cus_status'] == 15) {
                 $response['follow_cus_sts'] = 'Error';
                 return $response['follow_cus_sts']; // exit immediately
             } elseif ($row && $row['cus_status'] == 16) {
                 $response['follow_cus_sts'] = 'Legal';
+                return $response['follow_cus_sts']; // exit immediately
+            } elseif ($row && $row['cus_status'] == 17) {
+                $response['follow_cus_sts'] = 'NIP';
                 return $response['follow_cus_sts']; // exit immediately
             }
 

@@ -544,7 +544,7 @@ $(function () {
 });
 
 function getSubStsMapping() {
-    let subStatus = ['Legal', 'Error', 'OD', 'Pending', 'Current'];
+    let subStatus = ['NIP','Legal', 'Error', 'OD', 'Pending', 'Current'];
     let editSubStatus = $('#customer_status').val() || '';
     subStatusMultiselect.clearChoices();
     $.each(subStatus, function (index, val) {

@@ -29,7 +29,7 @@ $query = "SELECT cp.cus_id, cp.aadhar_num , cp.cus_name, anc.areaname, lnc.linen
     LEFT JOIN customer_status cs ON cp.id = cs.cus_profile_id
      JOIN users u ON FIND_IN_SET(cp.line, u.line)
  	JOIN users us ON FIND_IN_SET(lelc.loan_category, us.loan_category)
-     WHERE cs.status IN(7,15,16) AND u.id ='$user_id' AND us.id ='$user_id' ";
+     WHERE cs.status IN(7,15,16,17) AND u.id ='$user_id' AND us.id ='$user_id' ";
 if (isset($_POST['search'])) {
     if ($_POST['search'] != "") {
         $search = $_POST['search'];

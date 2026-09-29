@@ -47,7 +47,7 @@ if ($qry->rowCount() > 0) {
         $cus_status = '';
     }
     // If status is 7 or 8, cus_status should be 'Additional'
-    else if (in_array($status, [7, 8, 15, 16])) {
+    else if (in_array($status, [7, 8, 15, 16,17])) {
         $cus_status = 'Additional';
     }
     // If status is 9 or above, cus_status should be 'Renewal'
