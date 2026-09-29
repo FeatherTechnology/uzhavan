@@ -27,6 +27,7 @@ $status = [
     14 => 'Loan Issue',
     15 => 'Present',
     16 => 'Present',
+    17 => 'Present',
 ];
 
 $whereClause = "WHERE 1"; // Initial WHERE clause
@@ -84,7 +85,7 @@ if ($qry->rowCount() > 0) {
         $response['info'] .=  "  <a href='#' class='loan-calculation' value='" . $row['id'] . "'>Loan Calculation</a>";
         $response['info'] .=  " <a href='#' class='documentation' value='" . $row['cus_profile_id'] . "'>Documentation</a>";
 
-        if ($row['status'] >= 8 && !in_array($row['status'], [13, 14, 15,16])) {
+        if ($row['status'] >= 8 && !in_array($row['status'], [13, 14, 15,16,17])) {
             $response['info'] .= " <a href='#' class='closed-remark' value='" . $row['cus_profile_id'] . "'>Remark View</a>";
         }
 
@@ -192,6 +193,8 @@ function loanCustomerStatus($pdo, $cus_profile_id, $i)
             $status = 'Error';
         } elseif ($cs_status == '16') {
             $status = 'Legal';
+        } elseif ($cs_status == '17') {
+            $status = 'NIP';
         }
 
         return $status;

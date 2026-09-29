@@ -12,6 +12,7 @@ $status = [
     12 => 'NOC',
     15 => 'Present',
     16 => 'Present',
+    17 => 'Present'
 ];
 $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_id, lc.loan_category, lelc.loan_date,lelc.loan_amount,cs.closed_date,cs.status as c_sts,cs.coll_status,cs.sub_status,ag.agent_name FROM loan_entry_loan_calculation lelc 
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
@@ -39,6 +40,7 @@ if ($qry->rowCount() > 0) {
             case '7':
             case '15':
             case '16':
+            case '17':
                 $subStatusText = $loanInfo['coll_status'];
                 break;
             case '8':
@@ -70,7 +72,7 @@ if ($qry->rowCount() > 0) {
         $cus_profile_id = $loanInfo['cus_profile_id'];
         $doc_status = '';
 
-        if ($originalStatus <= 9 || in_array($originalStatus, [15, 16])) {
+        if ($originalStatus <= 9 || in_array($originalStatus, [15, 16,17])) {
             // show for current/closed but not submitted
             if (getDocumentStatus($pdo, $cus_profile_id) === false) {
                 $doc_status = 'Document Pending';

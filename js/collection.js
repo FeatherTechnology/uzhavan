@@ -321,6 +321,19 @@ $(document).ready(function () {
         return;
 
     })
+    $(document).on('click', '.move-nit', function () {
+
+        let cus_sts_id = $(this).attr('value');
+        let cp_id = $(this).attr('data-id');
+        cus_sts = 17;
+        swalConfirm(
+            "Move",
+            "Are you sure to move to NIP?",
+            () => moveToNext(cus_sts_id, cus_sts, cp_id)
+        );
+        return;
+
+    })
     $(document).on('click', '.return-sub', function () {
 
         let cus_sts_id = $(this).attr('value');
@@ -347,6 +360,9 @@ $(document).ready(function () {
                 }
                 else if (cus_sts == '7') {
                     alertName = 'Moved To Sub Status';
+                }
+                else if (cus_sts == '17') {
+                    alertName = 'Moved To NIP';
                 }
 
                 swalSuccessOk('Success', alertName);

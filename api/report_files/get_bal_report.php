@@ -5,7 +5,7 @@ $user_id = $_SESSION['user_id'];
 
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed', 15 => 'Error', 16 => 'Legal'];
+$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',15=>'Error',16=>'Legal',17=>'NIP'];
 
 $column = [
     'li.id',

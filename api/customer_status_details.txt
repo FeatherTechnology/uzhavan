@@ -15,6 +15,7 @@ Customer status Details:
 14 = Revoke in Loan Issue;
 15 = Error in Collection;
 16 = Legal in Collection;
+17 = NIP in Collection
 /////////////////////////////////////////////////////////////
 Link used for auto-updating customer status in collection
 http://spfeather-002-site7.ktempurl.com/include/views/monthly_customer_update.php

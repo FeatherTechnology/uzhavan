@@ -44,7 +44,7 @@ JOIN loan_issue li ON lelc.cus_profile_id = li.cus_profile_id
 LEFT JOIN users us ON us.id = '$user_id'
 JOIN users u ON FIND_IN_SET(cp.line, u.line)
 JOIN users urs ON FIND_IN_SET(lelc.loan_category, urs.loan_category)
-WHERE lelc.cus_id = '$cus_id' AND cs.status IN(7,15,16) AND u.id ='$user_id' AND urs.id ='$user_id' AND li.balance_amount = 0 ORDER BY lelc.id DESC ");
+WHERE lelc.cus_id = '$cus_id' AND cs.status IN(7,15,16,17) AND u.id ='$user_id' AND urs.id ='$user_id' AND li.balance_amount = 0 ORDER BY lelc.id DESC ");
 if ($qry->rowCount() > 0) {
     $curdate = date('Y-m-d');
     $i = 1;
@@ -57,7 +57,10 @@ if ($qry->rowCount() > 0) {
             $sub_sts = 'Error';
         } elseif ($loanInfo['cus_sts'] == 16) {
             $sub_sts = 'Legal';
-        } else {
+        } elseif ($loanInfo['cus_sts'] == 17) {
+            $sub_sts = 'NIP';
+        } 
+        else {
             // 🔹 Normal sub-status logic
             if (date('Y-m-d', strtotime($loanInfo['issue_date'])) > $curdate && $bal_amt[$i - 1] != 0) {
                 $sub_sts = 'Current';
@@ -88,12 +91,13 @@ if ($qry->rowCount() > 0) {
         </div>";
 
         $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i><div class='dropdown-content'>";
-        if (!in_array($loanInfo['cus_sts'], [15, 16])) {
+        if (!in_array($loanInfo['cus_sts'], [15, 16,17])) {
             $loanInfo['action'] .= "<a href='#' class='pay-due' value='" . $loanInfo['cp_id'] . "'>Pay Due</a>";
         }
 
         $loanInfo['action'] .= "<a href='#' class='move-error' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Error</a>";
         $loanInfo['action'] .= "<a href='#' class='move-legal' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Legal</a>";
+        $loanInfo['action'] .= "<a href='#' class='move-nit' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To NIP</a>";
         $loanInfo['action'] .= "<a href='#' class='return-sub' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Return Sub Status</a>";
 
 

@@ -9,7 +9,7 @@ $qry = $pdo->query("SELECT lelc.cus_id,lelc.cus_profile_id, lelc.id, lelc.loan_i
 LEFT JOIN loan_category_creation lcc ON lelc.loan_category = lcc.id 
 LEFT JOIN loan_category lc ON lcc.loan_category = lc.id 
 LEFT JOIN customer_status cs ON lelc.id = cs.loan_calculation_id 
-WHERE cs.cus_id = '$cus_id' AND cs.status IN (7,15,16)");
+WHERE cs.cus_id = '$cus_id' AND cs.status IN (7,15,16,17)");
 if ($qry->rowCount() > 0) {
     while ($loanInfo = $qry->fetch(PDO::FETCH_ASSOC)) {
         $loanDate = new DateTime($loanInfo['loan_date']);

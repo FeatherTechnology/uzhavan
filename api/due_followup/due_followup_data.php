@@ -95,7 +95,7 @@ LEFT JOIN (
 ON cp.cus_id = cm.cus_id
 
 WHERE
-    cs.payable_amnt > 0 AND cs.status IN (7,15,16) AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  $branchCondition
+    cs.payable_amnt > 0 AND cs.status IN (7,15,16,17) AND u.id ='$user_id' AND FIND_IN_SET(cs.coll_status,'$sub_status_mapping') $qry_cndtn  $branchCondition
             $lineCondition
             $loanCatCondition ";
 
