@@ -171,12 +171,13 @@ foreach ($result as $row) {
     $qry1 = $pdo->query("SELECT 
         cus_id, 
         MIN(CASE 
-           WHEN coll_status = 'Legal' THEN 1
+            WHEN coll_status = 'Legal' THEN 1
             WHEN coll_status = 'Error' THEN 2
-            WHEN coll_status = 'OD' THEN 3
-            WHEN coll_status = 'Pending' THEN 4
-            WHEN coll_status = 'Current' THEN 5
-            ELSE 6 
+            WHEN coll_status = 'NIP' THEN 3
+            WHEN coll_status = 'OD' THEN 4
+            WHEN coll_status = 'Pending' THEN 5
+            WHEN coll_status = 'Current' THEN 6
+            ELSE 7
         END) AS status_priority
         FROM customer_status
         WHERE payable_amnt > 0 AND cus_id = '$cus_id'
@@ -193,12 +194,15 @@ foreach ($result as $row) {
                 $cus_status = 'Error';
                 break;
             case 3:
-                $cus_status = 'OD';
+                $cus_status = 'NIP';
                 break;
             case 4:
-                $cus_status = 'Pending';
+                $cus_status = 'OD';
                 break;
             case 5:
+                $cus_status = 'Pending';
+                break;
+            case 6:
                 $cus_status = 'Current';
                 break;
             default:

@@ -208,25 +208,29 @@ class bulkUploadClass
     function getLoanCode($pdo, $id)
     {
         if (!isset($id) || $id == '') {
-            $qry = $pdo->query("SELECT loan_id FROM loan_entry_loan_calculation WHERE loan_id != '' ORDER BY id DESC LIMIT 1");
 
-            if ($qry->rowCount() > 0) {
-                $qry_info = $qry->fetch();
-                $l_no = ltrim(strstr($qry_info['loan_id'], '-'), '-');
-                $l_no = $l_no + 1;
-                $loan_ID_final = "LID-" . "$l_no";
+            $qry = $pdo->query("SELECT MAX(CAST(loan_id AS SIGNED)) AS max_loan_id
+            FROM loan_entry_loan_calculation WHERE loan_id != '' AND loan_id IS NOT NULL");
+
+            $row = $qry->fetch(PDO::FETCH_ASSOC);
+
+            if ($row['max_loan_id'] !== null) {
+                $loan_ID_final = $row['max_loan_id'] + 1;
             } else {
-                $loan_ID_final = "LID-101";
+                $loan_ID_final = 101;
             }
         } else {
-            $stmt = $pdo->prepare("SELECT loan_id FROM loan_entry_loan_calculation WHERE id = :id");
+
+            $stmt = $pdo->prepare("SELECT loan_id FROM loan_entry_loan_calculation WHERE id = :id ");
             $stmt->execute(['id' => $id]);
 
             if ($stmt->rowCount() > 0) {
-                $qry_info = $stmt->fetch();
+
+                $qry_info = $stmt->fetch(PDO::FETCH_ASSOC);
                 $loan_ID_final = $qry_info['loan_id'];
             } else {
-                $loan_ID_final = "LID-101"; // Default value if not found
+
+                $loan_ID_final = 101;
             }
         }
 
