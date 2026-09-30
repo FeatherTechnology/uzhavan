@@ -59,8 +59,7 @@ if ($qry->rowCount() > 0) {
             $sub_sts = 'Legal';
         } elseif ($loanInfo['cus_sts'] == 17) {
             $sub_sts = 'NIP';
-        } 
-        else {
+        } else {
             // 🔹 Normal sub-status logic
             if (date('Y-m-d', strtotime($loanInfo['issue_date'])) > $curdate && $bal_amt[$i - 1] != 0) {
                 $sub_sts = 'Current';
@@ -91,17 +90,15 @@ if ($qry->rowCount() > 0) {
         </div>";
 
         $loanInfo['action'] = "<div class='dropdown'><button class='btn btn-outline-secondary'><i class='fa'>&#xf107;</i><div class='dropdown-content'>";
-        if (!in_array($loanInfo['cus_sts'], [15, 16,17])) {
+        if (!in_array($loanInfo['cus_sts'], [15, 16, 17])) {
             $loanInfo['action'] .= "<a href='#' class='pay-due' value='" . $loanInfo['cp_id'] . "'>Pay Due</a>";
         }
 
-        $loanInfo['action'] .= "<a href='#' class='move-error' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Error</a>";
-        $loanInfo['action'] .= "<a href='#' class='move-legal' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Legal</a>";
-        $loanInfo['action'] .= "<a href='#' class='move-nit' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To NIP</a>";
-        $loanInfo['action'] .= "<a href='#' class='return-sub' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Return Sub Status</a>";
-
-
         if ($loanInfo['collection_access'] == 1) {
+            $loanInfo['action'] .= "<a href='#' class='move-error' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Error</a>";
+            $loanInfo['action'] .= "<a href='#' class='move-legal' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To Legal</a>";
+            $loanInfo['action'] .= "<a href='#' class='move-nit' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Move To NIP</a>";
+            $loanInfo['action'] .= "<a href='#' class='return-sub' value='" . $loanInfo['cus_sts_id'] . "' data-id ='" . $loanInfo['cp_id'] . "'>Return Sub Status</a>";
             $loanInfo['action'] .= "<a href='#' class='fine-form' value='" . $loanInfo['cp_id'] . "'>Fine</a>";
         }
 
