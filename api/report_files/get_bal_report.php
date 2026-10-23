@@ -5,8 +5,6 @@ $user_id = $_SESSION['user_id'];
 
 $to_date = $_POST['to_date'];
 
-$status = [2 => 'aa', 3 => 'Move', 4 => 'Approved', 5 => 'Cancel', 6 => 'Revoke', 7 => 'Current', 8 => 'In Closed', 9 => 'Closed', 10 => 'NOC', 11 => 'NOC Completed', 12 => 'NOC Removed',15=>'Error',16=>'Legal',17=>'NIP'];
-
 $column = [
     'li.id',
     'lnc.linename',
@@ -33,7 +31,7 @@ $column = [
     'li.id',
 ];
 
-$query = "SELECT li.id, lnc.linename, lelc.loan_id, li.issue_date, lelc.maturity_date, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name, cp.mobile1, lc.loan_category, ac.agent_name, lelc.loan_amnt, lelc.due_amnt, lelc.due_period, lelc.total_amnt, lelc.principal_amnt, lelc.interest_amnt,lelc.due_type, cs.status, c.due_amt_track, c.princ_amt_track, c.int_amt_track
+$query = "SELECT li.id, lnc.linename, lelc.loan_id, li.issue_date, lelc.maturity_date, cp.cus_id, cp.aadhar_num, cp.cus_name, anc.areaname, bc.branch_name, cp.mobile1, lc.loan_category, ac.agent_name, lelc.loan_amnt, lelc.due_amnt, lelc.due_period, lelc.total_amnt, lelc.principal_amnt, lelc.interest_amnt,lelc.due_type, cs.status, c.due_amt_track, c.princ_amt_track, c.int_amt_track, c.pre_close_waiver , cs.coll_status
 FROM loan_issue li  
 JOIN customer_profile cp ON li.cus_profile_id = cp.id
 JOIN loan_entry_loan_calculation lelc ON li.cus_profile_id = lelc.cus_profile_id
@@ -47,7 +45,8 @@ LEFT JOIN(
     SELECT cus_profile_id,
         SUM(due_amt_track) AS due_amt_track,
         SUM(princ_amt_track) AS princ_amt_track,
-        SUM(int_amt_track) AS int_amt_track
+        SUM(int_amt_track) AS int_amt_track,
+        SUM(pre_close_waiver) AS pre_close_waiver
     FROM
         collection
     WHERE
@@ -106,7 +105,7 @@ $sno = 1;
 foreach ($result as $row) {
     $sub_array = [];
     $balance_amt = ($row['due_type'] != 'Interest') ?
-        intVal($row['total_amnt']) - intVal($row['due_amt_track']) :
+        intVal($row['total_amnt']) - intVal($row['due_amt_track']) - intVal($row['pre_close_waiver']) :
         intVal($row['principal_amnt']) - intVal($row['princ_amt_track']);
 
     // Don't show customer if balance amount is 0 or less
@@ -148,7 +147,7 @@ foreach ($result as $row) {
     $sub_array[] = moneyFormatIndia($response['interest_paid']);
     $sub_array[] = $bal_due;
     $sub_array[] = 'Present';
-    $sub_array[] = $status[$row['status']];
+    $sub_array[] = $row['coll_status'];
     $data[] = $sub_array;
     $sno++;
 }

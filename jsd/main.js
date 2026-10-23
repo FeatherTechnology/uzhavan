@@ -1292,3 +1292,25 @@ function initColVisFeatures(table, tableId) {
 	bindColVisEvents(); // attach listeners
 	fixColVisUI(); // initial correction
 }
+
+function excelExportAction(e, dt, button, config, baseTitle) {
+	const defaultAction = $.fn.dataTable.ext.buttons.excelHtml5.action;
+
+	// Build dynamic title
+	const now = new Date();
+	const date = now.toLocaleDateString('en-GB').replace(/\//g, '-');
+	const time = now.toLocaleTimeString('en-US').replace(/:/g, '-');
+	const dynamicTitle = `${baseTitle} - ${date} - ${time}`;
+
+	// Set title + filename
+	config.title = dynamicTitle;
+	config.filename = dynamicTitle;
+
+	// Perform actual Excel export
+	defaultAction.call(this, e, dt, button, config);
+}
+
+// Reusable DataTables info callback. - Overrides the default info text and displays only the current range and total filtered entries.
+function customDataTableInfo(settings, start, end, max, total, pre) {
+    return 'Showing ' + start + ' to ' + end + ' of ' + total + ' entries';
+}

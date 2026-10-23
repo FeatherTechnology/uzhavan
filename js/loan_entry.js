@@ -55,7 +55,7 @@ $(document).ready(function () {
     $('#back_btn').click(function () {
         let cus_id = $('#auto_gen_cus_id').val();
         let cus_profile_id = $('#customer_profile_id').val();
-        $('.customer_content').hide();
+        // $('.customer_content').hide();
         $.post('api/loan_entry/cus_sts_check.php', { 'cus_id': cus_id, 'cus_profile_id': cus_profile_id }, function (response) {
             if (response.status == 0) {
                 // If status is 0, proceed with confirmation
@@ -939,12 +939,13 @@ $(document).ready(function () {
 
                     }
                     $('#customer_profile_id').val(response.last_id);
+                    $('#auto_gen_cus_id').val(response.cus_id);
                     $('#per_pic').val(response.pic);
                     $('#cus_data').val(response.cus_data);
                     // if (response.cus_data == 'Existing') {
                     $('.cus_status_div').show();
                     // $('.loan_count_div').show();
-                    getLoanCount(cus_id, response.last_id);
+                    getLoanCount(response.cus_id, response.last_id);
                     // }
                     // else {
                     // $('.loan_count_div').hide();
@@ -2428,6 +2429,7 @@ $(document).ready(function () {
                     }
 
                     $('#loan_calculation_id').val(response.last_id);
+                    $("#loan_id_calc").val(response.loan_id);
                 }, 'json');
             }
 
