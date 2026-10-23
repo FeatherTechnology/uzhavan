@@ -372,12 +372,12 @@ $(document).ready(function () {
         let append;
         if (type == 1) {
             //direct
-            append = `<option value="">Select Follow Up Status</option><option value='1'>Commitment</option><option value='2'>Unavailable</option>`;
+            append = `<option value="">Select Follow Up Status</option><option value='1'>Commitment</option><option value='2'>Unavailable</option><option value='3'>Paid</option>`;
             $(".person-div").hide();
             $(".person-div").find(':input').val('');
         } else if (type == 2) {
             //mobile
-            append = `<option value="">Select Follow Up Status</option> <option value='1'>Commitment</option> <option value='2'>RNR</option> <option value='3'>Not Reachable</option> <option value='4'>Switch Off</option> <option value='5'>Not in Use</option> <option value='6'>Blocked</option>`;
+            append = `<option value="">Select Follow Up Status</option> <option value='1'>Commitment</option> <option value='2'>RNR</option> <option value='3'>Not Reachable</option> <option value='4'>Switch Off</option> <option value='5'>Not in Use</option> <option value='6'>Blocked</option> <option value='7'>Paid</option>`;
             $(".person-div").hide();
             $(".person-div").find(':input').val('');
         } else {

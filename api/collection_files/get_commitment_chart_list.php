@@ -21,7 +21,7 @@ if (isset($_POST['cp_id'])) {
 
         // Apply different follow_status_arr based on follow_type
         if ($row['follow_type'] == '1') {
-            $follow_status_arr = [1 => 'Commitment', 2 => 'Unavailable'];
+            $follow_status_arr = [1 => 'Commitment', 2 => 'Unavailable', 3 => 'Paid'];
         } else if ($row['follow_type'] == '2') {
             $follow_status_arr = [
                 1 => 'Commitment',
@@ -29,7 +29,8 @@ if (isset($_POST['cp_id'])) {
                 3 => 'Not Reachable',
                 4 => 'Switch Off',
                 5 => 'Not in Use',
-                6 => 'Blocked'
+                6 => 'Blocked',
+                7 => 'Paid'
             ];
         }
 
